@@ -6,6 +6,7 @@ import {
   isErrorInstance,
   isClass,
   isClassInstance,
+  hasTypeName,
 } from '@eveble/helpers';
 import { isArray, isPlainObject } from 'lodash';
 import { DebugDescriber } from './describers/debug-describer';
@@ -84,7 +85,10 @@ export class Describer implements types.Describer {
       type = KINDS.ARRAY;
     } else if (isPlainObject(arg)) {
       type = KINDS.OBJECT;
-    } else if (isNativeType(arg) || isNativeTypeInstance(arg)) {
+    } else if (
+      (isNativeType(arg) || isNativeTypeInstance(arg)) &&
+      !hasTypeName(arg)
+    ) {
       type = KINDS.NATIVE;
     } else if (isErrorClass(arg) || isErrorInstance(arg)) {
       type = KINDS.ERROR;
