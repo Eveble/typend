@@ -111,7 +111,7 @@ import {
   isPatternClass,
   isPattern,
   isUtility,
-  isDefinable,
+  isDefined,
   isValidable,
   getMatchingParentProto,
   isSpecial,
@@ -224,7 +224,7 @@ import {
   isPatternClass as isPatternClassExported,
   isPattern as isPatternExported,
   isUtility as isUtilityExported,
-  isDefinable as isDefinableExported,
+  isDefined as isDefinedExported,
   isValidable as isValidableExported,
   getMatchingParentProto as getMatchingParentProtoExported,
   isSpecial as isSpecialExported,
@@ -627,8 +627,8 @@ describe('exports', () => {
       it('isUtility', () => {
         expect(isUtility).to.be.equal(isUtilityExported);
       });
-      it('isDefinable', () => {
-        expect(isDefinable).to.be.equal(isDefinableExported);
+      it('isDefined', () => {
+        expect(isDefined).to.be.equal(isDefinedExported);
       });
       it('isValidable', () => {
         expect(isValidable).to.be.equal(isValidableExported);
@@ -713,7 +713,7 @@ describe('exports', () => {
       expect(never).to.be.instanceof(Never);
     });
     it('oneOf', () => {
-      expect(oneOf(String, Number)).to.be.instanceof(OneOf);
+      expect(oneOf([String, Number])).to.be.instanceof(OneOf);
     });
     it('optional', () => {
       expect(optional(String)).to.be.instanceof(Optional);
