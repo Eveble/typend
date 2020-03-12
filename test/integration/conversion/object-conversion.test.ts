@@ -338,5 +338,33 @@ describe(`Object conversion`, function() {
         })
       );
     });
+
+    it('returns converted Record as empty Collection instance', () => {
+      expect(converter.convert(reflect<Record<keyof any, any>>())).to.be.eql(
+        new Collection()
+      );
+    });
+
+    it('returns converted Record as a type as empty Collection instance', () => {
+      type RecordAsAType = Record<keyof any, any>;
+
+      expect(converter.convert(reflect<RecordAsAType>())).to.be.eql(
+        new Collection()
+      );
+    });
+
+    it('returns converted object literal as a type as Collection instance', () => {
+      type NamedObjectLiteralAsType = {
+        key: string;
+      };
+
+      expect(
+        converter.convert(reflect<{ obj: NamedObjectLiteralAsType }>())
+      ).to.be.eql(
+        new Collection({
+          obj: new Collection({ key: new InstanceOf(String) }),
+        })
+      );
+    });
   });
 });
