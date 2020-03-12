@@ -44,9 +44,9 @@ export class UnionConverter implements types.TypeConverter {
 
     let pattern;
     if (expectations.length === 2 && expectations.includes(undefined)) {
-      const value =
+      const expectation =
         expectations[0] !== undefined ? expectations[0] : expectations[1];
-      pattern = new Optional(value);
+      pattern = new Optional(expectation);
     } else {
       pattern = new OneOf(...expectations);
     }
