@@ -3,6 +3,7 @@
 import 'reflect-metadata';
 import { types } from './types';
 import { INITIALIZER_KEY } from './constants/metadata-keys';
+import { Optional } from './patterns/optional';
 
 export abstract class WrapperPattern extends Array {
   public static kind: string | undefined;
@@ -21,6 +22,14 @@ export abstract class WrapperPattern extends Array {
     super();
     this.onValidation(...expectations);
     this.push(...expectations);
+  }
+
+  /**
+   * Make current pattern optional.
+   * @returns Pattern wrapped with instance of Optional pattern.
+   */
+  get isOptional(): Optional {
+    return new Optional(this);
   }
 
   /**

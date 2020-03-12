@@ -1,12 +1,20 @@
 import 'reflect-metadata';
 import { types } from './types';
 import { INITIALIZER_KEY } from './constants/metadata-keys';
+import { Optional } from './patterns/optional';
 
 export abstract class Pattern extends Object {
   public static kind = '';
 
   public static describer: types.Describer;
 
+  /**
+   * Make current pattern optional.
+   * @returns Pattern wrapped with instance of Optional pattern.
+   */
+  get isOptional(): Optional {
+    return new Optional(this);
+  }
   /**
    * Returns for which kind pattern is created.
    * @returns Kind represented as a string.
