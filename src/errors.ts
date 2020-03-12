@@ -20,12 +20,6 @@ export class InvalidDefinitionError extends ExtendableError {
   }
 }
 
-export class InvalidTypeError extends ValidationError {
-  constructor(message: string, ...args: string[]) {
-    super(format(message, ...args));
-  }
-}
-
 export class TypeConverterExists extends TypeError {
   constructor(type: string) {
     super(`Converter for type '${type}' is already registered`);
@@ -33,6 +27,12 @@ export class TypeConverterExists extends TypeError {
 }
 
 export class ValidationError extends ExtendableError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
+
+export class InvalidTypeError extends ValidationError {
   constructor(message: string, ...args: string[]) {
     super(format(message, ...args));
   }
