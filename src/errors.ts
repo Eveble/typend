@@ -73,6 +73,20 @@ export class UnknownError extends ValidationError {
     super(format(message, ...args));
   }
 }
+
+export class PatternValidatorExistError extends ExtendableError {
+  constructor(type: string) {
+    super(`Validator for type '${type}' would be overwritten. To
+    override existing validator use 'Validator::overrideValidator'`);
+  }
+}
+
+export class PatternValidatorNotFoundError extends ExtendableError {
+  constructor(type: string) {
+    super(`Validator for type '${type}' can't be found`);
+  }
+}
+
 export class UndefinableClassError extends ExtendableError {
   constructor(typeName) {
     super(
@@ -80,4 +94,3 @@ export class UndefinableClassError extends ExtendableError {
     );
   }
 }
-
