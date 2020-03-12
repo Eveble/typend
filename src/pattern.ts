@@ -15,6 +15,18 @@ export abstract class Pattern extends Object {
   get isOptional(): Optional {
     return new Optional(this);
   }
+
+  /**
+   * Ensures that current pattern is required.
+   * @returns Pattern that is unwrapped from Optional pattern.
+   */
+  get isRequired(): any {
+    if (this instanceof Optional) {
+      return this[0];
+    }
+    return this;
+  }
+
   /**
    * Returns for which kind pattern is created.
    * @returns Kind represented as a string.

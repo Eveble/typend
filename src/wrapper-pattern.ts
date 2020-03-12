@@ -33,6 +33,17 @@ export abstract class WrapperPattern extends Array {
   }
 
   /**
+   * Ensures that current pattern is required.
+   * @returns Pattern that is unwrapped from Optional pattern.
+   */
+  get isRequired(): any {
+    if (this instanceof Optional) {
+      return this[0];
+    }
+    return this;
+  }
+
+  /**
    * Sets describing library.
    * @param describer - Describer library instance.
    */
