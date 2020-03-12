@@ -1,0 +1,115 @@
+{
+  "name": "typend",
+  "version": "0.1.0",
+  "description": "TypeScript runtime validation",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "eveble",
+    "matchist",
+    "simplecheck",
+    "check",
+    "Meteor",
+    "variable",
+    "instanceof",
+    "instance",
+    "evaluation",
+    "matcher",
+    "match",
+    "typescript"
+  ],
+  "author": "Eveble <eveble@eveble.com> (https://eveble.com)",
+  "homepage": "https://eveble.com",
+  "bugs": "https://github.com/eveble/matchist/issues",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 13.0.x",
+    "npm": ">= 6.12.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/eveble/matchist.git"
+  },
+  "dependencies": {
+    "@eveble/helpers": "^0.2.1",
+    "deep-diff": "^1.0.2",
+    "deepmerge": "^4.2.2",
+    "es6-error": "^4.1.1",
+    "lodash": "^4.17.15",
+    "polytype": "^0.9.1",
+    "reflect-metadata": "^0.1.13",
+    "tsruntime": "^3.0.0-beta.1",
+    "ttypescript": "^1.5.10"
+  },
+  "devDependencies": {
+    "@eveble/testing-helpers": "0.2.2",
+    "@types/chai": "^4.2.10",
+    "@types/deep-diff": "^1.0.0",
+    "@types/lodash": "^4.14.149",
+    "@types/mocha": "^7.0.2",
+    "@types/sinon": "^7.5.2",
+    "@types/sinon-chai": "^3.2.3",
+    "@typescript-eslint/eslint-plugin": "^2.23.0",
+    "@typescript-eslint/parser": "^2.23.0",
+    "babel-eslint": "10.1.0",
+    "chai": "^4.2.0",
+    "cross-env": "^7.0.2",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-mocha": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
+    "mocha": "^7.1.0",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
+    "rollup": "^1.27.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-filesize": "^6.2.1",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.5.0",
+    "rollup-plugin-typescript2": "^0.26.0",
+    "sinon-chai": "^3.5.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3",
+    "sinon": "^9.0.1",
+    "ts-sinon": "^1.0.25",
+    "gulp": "^4.0.2",
+    "gulp-connect": "^5.7.0",
+    "gulp-typedoc": "^2.2.4",
+    "typedoc": "^0.16.11"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && npm run lint && npm run build:es && npm run build:cjs",
+    "build:es": "cross-env NODE_ENV=es rollup -c",
+    "build:cjs": "cross-env NODE_ENV=cjs rollup -c",
+    "docs:build": "rimraf docs && node_modules/.bin/gulp docs:build",
+    "docs:watch": "node_modules/.bin/gulp docs:watch",
+    "prepare": "npm run test && npm run lint && npm run build",
+    "test": "cross-env NODE_ENV=test TS_NODE_PROJECT=./test/tsconfig.json TS_NODE_COMPILER=\"ttypescript\" ./node_modules/.bin/mocha --config ./.mocharc.json",
+    "test:watch": "npm test -- --watch",
+    "test:unit": "cross-env NODE_ENV=test TS_NODE_PROJECT=./test/tsconfig.json TS_NODE_COMPILER=\"ttypescript\" ./node_modules/.bin/mocha --config ./.mocharc.json ./test/unit",
+    "test:unit:watch": "cross-env NODE_ENV=test TS_NODE_PROJECT=./test/tsconfig.json TS_NODE_COMPILER=\"ttypescript\" ./node_modules/.bin/mocha --watch --config ./.mocharc.json ./test/unit",
+    "test:integration": "cross-env NODE_ENV=test TS_NODE_PROJECT=./test/tsconfig.json TS_NODE_COMPILER=\"ttypescript\" ./node_modules/.bin/mocha --config ./.mocharc.json ./test/integration",
+    "test:integration:watch": "cross-env NODE_ENV=test TS_NODE_PROJECT=./test/tsconfig.json TS_NODE_COMPILER=\"ttypescript\" ./node_modules/.bin/mocha --watch --config ./.mocharc.json ./test/integration",
+    "lint:check": "node_modules/typescript/bin/tsc && ./node_modules/.bin/eslint 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && ./node_modules/.bin/prettier --list-different 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
+    "lint": "node_modules/typescript/bin/tsc --noEmit && ./node_modules/.bin/prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && ./node_modules/.bin/eslint --fix 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged",
+      "pre-push": "yarn lint"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
