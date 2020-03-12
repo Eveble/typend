@@ -1,4 +1,5 @@
 import ExtendableError from 'es6-error';
+import { format } from 'util';
 
 export class TypeDescriberExistsError extends ExtendableError {
   constructor(type: string) {
@@ -12,3 +13,16 @@ export class TypeDescriberNotFoundError extends ExtendableError {
     super(`Describer for type '${type}' can't be found`);
   }
 }
+
+export class InvalidDefinitionError extends ExtendableError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
+
+export class InvalidTypeError extends ValidationError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
+
