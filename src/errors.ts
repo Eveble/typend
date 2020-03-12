@@ -26,3 +26,8 @@ export class InvalidTypeError extends ValidationError {
   }
 }
 
+export class TypeConverterExists extends TypeError {
+  constructor(type: string) {
+    super(`Converter for type '${type}' is already registered`);
+  }
+}
