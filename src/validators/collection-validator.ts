@@ -6,6 +6,7 @@ import { InvalidTypeError, UnexpectedKeyError } from '../errors';
 import { getResolvablePath, isResolvablePath } from '../helpers';
 import { types } from '../types';
 import { Collection } from '../patterns/collection';
+import { Optional } from '../patterns/optional';
 
 export class CollectionValidator extends PatternValidator
   implements types.PatternValidator {
@@ -70,8 +71,24 @@ export class CollectionValidator extends PatternValidator
       if (difference === undefined || difference.path === undefined) {
         continue;
       }
+
       // Ensure that each difference in object is validated against expectation from same path
-      const diffPath: string = difference.path.join('.');
+      let diffPath: string;
+      // Case "optional array property on collection":
+      // {prop: new Optional(new List('my-element'))}
+      //   > referenced by diff tool on difference.path as `prop[0]`, so it would end up
+      //     comparing first element from expectation without taking Optional pattern instance
+      //     in to account(equal to failed validation)
+      if (
+        get(
+          collOrExpect,
+          difference.path.join('.').replace('.0', '')
+        ) instanceof Optional
+      ) {
+        diffPath = difference.path.join('.').replace('.0', '');
+      } else {
+        diffPath = difference.path.join('.');
+      }
       const key: string = getResolvablePath(diffPath, collOrExpect);
 
       if (!isResolvablePath(key, collOrExpect)) {

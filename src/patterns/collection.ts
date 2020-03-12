@@ -13,7 +13,7 @@ export class Collection extends Pattern implements types.Pattern {
    * @throws {InvalidTypeError}
    * Thrown if provided properties is not an object.
    */
-  constructor(properties: Record<keyof any, any>) {
+  constructor(properties: Record<keyof any, any> = {}) {
     super();
     if (!isPlainObject(properties)) {
       throw new InvalidTypeError(

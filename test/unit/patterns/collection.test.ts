@@ -38,7 +38,6 @@ describe(`Collection`, function() {
     Map,
     Error,
     Object,
-    undefined,
     null,
     // String literal
     'abcd',

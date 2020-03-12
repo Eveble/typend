@@ -13,6 +13,8 @@ import {
   ValidationError,
   propsOf,
   typeOf,
+  iof,
+  list,
 } from '../../src/index';
 
 @define()
@@ -78,7 +80,13 @@ describe(`matching`, () => {
       `Expected anything, got regular expression(/fail/)`,
     ],
     [/fail/, any, `Expected anything, got regular expression(/fail/)`],
-    [(): boolean => { return true }, any, `Expected anything, got Function`],
+    [
+      (): boolean => {
+        return true;
+      },
+      any,
+      `Expected anything, got Function`,
+    ],
     [[1], any, `Expected anything, got [Number(1)]`],
     [[-1], any, `Expected anything, got [Number(-1)]`],
     [
@@ -117,7 +125,15 @@ describe(`matching`, () => {
       `Expected anything, got [regular expression(/fail/)]`,
     ],
     [[/fail/], any, `Expected anything, got [regular expression(/fail/)]`],
-    [[(): boolean => { return true },], any, `Expected anything, got [Function]`],
+    [
+      [
+        (): boolean => {
+          return true;
+        },
+      ],
+      any,
+      `Expected anything, got [Function]`,
+    ],
     // Error
     [
       new MyError('my-message'),
@@ -287,6 +303,19 @@ describe(`matching`, () => {
       ['first-value', 2],
       [String, Number],
       'Expected [String("first-value"), Number(2)] to be matching an [String, Number]',
+    ],
+    // Array as property in record
+    [
+      // Case "optional array property on collection":
+      { elements: [new MyClass('first'), new MyClass('second')] },
+      { elements: optional(list(iof(MyClass))) },
+      `(Key 'elements': Expected [MyClass({}), MyClass({})] to be matching an [[MyClass]] in MyList({"elements":[{},{}]}))`,
+    ],
+    [
+      // Case "optional array property on collection"(non-optional):
+      { elements: [new MyClass('first'), new MyClass('second')] },
+      { elements: list(iof(MyClass)) },
+      `Key 'elements': Expected [MyClass({}), MyClass({})] to be matching an [[MyClass]] in MyList({"elements":[{},{}]}))`,
     ],
     // Object
     [

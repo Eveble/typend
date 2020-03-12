@@ -131,7 +131,8 @@ export class ObjectConverter implements types.TypeConverter {
   public isInterface(reflectedType: tsrTypes.ReflectedType): boolean {
     return (
       reflectedType.kind === 15 &&
-      (reflectedType as tsrTypes.ObjectType).name !== undefined
+      (reflectedType as tsrTypes.ObjectType).name !== undefined &&
+      (reflectedType as tsrTypes.ObjectType).name !== '__type'
     );
   }
 }
