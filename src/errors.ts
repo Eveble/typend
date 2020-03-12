@@ -32,6 +32,47 @@ export class TypeConverterExists extends TypeError {
   }
 }
 
+export class ValidationError extends ExtendableError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
+
+export class InvalidValueError extends ValidationError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
+
+export class UnequalValueError extends ValidationError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
+
+export class UnmatchedTypeError extends ValidationError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
+
+export class NotAMemberError extends ValidationError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
+
+export class UnexpectedKeyError extends ValidationError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
+
+export class UnknownError extends ValidationError {
+  constructor(message: string, ...args: string[]) {
+    super(format(message, ...args));
+  }
+}
 export class UndefinableClassError extends ExtendableError {
   constructor(typeName) {
     super(
