@@ -333,6 +333,36 @@ const symbol: Function = Symbol;
 // Initialize delegator with default formatting on describer
 describer.setFormatting('default');
 
+const PropTypes = {
+  any,
+  array: Array,
+  arrayOf: list,
+  bool: Boolean,
+  func: Function,
+  equal: eq,
+  instanceOf: iof,
+  integer,
+  Integer,
+  interface(properties: Record<keyof any, any>): Interface {
+    return new Interface(properties);
+  },
+  maybe,
+  never,
+  number: Number,
+  object: new Collection({}),
+  objectOf: new Collection({}),
+  oneOf,
+  oneOfType: oneOf,
+  shape(properties: Record<keyof any, any>): Interface {
+    return new Interface(properties);
+  },
+  string: String,
+  symbol: Symbol,
+  tuple,
+  void: voided,
+  where,
+};
+
 export {
   // Declarations
   types,
@@ -488,6 +518,7 @@ export {
   unrecognized,
   voided,
   where,
+  PropTypes,
   // Utilities
   propsOf,
   typeOf,

@@ -272,6 +272,8 @@ import {
   number,
   boolean,
   symbol,
+  // Property types
+  PropTypes,
 } from '../../src/index';
 
 describe('exports', () => {
@@ -682,76 +684,177 @@ describe('exports', () => {
       expect(reflect).to.be.instanceof(Function);
     });
 
-    it('any', () => {
-      expect(any).to.be.instanceof(Any);
-    });
-    it('iof', () => {
-      expect(iof(String)).to.be.instanceof(InstanceOf);
-    });
-    it('collection', () => {
-      expect(collection({})).to.be.instanceof(Collection);
-    });
-    it('collectionIncluding', () => {
-      expect(collectionIncluding({})).to.be.instanceof(CollectionIncluding);
-    });
-    it('collectionWithin', () => {
-      expect(collectionWithin({})).to.be.instanceof(CollectionWithin);
-    });
-    it('eq', () => {
-      expect(eq('my-value')).to.be.instanceof(Equals);
-    });
-    it('integer', () => {
-      expect(integer).to.be.equal(Integer);
-    });
-    it('list', () => {
-      expect(list([String])).to.be.instanceof(List);
-    });
-    it('maybe', () => {
-      expect(maybe('my-value')).to.be.instanceof(Maybe);
-    });
-    it('never', () => {
-      expect(never).to.be.instanceof(Never);
-    });
-    it('oneOf', () => {
-      expect(oneOf([String, Number])).to.be.instanceof(OneOf);
-    });
-    it('optional', () => {
-      expect(optional(String)).to.be.instanceof(Optional);
-    });
-    it('unknown', () => {
-      expect(unknown).to.be.instanceof(Unknown);
-    });
-    it('unrecognized', () => {
-      expect(unrecognized('my-unrecognized-value')).to.be.instanceof(
-        Unrecognized
-      );
-    });
-    it('voided', () => {
-      expect(voided).to.be.instanceof(Void);
-    });
-    it('where', () => {
-      expect(
-        where((): boolean => {
-          return true;
-        })
-      ).to.be.instanceof(Where);
-    });
-    it('tuple', () => {
-      expect(tuple([String, Number, 'my-value'])).to.be.instanceof(Tuple);
-    });
-    it('string', () => {
-      expect(string).to.be.equal(String);
-    });
-    it('number', () => {
-      expect(number).to.be.equal(Number);
-    });
-    it('boolean', () => {
-      expect(boolean).to.be.equal(Boolean);
-    });
-    it('symbol', () => {
-      expect(symbol).to.be.equal(Symbol);
+    describe('default api for patterns', () => {
+      it('any', () => {
+        expect(any).to.be.instanceof(Any);
+      });
+      it('iof', () => {
+        expect(iof(String)).to.be.instanceof(InstanceOf);
+      });
+      it('collection', () => {
+        expect(collection({})).to.be.instanceof(Collection);
+      });
+      it('collectionIncluding', () => {
+        expect(collectionIncluding({})).to.be.instanceof(CollectionIncluding);
+      });
+      it('collectionWithin', () => {
+        expect(collectionWithin({})).to.be.instanceof(CollectionWithin);
+      });
+      it('eq', () => {
+        expect(eq('my-value')).to.be.instanceof(Equals);
+      });
+      it('integer', () => {
+        expect(integer).to.be.equal(Integer);
+      });
+      it('list', () => {
+        expect(list([String])).to.be.instanceof(List);
+      });
+      it('maybe', () => {
+        expect(maybe('my-value')).to.be.instanceof(Maybe);
+      });
+      it('never', () => {
+        expect(never).to.be.instanceof(Never);
+      });
+      it('oneOf', () => {
+        expect(oneOf([String, Number])).to.be.instanceof(OneOf);
+      });
+      it('optional', () => {
+        expect(optional(String)).to.be.instanceof(Optional);
+      });
+      it('unknown', () => {
+        expect(unknown).to.be.instanceof(Unknown);
+      });
+      it('unrecognized', () => {
+        expect(unrecognized('my-unrecognized-value')).to.be.instanceof(
+          Unrecognized
+        );
+      });
+      it('voided', () => {
+        expect(voided).to.be.instanceof(Void);
+      });
+      it('where', () => {
+        expect(
+          where((): boolean => {
+            return true;
+          })
+        ).to.be.instanceof(Where);
+      });
+      it('tuple', () => {
+        expect(tuple([String, Number, 'my-value'])).to.be.instanceof(Tuple);
+      });
+      it('string', () => {
+        expect(string).to.be.equal(String);
+      });
+      it('number', () => {
+        expect(number).to.be.equal(Number);
+      });
+      it('boolean', () => {
+        expect(boolean).to.be.equal(Boolean);
+      });
+      it('symbol', () => {
+        expect(symbol).to.be.equal(Symbol);
+      });
     });
 
+    describe('PropTypes api for patterns', () => {
+      it('PropType.any', () => {
+        expect(PropTypes.any).to.be.instanceof(Any);
+      });
+
+      it('PropType.array', () => {
+        expect(PropTypes.array).to.be.equal(Array);
+      });
+
+      it('PropType.arrayOf', () => {
+        expect(PropTypes.arrayOf()).to.be.instanceof(List);
+      });
+
+      it('PropTypes.bool', () => {
+        expect(PropTypes.bool).to.be.equal(Boolean);
+      });
+
+      it('PropTypes.func', () => {
+        expect(PropTypes.func).to.be.equal(Function);
+      });
+
+      it('PropType.equal', () => {
+        expect(PropTypes.equal('my-value')).to.be.instanceof(Equals);
+      });
+
+      it('PropTypes.instanceOf', () => {
+        expect(PropTypes.instanceOf(String)).to.be.instanceof(InstanceOf);
+      });
+
+      it('PropTypes.integer', () => {
+        expect(PropTypes.integer).to.be.equal(Integer);
+      });
+
+      it('PropTypes.Integer', () => {
+        expect(PropTypes.Integer).to.be.equal(Integer);
+      });
+
+      it('PropTypes.interface', () => {
+        expect(PropTypes.interface({})).to.be.instanceof(Interface);
+      });
+
+      it('PropTypes.maybe', () => {
+        expect(PropTypes.maybe('my-value')).to.be.instanceof(Maybe);
+      });
+
+      it('PropTypes.never', () => {
+        expect(PropTypes.never).to.be.instanceof(Never);
+      });
+
+      it('PropTypes.number', () => {
+        expect(PropTypes.number).to.be.equal(Number);
+      });
+
+      it('PropTypes.object', () => {
+        expect(PropTypes.object).to.be.instanceof(Collection);
+      });
+
+      it('PropTypes.objectOf', () => {
+        expect(PropTypes.objectOf).to.be.instanceof(Collection);
+      });
+
+      it('PropTypes.oneOf', () => {
+        expect(PropTypes.oneOf([1, 'my-string'])).to.be.instanceof(OneOf);
+      });
+
+      it('PropTypes.oneOfType', () => {
+        expect(PropTypes.oneOfType([String, Number])).to.be.instanceof(OneOf);
+      });
+
+      it('PropTypes.shape', () => {
+        expect(PropTypes.shape({})).to.be.instanceof(Interface);
+      });
+
+      it('PropTypes.string', () => {
+        expect(PropTypes.string).to.be.equal(String);
+      });
+
+      it('PropTypes.symbol', () => {
+        expect(PropTypes.symbol).to.be.equal(Symbol);
+      });
+
+      it('PropTypes.tuple', () => {
+        expect(PropTypes.tuple([String, Number, 'my-value'])).to.be.instanceof(
+          Tuple
+        );
+      });
+
+      it('PropTypes.void', () => {
+        expect(PropTypes.void).to.be.instanceof(Void);
+      });
+
+      it('PropTypes.where', () => {
+        expect(
+          PropTypes.where((): boolean => {
+            return true;
+          })
+        ).to.be.instanceof(Where);
+      });
+    });
     it('propsOf', () => {
       class MyClass {}
       expect(propsOf(MyClass)).to.be.instanceof(PropsOf);
