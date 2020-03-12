@@ -8,7 +8,7 @@ import {
   isPatternClass,
   isPattern,
   isUtility,
-  isDefinable,
+  isDefined,
   isValidable,
   isInstanceOfExpectation,
   isSpecial,
@@ -217,19 +217,19 @@ describe(`helpers`, function() {
     });
   });
 
-  describe('isDefinable', () => {
+  describe('isDefined', () => {
     it('returns true for class constructors implementing @define decorator', () => {
       @define()
       class DefinableClass {}
 
-      expect(isDefinable(DefinableClass)).to.be.true;
+      expect(isDefined(DefinableClass)).to.be.true;
     });
 
     it('returns false for class constructors not implementing @define decorator', () => {
       class DefaultClass {}
 
-      expect(isDefinable(undefined)).to.be.false;
-      expect(isDefinable(DefaultClass)).to.be.false;
+      expect(isDefined(undefined)).to.be.false;
+      expect(isDefined(DefaultClass)).to.be.false;
     });
   });
 

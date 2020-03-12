@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Types as tsruntimeTypes } from 'tsruntime';
 import { define } from '../../../src/decorators/define';
 import 'reflect-metadata';
-import { isDefinable } from '../../../src/helpers';
+import { isDefined } from '../../../src/helpers';
 
 describe(`define`, function() {
   @define()
@@ -92,14 +92,14 @@ describe(`define`, function() {
     });
   });
 
-  describe('isDefinable helper', () => {
+  describe('isDefined helper', () => {
     it('returns true on class decorated with define decorator', () => {
-      expect(isDefinable(Parent)).to.be.true;
-      expect(isDefinable(Child)).to.be.true;
+      expect(isDefined(Parent)).to.be.true;
+      expect(isDefined(Child)).to.be.true;
     });
 
     it('returns false on class that are not decorated with define decorator', () => {
-      expect(isDefinable(NonDefinableClass)).to.be.false;
+      expect(isDefined(NonDefinableClass)).to.be.false;
     });
   });
 });

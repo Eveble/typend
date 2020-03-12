@@ -140,7 +140,7 @@ export function isUtility(arg: any): boolean {
  * @param ctor - Class constructor.
  * @returns Returns `true` if provided class is definable, else `false`.
  */
-export function isDefinable(ctor: any): boolean {
+export function isDefined(ctor: any): boolean {
   if (ctor === undefined) {
     return false;
   }

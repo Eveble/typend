@@ -4,7 +4,7 @@ import { isClass, getTypeName } from '@eveble/helpers';
 import { KINDS } from '../../../constants/literal-keys';
 import { types } from '../../../types';
 import { UndefinableClassError } from '../../../errors';
-import { getMatchingParentProto, isDefinable } from '../../../helpers';
+import { getMatchingParentProto, isDefined } from '../../../helpers';
 import {
   PROPERTIES_KEY,
   REFLECTION_KEY,
@@ -223,8 +223,9 @@ export class ClassConverter implements types.TypeConverter {
   ): Record<keyof any, any> {
     // Support 'classes' from 'polytype' for multi inheritance(mixin/traits etc.)
     const matcher = (evaluatedProto: types.Prototype): boolean => {
-      return isDefinable(evaluatedProto.constructor);
+      return isDefined(evaluatedProto.constructor);
     };
+
     const parentProto: types.Prototype | undefined = getMatchingParentProto(
       type.prototype,
       matcher
