@@ -12,6 +12,7 @@ import { types } from '../types';
  * @param proto - Prototype.
  * @param propertyKey - Property or method name(key) as a string.
  * @example
+ *```ts
  * class MyClass {
  *  name: string;
  *  @internal engine: Engine
@@ -19,6 +20,7 @@ import { types } from '../types';
  *  @internal
  *  MyMessage(message: MyMessage): void {}
  * }
+ * ```
  */
 export function internal(proto: types.Prototype, propertyKey: string): void {
   const target: any = proto.constructor;

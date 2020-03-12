@@ -13,8 +13,10 @@ import { types } from '../types';
  * @param args - Optional arguments that will be passed back to before/after hooks.
  * @returns Marked class as reflective.
  * @example
+ *```ts
  * define()
  * class MyType {}
+ * ```
  */
 export function define(...args: any[]): MarkReflective<types.ClassDecorator> {
   function reflectiveFn(

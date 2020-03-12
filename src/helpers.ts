@@ -16,6 +16,7 @@ import { VALIDATION_TYPE_KEY } from './constants/literal-keys';
  * @param definition - Definition from which resolvable path should be determined.
  * @returns Determined nearest resolvable path as a string.
  * @example
+ *```ts
  * const defWithPattern = {
  * foo: {
  *   baz: {
@@ -25,12 +26,13 @@ import { VALIDATION_TYPE_KEY } from './constants/literal-keys';
  *   },
  * },
  * getResolvablePath('foo.baz.properties', defWithPattern); // 'foo.baz'
- * @example
+ *
  * const defWithMissingProps = {
  * foo: {
  *   baz: {},
  * },
  * getResolvablePath('foo.baz.qux.quux', defWithMissingProps) // 'foo.baz'
+ *```
  */
 export function getResolvablePath(
   path: string,
