@@ -31,3 +31,12 @@ export class TypeConverterExists extends TypeError {
     super(`Converter for type '${type}' is already registered`);
   }
 }
+
+export class UndefinableClassError extends ExtendableError {
+  constructor(typeName) {
+    super(
+      `${typeName}: provided argument must be a class that implements '@define()' decorator`
+    );
+  }
+}
+
