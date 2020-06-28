@@ -210,6 +210,9 @@ const isInstanceOf = typend.isInstanceOf.bind(typend);
  * @returns Returns `true` if validation is successful, else throws.
  * @throws {ValidationError}
  * Thrown if the value does not match provided rule.
+ * @hidden
+ * @remarks
+ * Without hidden tag, Docusaurus is unable to render.
  */
 const check = createReflective((reflectedType: any) => {
   return <T>(value: any, isStrict?: boolean): boolean => {
@@ -225,6 +228,9 @@ const check = createReflective((reflectedType: any) => {
  * @param value - Value that needs to validated.
  * @param isStrict - Flag indicating that evaluation should be done in strict mode.
  * @returns Returns `true` if validation is successful, else `false`.
+ * @hidden
+ * @remarks
+ * Without hidden tag, Docusaurus is unable to render.
  */
 const is = createReflective((reflectedType: any) => {
   return <T>(value: any, isStrict?: boolean): boolean => {
@@ -239,6 +245,9 @@ const is = createReflective((reflectedType: any) => {
  * Validates if a value is a instance of expectation.
  * @param value - Value that needs to validated.
  * @returns Returns `true` if validation is successful, else `false`.
+ * @hidden
+ * @remarks
+ * Without hidden tag, Docusaurus is unable to render.
  */
 const instanceOf = createReflective((reflectedType: any) => {
   return <T>(value: any): boolean => {
@@ -252,6 +261,9 @@ const instanceOf = createReflective((reflectedType: any) => {
 /**
  * Converts TypeScript declaration to validable form.
  * @returns Returns converted TypeScript's declaration as validable form.
+ * @hidden
+ * @remarks
+ * Without hidden tag, Docusaurus is unable to render.
  */
 const convert = createReflective((reflectedType: any) => {
   return <T>(): any => {
@@ -262,6 +274,9 @@ const convert = createReflective((reflectedType: any) => {
 /**
  * Reflects TypeScript declaration to readable form.
  * @returns Returns reflected TypeScript's declaration as readable form.
+ * @hidden
+ * @remarks
+ * Without hidden tag, Docusaurus is unable to render.
  */
 const reflect = createReflective((reflectedType: any) => {
   return <T>(): any => {
