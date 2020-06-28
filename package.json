@@ -1,38 +1,45 @@
 {
   "name": "typend",
-  "version": "0.1.0",
-  "description": "TypeScript runtime validation",
+  "version": "0.0.0-development",
+  "description": "Runtime validation for TypeScript",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "author": {
+    "name": "Adam Desivi, Eveble",
+    "email": "eveble@eveble.com",
+    "url": "https://eveble.com"
+  },
+  "homepage": "https://eveble.github.io/typend/",
   "keywords": [
     "eveble",
-    "matchist",
+    "typend",
     "simplecheck",
     "check",
-    "Meteor",
+    "meteor",
     "variable",
     "instanceof",
     "instance",
     "evaluation",
     "matcher",
     "match",
-    "typescript"
+    "typescript",
+    "runtime",
+    "validator",
+    "validation"
   ],
-  "author": "Eveble <eveble@eveble.com> (https://eveble.com)",
-  "homepage": "https://eveble.com",
-  "bugs": "https://github.com/eveble/matchist/issues",
+  "bugs": "https://github.com/eveble/typend/issues",
   "license": "MIT",
   "engines": {
-    "node": ">= 13.0.x",
-    "npm": ">= 6.12.x"
+    "node": ">= 14.0.0",
+    "npm": ">= 6.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/eveble/matchist.git"
+    "url": "git://github.com/eveble/typend.git"
   },
   "dependencies": {
     "@eveble/helpers": "^0.2.1",
