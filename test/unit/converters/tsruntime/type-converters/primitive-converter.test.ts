@@ -3,7 +3,7 @@ import { reflect } from 'tsruntime';
 import { PrimitiveConverter } from '../../../../../src/converters/tsruntime/type-converters/primitive-converter';
 import { InstanceOf } from '../../../../../src/patterns/instance-of';
 
-describe(`PrimitiveConverter`, function() {
+describe(`PrimitiveConverter`, function () {
   let typeConverter: PrimitiveConverter;
 
   before(() => {

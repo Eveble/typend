@@ -13,7 +13,7 @@ import { Pattern } from '../../src/pattern';
 
 chai.use(sinonChai);
 
-describe(`Validator`, function() {
+describe(`Validator`, function () {
   class MyPattern extends Pattern implements types.Pattern {
     public static kind = 'MyValidator';
 

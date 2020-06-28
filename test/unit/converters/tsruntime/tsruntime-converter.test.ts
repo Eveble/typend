@@ -10,7 +10,7 @@ import { TypeConverterExists } from '../../../../src/errors';
 
 chai.use(sinonChai);
 
-describe(`TSRuntimeConverter`, function() {
+describe(`TSRuntimeConverter`, function () {
   let typeConverter: any;
 
   beforeEach(() => {

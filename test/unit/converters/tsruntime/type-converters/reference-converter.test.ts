@@ -8,7 +8,7 @@ import { types } from '../../../../../src/types';
 import { InstanceOf } from '../../../../../src/patterns/instance-of';
 import { KINDS } from '../../../../../src/constants/literal-keys';
 
-describe(`ReferenceConverter`, function() {
+describe(`ReferenceConverter`, function () {
   let converter: any;
   let typeConverter: ReferenceConverter;
 

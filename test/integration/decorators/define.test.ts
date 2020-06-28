@@ -4,7 +4,7 @@ import { define } from '../../../src/decorators/define';
 import 'reflect-metadata';
 import { isDefined } from '../../../src/helpers';
 
-describe(`define`, function() {
+describe(`define`, function () {
   @define()
   class Parent {
     key: string;

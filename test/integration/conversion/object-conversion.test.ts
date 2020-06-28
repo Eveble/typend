@@ -14,7 +14,7 @@ import { OneOf } from '../../../src/patterns/one-of';
 import { Tuple } from '../../../src/patterns/tuple';
 import { Interface } from '../../../src/patterns/interface';
 
-describe(`Object conversion`, function() {
+describe(`Object conversion`, function () {
   @define()
   class MyClass {
     key: string;

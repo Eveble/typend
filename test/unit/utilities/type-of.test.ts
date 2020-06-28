@@ -12,7 +12,7 @@ import { validable } from '../../../src/annotations/validable';
 import { Any } from '../../../src/patterns/any';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`TypeOf`, function() {
+describe(`TypeOf`, function () {
   let converter: any;
   let library: any;
   let describer: any;

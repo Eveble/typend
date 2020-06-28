@@ -9,7 +9,7 @@ import { KINDS } from '../../../../../src/constants/literal-keys';
 import { InstanceOf } from '../../../../../src/patterns/instance-of';
 import { Class } from '../../../../../src/patterns/class';
 
-describe(`TypeOfConverter`, function() {
+describe(`TypeOfConverter`, function () {
   @define()
   class MyClass {
     key: string;

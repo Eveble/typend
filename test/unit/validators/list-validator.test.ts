@@ -14,7 +14,7 @@ import {
 
 chai.use(sinonChai);
 
-describe(`ListValidator`, function() {
+describe(`ListValidator`, function () {
   let describer: any;
   let validator: any;
 

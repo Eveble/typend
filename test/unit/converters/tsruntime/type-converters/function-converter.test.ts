@@ -3,7 +3,7 @@ import { reflect } from 'tsruntime';
 import { FunctionConverter } from '../../../../../src/converters/tsruntime/type-converters/function-converter';
 import { InstanceOf } from '../../../../../src/patterns/instance-of';
 
-describe(`FunctionConverter`, function() {
+describe(`FunctionConverter`, function () {
   let typeConverter: FunctionConverter;
 
   before(() => {

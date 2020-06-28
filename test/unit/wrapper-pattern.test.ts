@@ -7,7 +7,7 @@ import { WrapperPattern } from '../../src/wrapper-pattern';
 
 chai.use(sinonChai);
 
-describe(`WrapperPattern`, function() {
+describe(`WrapperPattern`, function () {
   let describer: any;
 
   beforeEach(() => {

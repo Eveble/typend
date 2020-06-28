@@ -6,7 +6,7 @@ import { Pattern } from '../../src/pattern';
 
 chai.use(sinonChai);
 
-describe(`Pattern`, function() {
+describe(`Pattern`, function () {
   let describer: any;
 
   beforeEach(() => {

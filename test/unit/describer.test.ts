@@ -22,7 +22,7 @@ import { KINDS } from '../../src/constants/literal-keys';
 
 chai.use(sinonChai);
 
-describe(`Identifier`, function() {
+describe(`Identifier`, function () {
   let describer: any;
 
   before(() => {

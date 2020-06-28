@@ -8,7 +8,7 @@ import { InvalidTypeError } from '../../../src/errors';
 import { KINDS } from '../../../src/constants/literal-keys';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`Equals`, function() {
+describe(`Equals`, function () {
   let describer: any;
 
   beforeEach(() => {

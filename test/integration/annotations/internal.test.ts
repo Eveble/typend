@@ -7,7 +7,7 @@ import {
 } from '../../../src/constants/metadata-keys';
 import { types } from '../../../src/types';
 
-describe(`internal`, function() {
+describe(`internal`, function () {
   class Parent {
     parent: string;
 

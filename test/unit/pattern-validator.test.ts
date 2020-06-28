@@ -6,7 +6,7 @@ import { PatternValidator } from '../../src/pattern-validator';
 
 chai.use(sinonChai);
 
-describe(`PatternValidator`, function() {
+describe(`PatternValidator`, function () {
   let describer: any;
 
   beforeEach(() => {

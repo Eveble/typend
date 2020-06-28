@@ -7,7 +7,7 @@ import { Pattern } from '../../../src/pattern';
 import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-describe(`CollectionWithin`, function() {
+describe(`CollectionWithin`, function () {
   let describer: any;
 
   beforeEach(() => {

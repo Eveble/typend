@@ -22,7 +22,7 @@ import { InstanceOf } from '../../src/patterns/instance-of';
 import { Interface } from '../../src/patterns/interface';
 import { VALIDATION_TYPE_KEY } from '../../src/constants/literal-keys';
 
-describe(`helpers`, function() {
+describe(`helpers`, function () {
   describe('getResolvablePath', () => {
     it('returns path to nearest pattern node by removing nested Type pattern properties structure from path segments', () => {
       const props: Record<string, any> = {

@@ -14,7 +14,7 @@ import { types } from '../../../src/types';
 
 chai.use(sinonChai);
 
-describe(`CollectionIncludingValidator`, function() {
+describe(`CollectionIncludingValidator`, function () {
   let describer: any;
   let validator: any;
 

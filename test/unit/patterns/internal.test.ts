@@ -7,7 +7,7 @@ import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`Internal`, function() {
+describe(`Internal`, function () {
   let describer: any;
 
   beforeEach(() => {

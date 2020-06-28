@@ -5,7 +5,7 @@ import { WhereValidator } from '../../../src/validators/where-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
 import { ValidationError } from '../../../src/errors';
 
-describe(`Where`, function() {
+describe(`Where`, function () {
   class ParentClass {
     public value: any;
 

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { reflect } from 'tsruntime';
 import { NilConverter } from '../../../../../src/converters/tsruntime/type-converters/nil-converter';
 
-describe(`NilConverter`, function() {
+describe(`NilConverter`, function () {
   let typeConverter: NilConverter;
 
   before(() => {

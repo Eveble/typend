@@ -5,7 +5,7 @@ import { Any } from '../../../../../src/patterns/any';
 import { Never } from '../../../../../src/patterns/never';
 import { Void } from '../../../../../src/patterns/void';
 
-describe(`NativeConverter`, function() {
+describe(`NativeConverter`, function () {
   let typeConverter: NativeConverter;
 
   before(() => {

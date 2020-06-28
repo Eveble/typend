@@ -17,7 +17,7 @@ import { Collection } from '../../../src/patterns/collection';
 
 chai.use(sinonChai);
 
-describe(`Class conversion`, function() {
+describe(`Class conversion`, function () {
   @define()
   class MyClass {
     key: string;

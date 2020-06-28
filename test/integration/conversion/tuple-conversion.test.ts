@@ -10,7 +10,7 @@ import { Void } from '../../../src/patterns/void';
 import { Never } from '../../../src/patterns/never';
 import { Collection } from '../../../src/patterns/collection';
 
-describe(`Tuple conversion`, function() {
+describe(`Tuple conversion`, function () {
   type MyType = {
     first: string;
   };

@@ -8,7 +8,7 @@ import { Any } from '../../../src/patterns/any';
 import { Collection } from '../../../src/patterns/collection';
 import { define } from '../../../src/decorators/define';
 
-describe(`Array conversion`, function() {
+describe(`Array conversion`, function () {
   @define()
   class MyClass {
     key: string;

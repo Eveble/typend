@@ -8,7 +8,7 @@ import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`Where`, function() {
+describe(`Where`, function () {
   let describer: any;
 
   beforeEach(() => {

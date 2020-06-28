@@ -9,7 +9,7 @@ import { Collection } from '../../../src/patterns/collection';
 import { Class } from '../../../src/patterns/class';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`PropsOf`, function() {
+describe(`PropsOf`, function () {
   let converter: any;
   let library: any;
   let describer: any;

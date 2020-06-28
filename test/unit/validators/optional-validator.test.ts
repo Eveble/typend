@@ -9,7 +9,7 @@ import { ValidationError } from '../../../src/errors';
 
 chai.use(sinonChai);
 
-describe(`Optional`, function() {
+describe(`Optional`, function () {
   let validator: any;
 
   beforeEach(() => {

@@ -8,7 +8,7 @@ import { Tuple } from '../../../../../src/patterns/tuple';
 import { KINDS } from '../../../../../src/constants/literal-keys';
 import { InstanceOf } from '../../../../../src/patterns/instance-of';
 
-describe(`TupleConverter`, function() {
+describe(`TupleConverter`, function () {
   let converter: any;
   let typeConverter: TupleConverter;
 

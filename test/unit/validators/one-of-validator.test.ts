@@ -10,7 +10,7 @@ import { ValidationError, NotAMemberError } from '../../../src/errors';
 
 chai.use(sinonChai);
 
-describe(`OneOf`, function() {
+describe(`OneOf`, function () {
   let describer: any;
   let validator: any;
 

@@ -8,7 +8,7 @@ import { types } from '../../../../../src/types';
 import { KINDS } from '../../../../../src/constants/literal-keys';
 import { InstanceOf } from '../../../../../src/patterns/instance-of';
 
-describe(`ArrayConverter`, function() {
+describe(`ArrayConverter`, function () {
   let converter: any;
   let typeConverter: ArrayConverter;
 

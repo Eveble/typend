@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Description, DescriptionList } from '../../src/description';
 
-describe(`Description`, function() {
+describe(`Description`, function () {
   describe(`construction`, () => {
     it(`takes a value as a string, type as a string and message as a string and assigns them`, () => {
       const value = 'my-value';
@@ -39,7 +39,7 @@ describe(`Description`, function() {
   });
 });
 
-describe(`DescriptionList`, function() {
+describe(`DescriptionList`, function () {
   describe(`construction`, () => {
     it(`initializes with description list as empty array`, () => {
       const list = new DescriptionList();

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { validable } from '../../../src/annotations/validable';
 import { isValidable } from '../../../src/helpers';
 
-describe(`validable`, function() {
+describe(`validable`, function () {
   @validable(false)
   class Parent {}
 

@@ -16,7 +16,7 @@ import { InstanceOf } from '../../../../../src/patterns/instance-of';
 
 chai.use(sinonChai);
 
-describe(`ClassConverter`, function() {
+describe(`ClassConverter`, function () {
   let converter: any;
   let objConverter: any;
   let typeConverter: ClassConverter;

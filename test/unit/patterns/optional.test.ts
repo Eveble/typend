@@ -9,7 +9,7 @@ import { KINDS } from '../../../src/constants/literal-keys';
 
 chai.use(sinonChai);
 
-describe(`Optional`, function() {
+describe(`Optional`, function () {
   let describer: any;
 
   beforeEach(() => {

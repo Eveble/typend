@@ -9,7 +9,7 @@ import { InstanceOf } from '../../../../../src/patterns/instance-of';
 import { KINDS } from '../../../../../src/constants/literal-keys';
 import { Interface } from '../../../../../src/patterns/interface';
 
-describe(`ObjectConverter`, function() {
+describe(`ObjectConverter`, function () {
   let converter: any;
   let classConverter: any;
   let typeConverter: ObjectConverter;

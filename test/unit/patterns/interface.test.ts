@@ -8,7 +8,7 @@ import { types } from '../../../src/types';
 import { Collection } from '../../../src/patterns/collection';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-describe(`Interface`, function() {
+describe(`Interface`, function () {
   let converter: any;
   let library: any;
   let describer: any;

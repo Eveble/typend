@@ -3,7 +3,7 @@ import { Unknown } from '../../../src/patterns/unknown';
 import { Pattern } from '../../../src/pattern';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-describe(`Unknown`, function() {
+describe(`Unknown`, function () {
   it(`extends Pattern`, () => {
     expect(Unknown.prototype).to.instanceof(Pattern);
   });

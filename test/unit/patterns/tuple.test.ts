@@ -9,7 +9,7 @@ import { OneOf } from '../../../src/patterns/one-of';
 import { KINDS } from '../../../src/constants/literal-keys';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`Tuple`, function() {
+describe(`Tuple`, function () {
   let describer: any;
 
   beforeEach(() => {

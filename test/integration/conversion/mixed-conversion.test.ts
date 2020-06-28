@@ -19,7 +19,7 @@ import { $PropsOf } from '../../../src/utility-types';
 import { Class } from '../../../src/patterns/class';
 import { Interface } from '../../../src/patterns/interface';
 
-describe(`Mixed conversion`, function() {
+describe(`Mixed conversion`, function () {
   type optional<T> = T | undefined;
 
   @define()

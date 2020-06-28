@@ -9,7 +9,7 @@ import { Equals } from '../../../src/patterns/equals';
 import { Collection } from '../../../src/patterns/collection';
 import { List } from '../../../src/patterns/list';
 
-describe(`Union conversion`, function() {
+describe(`Union conversion`, function () {
   type MyType = {
     first: string;
   };

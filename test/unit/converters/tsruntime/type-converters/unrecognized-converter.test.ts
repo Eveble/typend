@@ -3,7 +3,7 @@ import { reflect } from 'tsruntime';
 import { UnrecognizedConverter } from '../../../../../src/converters/tsruntime/type-converters/unrecognized-converter';
 import { Unrecognized } from '../../../../../src/patterns/unrecognized';
 
-describe(`UnrecognizedConverter`, function() {
+describe(`UnrecognizedConverter`, function () {
   let typeConverter: UnrecognizedConverter;
 
   before(() => {

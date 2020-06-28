@@ -7,7 +7,7 @@ import { Class } from '../../../src/patterns/class';
 import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-describe(`Class`, function() {
+describe(`Class`, function () {
   let describer: any;
 
   beforeEach(() => {

@@ -5,7 +5,7 @@ import { Class } from '../../../../src/patterns/class';
 import { Collection } from '../../../../src/patterns/collection';
 import { Internal } from '../../../../src/patterns/internal';
 
-describe(`InternalPropsTransformer`, function() {
+describe(`InternalPropsTransformer`, function () {
   class MyClassWithInternal {
     exposedKey: string;
 

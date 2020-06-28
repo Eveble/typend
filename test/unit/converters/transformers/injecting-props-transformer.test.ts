@@ -5,7 +5,7 @@ import { Class } from '../../../../src/patterns/class';
 import { Collection } from '../../../../src/patterns/collection';
 import { INJECTABLE_PROPERTIES_KEY } from '../../../../src/constants/metadata-keys';
 
-describe(`InjectingPropsTransformer`, function() {
+describe(`InjectingPropsTransformer`, function () {
   class MyClassWithInjected {
     defined: string;
   }

@@ -14,7 +14,7 @@ import {
 
 chai.use(sinonChai);
 
-describe(`TupleValidator`, function() {
+describe(`TupleValidator`, function () {
   let describer: any;
   let validator: any;
 

@@ -9,7 +9,7 @@ import { Optional } from '../../../../../src/patterns/optional';
 import { KINDS } from '../../../../../src/constants/literal-keys';
 import { InstanceOf } from '../../../../../src/patterns/instance-of';
 
-describe(`UnionConverter`, function() {
+describe(`UnionConverter`, function () {
   let converter: any;
   let typeConverter: UnionConverter;
 

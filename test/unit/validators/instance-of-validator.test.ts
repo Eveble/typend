@@ -11,7 +11,7 @@ import { UnmatchedTypeError, InvalidTypeError } from '../../../src/errors';
 
 chai.use(sinonChai);
 
-describe(`InstanceOfValidator`, function() {
+describe(`InstanceOfValidator`, function () {
   let describer: any;
 
   beforeEach(() => {

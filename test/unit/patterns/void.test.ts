@@ -3,7 +3,7 @@ import { Void } from '../../../src/patterns/void';
 import { Pattern } from '../../../src/pattern';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-describe(`Void`, function() {
+describe(`Void`, function () {
   it(`extends Pattern`, () => {
     expect(Void.prototype).to.instanceof(Pattern);
   });

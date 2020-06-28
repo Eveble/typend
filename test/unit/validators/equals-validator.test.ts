@@ -10,7 +10,7 @@ import { InvalidTypeError, UnequalValueError } from '../../../src/errors';
 
 chai.use(sinonChai);
 
-describe(`EqualsValidator`, function() {
+describe(`EqualsValidator`, function () {
   let describer: any;
 
   beforeEach(() => {
