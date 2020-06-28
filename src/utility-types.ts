@@ -15,14 +15,14 @@ FALLOW the rules:
 3. CANNOT use any other characters(?) beside underscore and alphanumeric(?).
 4. CANNOT use imported KEYS from other files as symbols or strings do to compilation errors:
 
-import { VALIDATION_TYPE_PROPS_OF_KEY } from './constants/metadata-keys';
+import { VALIDATION_TYPE_PROPS_OF_KEY } from './constants/literal-keys';
 import { SPECIAL_KEY } from './constants/special_keys';
 export type propsOf<T> = {
   [VALIDATION_TYPE_PROPS_OF_KEY]: T;
 };
 
-Would result in: ReferenceError: metadata_keys_1 is not defined
-^ 'metadata_keys_1' - this references the name of the file.
+Would result in: ReferenceError: literal_keys_1 is not defined
+^ 'literal_keys_1' - this references the name of the file.
 */
 export type $PropsOf<T> = {
   __eveble_validation: KINDS.PROPERTIES_OF;

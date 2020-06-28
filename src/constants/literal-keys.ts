@@ -36,3 +36,4 @@ export enum KINDS {
 
 export const VALIDATION_TYPE_KEY = '__eveble_validation';
 export const VALIDATION_PAYLOAD_KEY = '__eveble_payload';
+export const VALIDATION_TYPE_PROPS_OF_KEY = '__eveble_validation_type_props_of';

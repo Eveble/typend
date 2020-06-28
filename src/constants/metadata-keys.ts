@@ -24,9 +24,6 @@ export const PATTERN_KEY: unique symbol = Symbol('eveble:pattern-kind');
 
 export const VALIDATION_KEY: unique symbol = Symbol('eveble:flags:validation');
 
-export const VALIDATION_TYPE_PROPS_OF_KEY: '__eveble_validation_type_props_of' =
-  '__eveble_validation_type_props_of';
-
 export const INTERFACE_NAME_KEY: unique symbol = Symbol(
   'eveble:interface-name'
 );
