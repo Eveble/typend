@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Types as tsrTypes } from 'tsruntime';
-import { has } from 'lodash';
+import { has, isPlainObject } from 'lodash';
 import { getPrototypeListOf } from 'polytype';
 import { isClass, isConstructor } from '@eveble/helpers';
 import { DEFINABLE_KEY, VALIDATION_KEY } from './constants/metadata-keys';
@@ -9,6 +9,7 @@ import { Class } from './patterns/class';
 import { InstanceOf } from './patterns/instance-of';
 import { Interface } from './patterns/interface';
 import { VALIDATION_TYPE_KEY } from './constants/literal-keys';
+import { Collection } from './patterns/collection';
 
 /**
  * Returns resolvable path to nearest node from deeply-nested object.
@@ -174,4 +175,13 @@ export function isSpecial(reflectedType: tsrTypes.ReflectedType): boolean {
   >;
 
   return props?.[VALIDATION_TYPE_KEY] !== undefined;
+}
+
+/**
+ * Evaluates if provided argument is a plain record(plain object or `Collection`).
+ * @param arg - Evaluated argument.
+ * @returns Returns `true` if argument is an record(literal object or `Collection` instance), else `false`.
+ */
+export function isPlainRecord(arg: any): boolean {
+  return isPlainObject(arg) || arg instanceof Collection;
 }

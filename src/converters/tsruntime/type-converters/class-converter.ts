@@ -1,10 +1,15 @@
 import 'reflect-metadata';
 import { Types as tsrTypes, getClassType } from 'tsruntime';
 import { isClass, getTypeName } from '@eveble/helpers';
+import merge from 'deepmerge';
 import { KINDS } from '../../../constants/literal-keys';
 import { types } from '../../../types';
 import { UndefinableClassError } from '../../../errors';
-import { getMatchingParentProto, isDefined } from '../../../helpers';
+import {
+  getMatchingParentProto,
+  isDefined,
+  isPlainRecord,
+} from '../../../helpers';
 import {
   PROPERTIES_KEY,
   REFLECTION_KEY,
@@ -124,10 +129,9 @@ export class ClassConverter implements types.TypeConverter {
         ? objConverter.convert(reflectedClass, converter)
         : objConverter.reflect(reflectedClass, converter);
 
-      properties = {
-        ...parentProperties,
-        ...classProperties,
-      };
+      properties = merge(parentProperties, classProperties, {
+        isMergeableObject: isPlainRecord,
+      });
       properties = isConverted ? new Collection(properties) : properties;
     }
     return properties;
