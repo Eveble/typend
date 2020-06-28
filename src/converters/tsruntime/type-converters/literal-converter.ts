@@ -32,11 +32,12 @@ export class LiteralConverter implements types.TypeConverter {
     let value: string | number | boolean;
     if (reflectedType.kind === 7) {
       value = false;
-    } else if (reflectedType.kind === 8) {
+    } else if ((reflectedType as any).kind === 8) {
       value = true;
     } else {
-      value = (reflectedType as tsruntimeTypes.StringLiteralType &
-        tsruntimeTypes.NumberLiteralType).value;
+      value = (reflectedType as
+        | tsruntimeTypes.StringLiteralType
+        | tsruntimeTypes.NumberLiteralType).value;
     }
     return value;
   }

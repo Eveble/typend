@@ -39,8 +39,7 @@ export class PrimitiveConverter implements types.TypeConverter {
    */
   public reflect(
     reflectedType: tsruntimeTypes.ReflectedType
-    // eslint-disable-next-line @typescript-eslint/ban-types
-  ): String | Number | Boolean | Symbol {
+  ): string | number | boolean | symbol {
     return PrimitiveConverter.MAPPINGS[reflectedType.kind];
   }
 }

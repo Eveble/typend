@@ -16,7 +16,7 @@ export class FunctionConverter implements types.TypeConverter {
       return referenceType.type === Function && !isClass(referenceType.type);
     }
     // Function
-    return reflectedType.kind === 21;
+    return (reflectedType as tsruntimeTypes.FunctionType).kind === 21;
   }
 
   /**
