@@ -46,7 +46,7 @@ export function define(...args: any[]): MarkReflective<types.ClassDecorator> {
  * @param target - Class constructor.
  * @param args - Optional arguments that were passed back to define decorator.
  */
-define.beforeDefine = function(target: any, ...args: any[]): void {
+define.beforeDefine = function (target: any, ...args: any[]): void {
   return target && args ? undefined : undefined;
 };
 
@@ -55,6 +55,6 @@ define.beforeDefine = function(target: any, ...args: any[]): void {
  * @param target - Class constructor.
  * @param args - Optional arguments that were passed back to define decorator.
  */
-define.afterDefine = function(target: any, ...args: any[]): void {
+define.afterDefine = function (target: any, ...args: any[]): void {
   return target && args ? undefined : undefined;
 };
