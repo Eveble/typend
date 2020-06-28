@@ -14,7 +14,6 @@ export abstract class WrapperPattern extends Array {
    * Creates an instance of a WrapperPattern.
    * @param expectations - Expectations that will be assigned to pattern container.
    */
-  // eslint-disable-next-line no-unused-vars
   constructor(...expectations: any[]) {
     // Can't put negative numbers on construction.
     // 👏👏 -Infinity/10, meme review.
