@@ -47,10 +47,10 @@
     "deepmerge": "^4.2.2",
     "es6-error": "^4.1.1",
     "lodash": "^4.17.15",
-    "polytype": "^0.9.1",
     "reflect-metadata": "^0.1.13",
     "tsruntime": "^3.0.0-beta.1",
     "ttypescript": "^1.5.10"
+    "polytype": "^0.9.4"
   },
   "devDependencies": {
     "@eveble/testing-helpers": "0.2.2",
