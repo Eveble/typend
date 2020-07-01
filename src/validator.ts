@@ -21,7 +21,7 @@ export class Validator implements types.Validator {
   }
 
   /**
-   * Validates if a value matches a expectation or throws.
+   * Validates if a value matches an expectation or throws.
    * @param value - Value that needs to validated.
    * @param expectation - Explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated.
    * @param isStrict - Flag indicating that evaluation should be done in strict mode.
@@ -76,7 +76,7 @@ export class Validator implements types.Validator {
   }
 
   /**
-   * Validates if a value matches a expectation.
+   * Validates if a value matches an expectation.
    * @param value - Value that needs to validated.
    * @param expectation - Explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated.
    * @param isStrict - Optional flag indicating that evaluation should be done in strict mode.
@@ -129,7 +129,7 @@ export class Validator implements types.Validator {
 
   /**
    * Overrides already existing validator by mapping on delegator.
-   * @param kind - Identifier for which type, `TypeValidator` instance is mapped.
+   * @param kind - Identifier for which type, `PatternValidator` instance is mapped.
    * @param validator - Validator for registration.
    */
   public overrideValidator(
@@ -141,7 +141,7 @@ export class Validator implements types.Validator {
 
   /**
    * Returns validator by mapping.
-   * @param kind - Identifier for which type, `TypeValidator` instance is mapped.
+   * @param kind - Identifier for which type, `PatternValidator` instance is mapped.
    * @returns Registered validator instance, else undefined.
    */
   public getValidator(kind: string): types.PatternValidator | undefined {
@@ -150,7 +150,7 @@ export class Validator implements types.Validator {
 
   /**
    * Returns validator by mapping or throws.
-   * @param kind - Identifier for which type, `TypeValidator` instance is mapped.
+   * @param kind - Identifier for which type, `PatternValidator` instance is mapped.
    * @returns Registered validator instance, else throws.
    * @throws {PatternValidatorNotFoundError}
    * Thrown if pattern validator for kind does not existing on validator.
@@ -164,7 +164,7 @@ export class Validator implements types.Validator {
 
   /**
    * Evaluates if validator is already registered by mapping id.
-   * @param kind - Identifier for which type, `TypeValidator` instance is mapped.
+   * @param kind - Identifier for which type, `PatternValidator` instance is mapped.
    * @returns Returns true if validator is registered, else false.
    */
   public hasValidator(kind: string): boolean {
@@ -173,7 +173,7 @@ export class Validator implements types.Validator {
 
   /**
    * Removes validator by mapping id.
-   * @param kind - Identifier for which type, `TypeValidator` instance is mapped.
+   * @param kind - Identifier for which type, `PatternValidator` instance is mapped.
    */
   public removeValidator(kind: string): void {
     this.validators.delete(kind);
