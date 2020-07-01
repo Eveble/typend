@@ -139,22 +139,22 @@ module.exports = class ConfigGenerator {
    */
   listFilesInDirRecursive(dir, list = {}, subDir = undefined) {
     const files = fs.readdirSync(dir);
-
     files.forEach((file) => {
-      const filePath = path.join(dir, file);
-      const fileStat = fs.lstatSync(filePath);
-
-      if (fileStat.isDirectory()) {
-        const subDir = file;
-        if (list[subDir] === undefined) {
-          list[subDir] = [];
-        }
-        this.listFilesInDirRecursive(filePath, list, subDir);
-      } else {
-        if (subDir !== undefined) {
-          list[subDir].push(this.normalizePathForDocusaurusConfig(filePath));
+      if (/^\./.test(file) !== true) {
+        const filePath = path.join(dir, file);
+        const fileStat = fs.lstatSync(filePath);
+        if (fileStat.isDirectory()) {
+          const dir = file;
+          if (list[dir] === undefined) {
+            list[dir] = [];
+          }
+          this.listFilesInDirRecursive(filePath, list, dir);
         } else {
-          list.push(this.normalizePathForDocusaurusConfig(filePath));
+          if (subDir !== undefined) {
+            list[subDir].push(this.normalizePathForDocusaurusConfig(filePath));
+          } else {
+            list.push(this.normalizePathForDocusaurusConfig(filePath));
+          }
         }
       }
     });
