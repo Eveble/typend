@@ -26,3 +26,7 @@ sidebar_label: "Stringifiable"
 ▸ **toString**(): *string*
 
 **Returns:** *string*
+
+▸ **toString**(): *string*
+
+**Returns:** *string*

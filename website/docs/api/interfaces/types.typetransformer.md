@@ -8,6 +8,8 @@ sidebar_label: "TypeTransformer"
 
 * [Transformer](types.transformer.md)
 
+* Transformer
+
   ↳ **TypeTransformer**
 
 ## Implemented by
@@ -39,6 +41,17 @@ Name | Type |
 
 **Returns:** *boolean*
 
+▸ **canTransform**(`type`: [Type](../modules/types.md#type), ...`args`: any[]): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`type` | [Type](../modules/types.md#type) |
+`...args` | any[] |
+
+**Returns:** *boolean*
+
 ___
 
 ###  transform
@@ -46,6 +59,17 @@ ___
 ▸ **transform**(`type`: [Type](../modules/types.md#type), ...`args`: any[]): *[Type](../modules/types.md#type)*
 
 *Overrides [Transformer](types.transformer.md).[transform](types.transformer.md#transform)*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`type` | [Type](../modules/types.md#type) |
+`...args` | any[] |
+
+**Returns:** *[Type](../modules/types.md#type)*
+
+▸ **transform**(`type`: [Type](../modules/types.md#type), ...`args`: any[]): *[Type](../modules/types.md#type)*
 
 **Parameters:**
 

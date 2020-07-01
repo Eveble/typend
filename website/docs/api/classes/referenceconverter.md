@@ -11,6 +11,7 @@ sidebar_label: "ReferenceConverter"
 ## Implements
 
 * [TypeConverter](../interfaces/types.typeconverter.md)
+* TypeConverter
 
 ## Index
 

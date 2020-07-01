@@ -11,6 +11,7 @@ sidebar_label: "Validator"
 ## Implements
 
 * [Validator](../interfaces/types.validator.md)
+* Validator
 
 ## Index
 
@@ -41,6 +42,7 @@ sidebar_label: "Validator"
 
 \+ **new Validator**(`validators?`: Map‹string, [PatternValidator](../interfaces/types.patternvalidator.md)›): *[Validator](validator.md)*
 
+Creates an instance of Validator.
 Creates an instance of Validator.
 
 **Parameters:**
@@ -93,7 +95,7 @@ Returns validator by mapping.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`kind` | string | Identifier for which type, `TypeValidator` instance is mapped. |
+`kind` | string | Identifier for which type, `PatternValidator` instance is mapped. |
 
 **Returns:** *[PatternValidator](../interfaces/types.patternvalidator.md) | undefined*
 
@@ -116,7 +118,7 @@ Thrown if pattern validator for kind does not existing on validator.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`kind` | string | Identifier for which type, `TypeValidator` instance is mapped. |
+`kind` | string | Identifier for which type, `PatternValidator` instance is mapped. |
 
 **Returns:** *[PatternValidator](../interfaces/types.patternvalidator.md)*
 
@@ -150,7 +152,7 @@ Evaluates if validator is already registered by mapping id.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`kind` | string | Identifier for which type, `TypeValidator` instance is mapped. |
+`kind` | string | Identifier for which type, `PatternValidator` instance is mapped. |
 
 **Returns:** *boolean*
 
@@ -181,19 +183,19 @@ ___
 
 ###  isValid
 
-▸ **isValid**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation), `isStrict`: boolean): *boolean*
+▸ **isValid**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation), `isStrict?`: boolean): *boolean*
 
 *Implementation of [Validator](../interfaces/types.validator.md)*
 
-Validates if a value matches a expectation.
+Validates if a value matches an expectation.
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`value` | any | - | Value that needs to validated. |
-`expectation` | [Expectation](../modules/types.md#expectation) | - | Explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated. |
-`isStrict` | boolean | true | Optional flag indicating that evaluation should be done in strict mode. |
+Name | Type | Description |
+------ | ------ | ------ |
+`value` | any | Value that needs to validated. |
+`expectation` | [Expectation](../modules/types.md#expectation) | Explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated. |
+`isStrict?` | boolean | Optional flag indicating that evaluation should be done in strict mode. |
 
 **Returns:** *boolean*
 
@@ -213,7 +215,7 @@ Overrides already existing validator by mapping on delegator.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`kind` | string | Identifier for which type, `TypeValidator` instance is mapped. |
+`kind` | string | Identifier for which type, `PatternValidator` instance is mapped. |
 `validator` | [PatternValidator](../interfaces/types.patternvalidator.md) | Validator for registration.  |
 
 **Returns:** *void*
@@ -222,7 +224,7 @@ ___
 
 ###  registerValidator
 
-▸ **registerValidator**(`kind`: string, `validator`: [PatternValidator](../interfaces/types.patternvalidator.md), `shouldOverride`: boolean): *void*
+▸ **registerValidator**(`kind`: string, `validator`: [PatternValidator](../interfaces/types.patternvalidator.md), `shouldOverride?`: boolean): *void*
 
 *Implementation of [Validator](../interfaces/types.validator.md)*
 
@@ -233,11 +235,11 @@ Thrown if mapping would overridden on delegator without explicit call.
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`kind` | string | - | Id for which mapping will be created. |
-`validator` | [PatternValidator](../interfaces/types.patternvalidator.md) | - | Validator for registration. |
-`shouldOverride` | boolean | false | Optional flag indicating that mapping should be overridden if exist. |
+Name | Type | Description |
+------ | ------ | ------ |
+`kind` | string | Id for which mapping will be created. |
+`validator` | [PatternValidator](../interfaces/types.patternvalidator.md) | Validator for registration. |
+`shouldOverride?` | boolean | Optional flag indicating that mapping should be overridden if exist. |
 
 **Returns:** *void*
 
@@ -255,7 +257,7 @@ Removes validator by mapping id.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`kind` | string | Identifier for which type, `TypeValidator` instance is mapped.  |
+`kind` | string | Identifier for which type, `PatternValidator` instance is mapped.  |
 
 **Returns:** *void*
 
@@ -299,11 +301,11 @@ ___
 
 ###  validate
 
-▸ **validate**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation), `isStrict`: boolean): *boolean*
+▸ **validate**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation), `isStrict?`: boolean): *boolean*
 
 *Implementation of [Validator](../interfaces/types.validator.md)*
 
-Validates if a value matches a expectation or throws.
+Validates if a value matches an expectation or throws.
 
 **`remarks`** 
 Current implementation uses isStrict to differentiate strict validator from the loose one
@@ -322,11 +324,11 @@ Thrown if the value can't be validated by any of registered validators.
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`value` | any | - | Value that needs to validated. |
-`expectation` | [Expectation](../modules/types.md#expectation) | - | Explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated. |
-`isStrict` | boolean | true | Flag indicating that evaluation should be done in strict mode. |
+Name | Type | Description |
+------ | ------ | ------ |
+`value` | any | Value that needs to validated. |
+`expectation` | [Expectation](../modules/types.md#expectation) | Explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated. |
+`isStrict?` | boolean | Flag indicating that evaluation should be done in strict mode. |
 
 **Returns:** *boolean*
 

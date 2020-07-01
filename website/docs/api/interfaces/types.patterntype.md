@@ -38,11 +38,21 @@ Name | Type |
 
 **Returns:** *[Pattern](types.pattern.md)*
 
+\+ **new PatternType**(`arg`: any): *Pattern*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`arg` | any |
+
+**Returns:** *Pattern*
+
 ## Properties
 
 ###  describer
 
-• **describer**: *[Describer](types.describer.md)*
+• **describer**: *Describer*
 
 ___
 
@@ -58,6 +68,10 @@ ___
 
 **Returns:** *[Describer](types.describer.md)*
 
+▸ **getDescriber**(): *Describer*
+
+**Returns:** *Describer*
+
 ___
 
 ###  setDescriber
@@ -69,5 +83,15 @@ ___
 Name | Type |
 ------ | ------ |
 `describer` | [Describer](types.describer.md) |
+
+**Returns:** *void*
+
+▸ **setDescriber**(`describer`: Describer): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`describer` | Describer |
 
 **Returns:** *void*

@@ -11,6 +11,7 @@ sidebar_label: "CompactDescriber"
 ## Implements
 
 * [TypeDescriber](../interfaces/types.typedescriber.md)
+* TypeDescriber
 
 ## Index
 
@@ -26,20 +27,21 @@ sidebar_label: "CompactDescriber"
 
 ###  constructor
 
-\+ **new CompactDescriber**(`options`: object): *[CompactDescriber](compactdescriber.md)*
+\+ **new CompactDescriber**(`options?`: object): *[CompactDescriber](compactdescriber.md)*
 
+Creates an instance of CompactDescriber.
 Creates an instance of CompactDescriber.
 
 **Parameters:**
 
-▪`Default value`  **options**: *object*= { compact: true, colors: false }
+▪`Optional`  **options**: *object*
 
 Options object that can be passed to Node's inspect util.
 
-Name | Type | Default |
------- | ------ | ------ |
-`colors` | boolean | false |
-`compact` | boolean | true |
+Name | Type |
+------ | ------ |
+`colors` | boolean |
+`compact` | boolean |
 
 **Returns:** *[CompactDescriber](compactdescriber.md)*
 

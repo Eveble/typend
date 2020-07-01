@@ -4,15 +4,65 @@ title: "CollectionWithin"
 sidebar_label: "CollectionWithin"
 ---
 
+Validates if value matches an Object with expected keys and values matching the
+given expectations. The value may also contain other keys with arbitrary values not
+defined in pattern(equivalent of Meteor's `Match.ObjectIncluding`).
+
+It also can omit nested  Object properties(useful for building up configuration a
+like objects).
+
+**`returns`** Returns true if value is matching explicit `CollectionWithin` pattern even
+on nested missing object properties, else throws.
+
+**`example`** 
+```ts
+import { expect } from 'chai';
+import {
+ validate,
+ CollectionWithin,
+ ValidationError,
+} from 'typend';
+
+const expectation = {
+  included: {
+    foo: 'foo',
+  },
+  omitted: {
+    bar: 'bar',
+  },
+};
+
+expect(
+  validate(
+    { included: { foo: 'foo' }, omitted: { bar: 'bar' } },
+    new CollectionWithin(expectation)
+  )
+).to.be.true;
+
+expect(
+  validate({ included: { foo: 'foo' } }, new CollectionWithin(expectation))
+).to.be.true;
+
+expect(() =>
+  validate(
+    { included: { foo: 'NOT_foo' } },
+    new CollectionWithin(expectation)
+  )
+).to.throw(ValidationError);
+```
+
 ## Hierarchy
 
   ↳ [Pattern](pattern.md)
+
+* Pattern
 
   ↳ **CollectionWithin**
 
 ## Implements
 
 * [Pattern](../interfaces/types.pattern.md)
+* Pattern
 
 ## Index
 
@@ -55,6 +105,10 @@ sidebar_label: "CollectionWithin"
 *Overrides [Pattern](pattern.md).[constructor](pattern.md#constructor)*
 
 Creates an instance of an CollectionWithin.
+Creates an instance of an CollectionWithin.
+
+**`throws`** {InvalidDefinitionError}
+Thrown if provided properties is invalid(is not an object).
 
 **`throws`** {InvalidDefinitionError}
 Thrown if provided properties is invalid(is not an object).
@@ -75,11 +129,13 @@ Name | Type | Description |
 
 *Inherited from [Pattern](pattern.md).[describer](pattern.md#static-describer)*
 
+*Overrides void*
+
 ___
 
 ### `Static` kind
 
-▪ **kind**: *[KINDS](../enums/kinds.md)* = KINDS.OBJECT_WITHIN
+▪ **kind**: *KINDS* = KINDS.OBJECT_WITHIN
 
 *Overrides [Pattern](pattern.md).[kind](pattern.md#static-kind)*
 
@@ -91,11 +147,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[isOptional](pattern.md#isoptional)*
 
-Make current pattern optional.
+*Overrides void*
 
 **Returns:** *[Optional](optional.md)*
-
-Pattern wrapped with instance of Optional pattern.
 
 ___
 
@@ -105,11 +159,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[isRequired](pattern.md#isrequired)*
 
-Ensures that current pattern is required.
+*Overrides void*
 
 **Returns:** *any*
-
-Pattern that is unwrapped from Optional pattern.
 
 ## Methods
 
@@ -119,17 +171,15 @@ Pattern that is unwrapped from Optional pattern.
 
 *Inherited from [Pattern](pattern.md).[describe](pattern.md#describe)*
 
-Describes value in human readable form.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`value` | any | Value that needs to be described. |
+Name | Type |
+------ | ------ |
+`value` | any |
 
 **Returns:** *string*
-
-Human readable value described as a string.
 
 ___
 
@@ -141,11 +191,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[getInitializer](pattern.md#getinitializer)*
 
-Returns the initializing value.
+*Overrides void*
 
 **Returns:** *any | undefined*
-
-Initializing value, else undefined.
 
 ___
 
@@ -157,11 +205,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[getKind](pattern.md#getkind)*
 
-Returns for which kind pattern is created.
+*Overrides void*
 
 **Returns:** *string*
-
-Kind represented as a string.
 
 ___
 
@@ -173,11 +219,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[hasInitializer](pattern.md#hasinitializer)*
 
-Evaluates if initializing value was assigned to type.
+*Overrides void*
 
 **Returns:** *boolean*
-
-Returns `true` if initializing value is set for type, else false.
 
 ___
 
@@ -186,6 +230,8 @@ ___
 ▸ **hasOwnProperty**(`v`: PropertyKey): *boolean*
 
 *Inherited from [Pattern](pattern.md).[hasOwnProperty](pattern.md#hasownproperty)*
+
+*Overrides [Pattern](pattern.md).[hasOwnProperty](pattern.md#hasownproperty)*
 
 Determines whether an object has a property with the specified name.
 
@@ -205,6 +251,8 @@ ___
 
 *Inherited from [Pattern](pattern.md).[isPrototypeOf](pattern.md#isprototypeof)*
 
+*Overrides [Pattern](pattern.md).[isPrototypeOf](pattern.md#isprototypeof)*
+
 Determines whether an object exists in another object's prototype chain.
 
 **Parameters:**
@@ -222,6 +270,8 @@ ___
 ▸ **propertyIsEnumerable**(`v`: PropertyKey): *boolean*
 
 *Inherited from [Pattern](pattern.md).[propertyIsEnumerable](pattern.md#propertyisenumerable)*
+
+*Overrides [Pattern](pattern.md).[propertyIsEnumerable](pattern.md#propertyisenumerable)*
 
 Determines whether a specified property is enumerable.
 
@@ -243,13 +293,13 @@ ___
 
 *Inherited from [Pattern](pattern.md).[setInitializer](pattern.md#setinitializer)*
 
-Sets as non-enumerable the initializing value for type if present on conversion.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`initializer` | any | Initializer value provided on conversion.  |
+Name | Type |
+------ | ------ |
+`initializer` | any |
 
 **Returns:** *void*
 
@@ -260,6 +310,8 @@ ___
 ▸ **toLocaleString**(): *string*
 
 *Inherited from [Pattern](pattern.md).[toLocaleString](pattern.md#tolocalestring)*
+
+*Overrides [Pattern](pattern.md).[toLocaleString](pattern.md#tolocalestring)*
 
 Returns a date converted to a string using the current locale.
 
@@ -273,6 +325,8 @@ ___
 
 *Inherited from [Pattern](pattern.md).[toString](pattern.md#tostring)*
 
+*Overrides [Pattern](pattern.md).[toString](pattern.md#tostring)*
+
 Returns a string representation of an object.
 
 **Returns:** *string*
@@ -284,6 +338,8 @@ ___
 ▸ **valueOf**(): *[Object](pattern.md#static-object)*
 
 *Inherited from [Pattern](pattern.md).[valueOf](pattern.md#valueof)*
+
+*Overrides [Pattern](pattern.md).[valueOf](pattern.md#valueof)*
 
 Returns the primitive value of the specified object.
 
@@ -297,11 +353,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[getDescriber](pattern.md#static-getdescriber)*
 
-Returns describing library.
+*Overrides void*
 
 **Returns:** *[Describer](../interfaces/types.describer.md)*
-
-Describer library instance.
 
 ___
 
@@ -311,12 +365,12 @@ ___
 
 *Inherited from [Pattern](pattern.md).[setDescriber](pattern.md#static-setdescriber)*
 
-Sets describing library.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`describer` | [Describer](../interfaces/types.describer.md) | Describer library instance.  |
+Name | Type |
+------ | ------ |
+`describer` | [Describer](../interfaces/types.describer.md) |
 
 **Returns:** *void*

@@ -11,6 +11,7 @@ sidebar_label: "Typend"
 ## Implements
 
 * [Library](../interfaces/types.library.md)
+* Library
 
 ## Index
 
@@ -44,6 +45,7 @@ sidebar_label: "Typend"
 \+ **new Typend**(`converter`: [Converter](../interfaces/types.converter.md), `describer`: [Describer](../interfaces/types.describer.md), `validator`: [Validator](../interfaces/types.validator.md)): *[Typend](typend.md)*
 
 Creates an instance of Typend.
+Creates an instance of Typend.
 
 **Parameters:**
 
@@ -59,7 +61,7 @@ Name | Type | Description |
 
 ###  converter
 
-• **converter**: *[Converter](../interfaces/types.converter.md)*
+• **converter**: *Converter*
 
 *Implementation of [Library](../interfaces/types.library.md).[converter](../interfaces/types.library.md#converter)*
 
@@ -67,7 +69,7 @@ ___
 
 ###  describer
 
-• **describer**: *[Describer](../interfaces/types.describer.md)*
+• **describer**: *Describer*
 
 *Implementation of [Library](../interfaces/types.library.md).[describer](../interfaces/types.library.md#describer)*
 
@@ -75,7 +77,7 @@ ___
 
 ###  validator
 
-• **validator**: *[Validator](../interfaces/types.validator.md)*
+• **validator**: *Validator*
 
 *Implementation of [Library](../interfaces/types.library.md).[validator](../interfaces/types.library.md#validator)*
 
@@ -83,7 +85,7 @@ ___
 
 ###  debug
 
-▸ **debug**(`isDebugging`: boolean): *void*
+▸ **debug**(`isDebugging?`: boolean): *void*
 
 *Implementation of [Library](../interfaces/types.library.md)*
 
@@ -91,9 +93,9 @@ Setup debugging mode on Typend.
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`isDebugging` | boolean | true | `Boolean` flags indicating that debugging should be enabled.  |
+Name | Type | Description |
+------ | ------ | ------ |
+`isDebugging?` | boolean | `Boolean` flags indicating that debugging should be enabled.  |
 
 **Returns:** *void*
 
@@ -162,17 +164,19 @@ ___
 
 ###  isValid
 
-▸ **isValid**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation) | [Utility](utility.md), `isStrict`: boolean): *boolean*
+▸ **isValid**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation) | [Utility](utility.md), `isStrict?`: boolean): *boolean*
 
-Validates if a value matches a expectation.
+*Implementation of [Library](../interfaces/types.library.md)*
+
+Validates if a value matches an expectation.
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`value` | any | - | Value that needs to validated. |
-`expectation` | [Expectation](../modules/types.md#expectation) &#124; [Utility](utility.md) | - | Expectation as explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated. |
-`isStrict` | boolean | true | Flag indicating that evaluation should be done in strict mode. |
+Name | Type | Description |
+------ | ------ | ------ |
+`value` | any | Value that needs to validated. |
+`expectation` | [Expectation](../modules/types.md#expectation) &#124; [Utility](utility.md) | Expectation as explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated. |
+`isStrict?` | boolean | Flag indicating that evaluation should be done in strict mode. |
 
 **Returns:** *boolean*
 
@@ -236,20 +240,22 @@ ___
 
 ###  validate
 
-▸ **validate**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation) | [Utility](utility.md), `isStrict`: boolean): *boolean*
+▸ **validate**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation) | [Utility](utility.md), `isStrict?`: boolean): *boolean*
 
-Validates if a value matches a expectation or throws.
+*Implementation of [Library](../interfaces/types.library.md)*
+
+Validates if a value matches an expectation or throws.
 
 **`throws`** {ValidationError}
 Thrown if the value does not match provided expectation.
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`value` | any | - | Value that needs to validated. |
-`expectation` | [Expectation](../modules/types.md#expectation) &#124; [Utility](utility.md) | - | Expectation as explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated. |
-`isStrict` | boolean | true | Flag indicating that evaluation should be done in strict mode. |
+Name | Type | Description |
+------ | ------ | ------ |
+`value` | any | Value that needs to validated. |
+`expectation` | [Expectation](../modules/types.md#expectation) &#124; [Utility](utility.md) | Expectation as explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated. |
+`isStrict?` | boolean | Flag indicating that evaluation should be done in strict mode. |
 
 **Returns:** *boolean*
 

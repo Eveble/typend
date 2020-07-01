@@ -62,7 +62,7 @@ sidebar_label: "PatternValidator"
 
 ### `Static` describer
 
-▪ **describer**: *[Describer](../interfaces/types.describer.md)*
+▪ **describer**: *Describer*
 
 ## Methods
 

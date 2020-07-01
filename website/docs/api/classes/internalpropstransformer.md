@@ -11,6 +11,7 @@ sidebar_label: "InternalPropsTransformer"
 ## Implements
 
 * [TypeTransformer](../interfaces/types.typetransformer.md)
+* TypeTransformer
 
 ## Index
 

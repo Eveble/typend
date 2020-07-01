@@ -11,6 +11,7 @@ sidebar_label: "DebugDescriber"
 ## Implements
 
 * [TypeDescriber](../interfaces/types.typedescriber.md)
+* TypeDescriber
 
 ## Index
 
@@ -26,20 +27,21 @@ sidebar_label: "DebugDescriber"
 
 ###  constructor
 
-\+ **new DebugDescriber**(`options`: object): *[DebugDescriber](debugdescriber.md)*
+\+ **new DebugDescriber**(`options?`: object): *[DebugDescriber](debugdescriber.md)*
 
+Creates an instance of DebugDescriber.
 Creates an instance of DebugDescriber.
 
 **Parameters:**
 
-▪`Default value`  **options**: *object*= { compact: false, colors: true }
+▪`Optional`  **options**: *object*
 
 Options object that can be passed to Node's inspect util.
 
-Name | Type | Default |
------- | ------ | ------ |
-`colors` | boolean | true |
-`compact` | boolean | false |
+Name | Type |
+------ | ------ |
+`colors` | boolean |
+`compact` | boolean |
 
 **Returns:** *[DebugDescriber](debugdescriber.md)*
 

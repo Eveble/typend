@@ -8,21 +8,23 @@ sidebar_label: "Pattern"
 
 * [Object](pattern.md#static-object)
 
+* [Object](pattern.md#static-object)
+
   ↳ **Pattern**
+
+  ↳ [Any](any.md)
 
   ↳ [Collection](collection.md)
 
   ↳ [Class](class.md)
-
-  ↳ [Interface](interface.md)
-
-  ↳ [Any](any.md)
 
   ↳ [CollectionIncluding](collectionincluding.md)
 
   ↳ [CollectionWithin](collectionwithin.md)
 
   ↳ [Integer](integer.md)
+
+  ↳ [Interface](interface.md)
 
   ↳ [Never](never.md)
 
@@ -69,6 +71,8 @@ sidebar_label: "Pattern"
 
 *Inherited from [Pattern](pattern.md).[constructor](pattern.md#constructor)*
 
+*Overrides [Pattern](pattern.md).[constructor](pattern.md#constructor)*
+
 The initial value of Object.prototype.constructor is the standard built-in Object constructor.
 
 ___
@@ -79,6 +83,8 @@ ___
 
 *Inherited from [Pattern](pattern.md).[should](pattern.md#should)*
 
+*Overrides [Pattern](pattern.md).[should](pattern.md#should)*
+
 ___
 
 ### `Static` Object
@@ -86,12 +92,13 @@ ___
 ▪ **Object**: *ObjectConstructor*
 
 Provides functionality common to all JavaScript objects.
+Provides functionality common to all JavaScript objects.
 
 ___
 
 ### `Static` describer
 
-▪ **describer**: *[Describer](../interfaces/types.describer.md)*
+▪ **describer**: *Describer*
 
 ___
 
@@ -103,11 +110,11 @@ ___
 
 ###  isOptional
 
-• **get isOptional**(): *[Optional](optional.md)*
+• **get isOptional**(): *Optional*
 
 Make current pattern optional.
 
-**Returns:** *[Optional](optional.md)*
+**Returns:** *Optional*
 
 Pattern wrapped with instance of Optional pattern.
 
@@ -185,6 +192,8 @@ ___
 
 *Inherited from [Pattern](pattern.md).[hasOwnProperty](pattern.md#hasownproperty)*
 
+*Overrides [Pattern](pattern.md).[hasOwnProperty](pattern.md#hasownproperty)*
+
 Determines whether an object has a property with the specified name.
 
 **Parameters:**
@@ -203,6 +212,8 @@ ___
 
 *Inherited from [Pattern](pattern.md).[isPrototypeOf](pattern.md#isprototypeof)*
 
+*Overrides [Pattern](pattern.md).[isPrototypeOf](pattern.md#isprototypeof)*
+
 Determines whether an object exists in another object's prototype chain.
 
 **Parameters:**
@@ -220,6 +231,8 @@ ___
 ▸ **propertyIsEnumerable**(`v`: PropertyKey): *boolean*
 
 *Inherited from [Pattern](pattern.md).[propertyIsEnumerable](pattern.md#propertyisenumerable)*
+
+*Overrides [Pattern](pattern.md).[propertyIsEnumerable](pattern.md#propertyisenumerable)*
 
 Determines whether a specified property is enumerable.
 
@@ -255,6 +268,8 @@ ___
 
 *Inherited from [Pattern](pattern.md).[toLocaleString](pattern.md#tolocalestring)*
 
+*Overrides [Pattern](pattern.md).[toLocaleString](pattern.md#tolocalestring)*
+
 Returns a date converted to a string using the current locale.
 
 **Returns:** *string*
@@ -267,6 +282,8 @@ ___
 
 *Inherited from [Pattern](pattern.md).[toString](pattern.md#tostring)*
 
+*Overrides [Pattern](pattern.md).[toString](pattern.md#tostring)*
+
 Returns a string representation of an object.
 
 **Returns:** *string*
@@ -278,6 +295,8 @@ ___
 ▸ **valueOf**(): *[Object](pattern.md#static-object)*
 
 *Inherited from [Pattern](pattern.md).[valueOf](pattern.md#valueof)*
+
+*Overrides [Pattern](pattern.md).[valueOf](pattern.md#valueof)*
 
 Returns the primitive value of the specified object.
 

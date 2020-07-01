@@ -32,3 +32,13 @@ Name | Type |
 `library` | [Library](types.library.md) |
 
 **Returns:** *[Expectation](../modules/types.md#expectation)*
+
+▸ **generate**(`library`: Library): *[Expectation](../modules/types.md#expectation)*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`library` | Library |
+
+**Returns:** *[Expectation](../modules/types.md#expectation)*

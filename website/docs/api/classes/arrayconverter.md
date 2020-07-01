@@ -11,6 +11,7 @@ sidebar_label: "ArrayConverter"
 ## Implements
 
 * [TypeConverter](../interfaces/types.typeconverter.md)
+* TypeConverter
 
 ## Index
 

@@ -11,6 +11,7 @@ sidebar_label: "ClassConverter"
 ## Implements
 
 * [TypeConverter](../interfaces/types.typeconverter.md)
+* TypeConverter
 
 ## Index
 
@@ -35,6 +36,7 @@ sidebar_label: "ClassConverter"
 \+ **new ClassConverter**(`transformers?`: Map‹string, [TypeTransformer](../interfaces/types.typetransformer.md)›): *[ClassConverter](classconverter.md)*
 
 Creates an instance of ClassConverter.
+Creates an instance of ClassConverter.
 
 **Parameters:**
 
@@ -48,7 +50,7 @@ Name | Type | Description |
 
 ###  transformers
 
-• **transformers**: *Map‹string, [TypeTransformer](../interfaces/types.typetransformer.md)›*
+• **transformers**: *Map‹string, TypeTransformer›*
 
 ## Methods
 

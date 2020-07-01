@@ -4,15 +4,29 @@ title: "Any"
 sidebar_label: "Any"
 ---
 
+**`returns`** Returns always `true` for any value.
+
+**`example`** 
+```ts
+import { check, validate, any } from 'typend';
+
+check<any>('foo');
+
+validate('foo', any);
+```
+
 ## Hierarchy
 
   ↳ [Pattern](pattern.md)
+
+* Pattern
 
   ↳ **Any**
 
 ## Implements
 
 * [Pattern](../interfaces/types.pattern.md)
+* Pattern
 
 ## Index
 
@@ -51,6 +65,8 @@ sidebar_label: "Any"
 
 *Inherited from [Pattern](pattern.md).[constructor](pattern.md#constructor)*
 
+*Overrides [Pattern](pattern.md).[constructor](pattern.md#constructor)*
+
 The initial value of Object.prototype.constructor is the standard built-in Object constructor.
 
 ___
@@ -61,11 +77,13 @@ ___
 
 *Inherited from [Pattern](pattern.md).[describer](pattern.md#static-describer)*
 
+*Overrides void*
+
 ___
 
 ### `Static` kind
 
-▪ **kind**: *[KINDS](../enums/kinds.md)* = KINDS.ANY
+▪ **kind**: *KINDS* = KINDS.ANY
 
 *Overrides [Pattern](pattern.md).[kind](pattern.md#static-kind)*
 
@@ -77,11 +95,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[isOptional](pattern.md#isoptional)*
 
-Make current pattern optional.
+*Overrides void*
 
 **Returns:** *[Optional](optional.md)*
-
-Pattern wrapped with instance of Optional pattern.
 
 ___
 
@@ -91,11 +107,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[isRequired](pattern.md#isrequired)*
 
-Ensures that current pattern is required.
+*Overrides void*
 
 **Returns:** *any*
-
-Pattern that is unwrapped from Optional pattern.
 
 ## Methods
 
@@ -105,17 +119,15 @@ Pattern that is unwrapped from Optional pattern.
 
 *Inherited from [Pattern](pattern.md).[describe](pattern.md#describe)*
 
-Describes value in human readable form.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`value` | any | Value that needs to be described. |
+Name | Type |
+------ | ------ |
+`value` | any |
 
 **Returns:** *string*
-
-Human readable value described as a string.
 
 ___
 
@@ -127,11 +139,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[getInitializer](pattern.md#getinitializer)*
 
-Returns the initializing value.
+*Overrides void*
 
 **Returns:** *any | undefined*
-
-Initializing value, else undefined.
 
 ___
 
@@ -143,11 +153,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[getKind](pattern.md#getkind)*
 
-Returns for which kind pattern is created.
+*Overrides void*
 
 **Returns:** *string*
-
-Kind represented as a string.
 
 ___
 
@@ -159,11 +167,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[hasInitializer](pattern.md#hasinitializer)*
 
-Evaluates if initializing value was assigned to type.
+*Overrides void*
 
 **Returns:** *boolean*
-
-Returns `true` if initializing value is set for type, else false.
 
 ___
 
@@ -172,6 +178,8 @@ ___
 ▸ **hasOwnProperty**(`v`: PropertyKey): *boolean*
 
 *Inherited from [Pattern](pattern.md).[hasOwnProperty](pattern.md#hasownproperty)*
+
+*Overrides [Pattern](pattern.md).[hasOwnProperty](pattern.md#hasownproperty)*
 
 Determines whether an object has a property with the specified name.
 
@@ -191,6 +199,8 @@ ___
 
 *Inherited from [Pattern](pattern.md).[isPrototypeOf](pattern.md#isprototypeof)*
 
+*Overrides [Pattern](pattern.md).[isPrototypeOf](pattern.md#isprototypeof)*
+
 Determines whether an object exists in another object's prototype chain.
 
 **Parameters:**
@@ -208,6 +218,8 @@ ___
 ▸ **propertyIsEnumerable**(`v`: PropertyKey): *boolean*
 
 *Inherited from [Pattern](pattern.md).[propertyIsEnumerable](pattern.md#propertyisenumerable)*
+
+*Overrides [Pattern](pattern.md).[propertyIsEnumerable](pattern.md#propertyisenumerable)*
 
 Determines whether a specified property is enumerable.
 
@@ -229,13 +241,13 @@ ___
 
 *Inherited from [Pattern](pattern.md).[setInitializer](pattern.md#setinitializer)*
 
-Sets as non-enumerable the initializing value for type if present on conversion.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`initializer` | any | Initializer value provided on conversion.  |
+Name | Type |
+------ | ------ |
+`initializer` | any |
 
 **Returns:** *void*
 
@@ -246,6 +258,8 @@ ___
 ▸ **toLocaleString**(): *string*
 
 *Inherited from [Pattern](pattern.md).[toLocaleString](pattern.md#tolocalestring)*
+
+*Overrides [Pattern](pattern.md).[toLocaleString](pattern.md#tolocalestring)*
 
 Returns a date converted to a string using the current locale.
 
@@ -259,6 +273,8 @@ ___
 
 *Inherited from [Pattern](pattern.md).[toString](pattern.md#tostring)*
 
+*Overrides [Pattern](pattern.md).[toString](pattern.md#tostring)*
+
 Returns a string representation of an object.
 
 **Returns:** *string*
@@ -270,6 +286,8 @@ ___
 ▸ **valueOf**(): *[Object](pattern.md#static-object)*
 
 *Inherited from [Pattern](pattern.md).[valueOf](pattern.md#valueof)*
+
+*Overrides [Pattern](pattern.md).[valueOf](pattern.md#valueof)*
 
 Returns the primitive value of the specified object.
 
@@ -283,11 +301,9 @@ ___
 
 *Inherited from [Pattern](pattern.md).[getDescriber](pattern.md#static-getdescriber)*
 
-Returns describing library.
+*Overrides void*
 
 **Returns:** *[Describer](../interfaces/types.describer.md)*
-
-Describer library instance.
 
 ___
 
@@ -297,12 +313,12 @@ ___
 
 *Inherited from [Pattern](pattern.md).[setDescriber](pattern.md#static-setdescriber)*
 
-Sets describing library.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`describer` | [Describer](../interfaces/types.describer.md) | Describer library instance.  |
+Name | Type |
+------ | ------ |
+`describer` | [Describer](../interfaces/types.describer.md) |
 
 **Returns:** *void*

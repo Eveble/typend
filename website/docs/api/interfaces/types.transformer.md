@@ -36,9 +36,39 @@ Name | Type |
 
 **Returns:** *boolean*
 
+▸ **canTransform**‹**T**›(`transformable`: T, ...`args`: any[]): *boolean*
+
+**Type parameters:**
+
+▪ **T**: *any*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`transformable` | T |
+`...args` | any[] |
+
+**Returns:** *boolean*
+
 ___
 
 ###  transform
+
+▸ **transform**‹**T**›(`transformable`: T, ...`args`: any[]): *T*
+
+**Type parameters:**
+
+▪ **T**: *any*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`transformable` | T |
+`...args` | any[] |
+
+**Returns:** *T*
 
 ▸ **transform**‹**T**›(`transformable`: T, ...`args`: any[]): *T*
 

@@ -11,6 +11,7 @@ sidebar_label: "NilConverter"
 ## Implements
 
 * [TypeConverter](../interfaces/types.typeconverter.md)
+* TypeConverter
 
 ## Index
 

@@ -32,11 +32,21 @@ sidebar_label: "Converter"
 
 ###  typeConverters
 
-• **typeConverters**: *Map‹string, [TypeConverter](types.typeconverter.md)›*
+• **typeConverters**: *Map‹string, TypeConverter›*
 
 ## Methods
 
 ###  convert
+
+▸ **convert**(`reflectedType`: any): *[Type](../modules/types.md#type)*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`reflectedType` | any |
+
+**Returns:** *[Type](../modules/types.md#type)*
 
 ▸ **convert**(`reflectedType`: any): *[Type](../modules/types.md#type)*
 
@@ -62,9 +72,29 @@ Name | Type |
 
 **Returns:** *[TypeConverter](types.typeconverter.md) | undefined*
 
+▸ **getConverter**(`kind`: string): *TypeConverter | undefined*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+
+**Returns:** *TypeConverter | undefined*
+
 ___
 
 ###  hasConverter
+
+▸ **hasConverter**(`kind`: string): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+
+**Returns:** *boolean*
 
 ▸ **hasConverter**(`kind`: string): *boolean*
 
@@ -91,9 +121,30 @@ Name | Type |
 
 **Returns:** *void*
 
+▸ **overrideConverter**(`kind`: string, `converter`: TypeConverter): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+`converter` | TypeConverter |
+
+**Returns:** *void*
+
 ___
 
 ###  reflect
+
+▸ **reflect**(`reflectedType`: any): *[Type](../modules/types.md#type)*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`reflectedType` | any |
+
+**Returns:** *[Type](../modules/types.md#type)*
 
 ▸ **reflect**(`reflectedType`: any): *[Type](../modules/types.md#type)*
 
@@ -121,9 +172,31 @@ Name | Type |
 
 **Returns:** *void*
 
+▸ **registerConverter**(`kind`: string, `converter`: TypeConverter, `shouldOverride?`: boolean): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+`converter` | TypeConverter |
+`shouldOverride?` | boolean |
+
+**Returns:** *void*
+
 ___
 
 ###  removeConverter
+
+▸ **removeConverter**(`kind`: string): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+
+**Returns:** *void*
 
 ▸ **removeConverter**(`kind`: string): *void*
 

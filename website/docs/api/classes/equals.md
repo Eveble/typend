@@ -4,7 +4,28 @@ title: "Equals"
 sidebar_label: "Equals"
 ---
 
+Validates if value is equal to expectation.
+
+**`example`** 
+```ts
+import {
+  check,
+  UnequalValueError,
+  validate,
+  PropTypes,
+} from 'typend';
+
+check<'foo'>('foo');
+check<1337>(1337);
+expect(() => check<1337>('foo')).to.throw(UnequalValueError);
+
+validate('foo', 'foo');
+validate(1337, PropTypes.equal(1337));
+```
+
 ## Type parameters
+
+▪ **T**
 
 ▪ **T**
 
@@ -12,15 +33,37 @@ sidebar_label: "Equals"
 
   ↳ [WrapperPattern](wrapperpattern.md)
 
+* WrapperPattern
+
   ↳ **Equals**
 
 ## Implements
 
 * [Pattern](../interfaces/types.pattern.md)
+* Pattern
 
 ## Indexable
 
 * \[ **n**: *number*\]: T
+
+Validates if value is equal to expectation.
+
+**`example`** 
+```ts
+import {
+  check,
+  UnequalValueError,
+  validate,
+  PropTypes,
+} from 'typend';
+
+check<'foo'>('foo');
+check<1337>(1337);
+expect(() => check<1337>('foo')).to.throw(UnequalValueError);
+
+validate('foo', 'foo');
+validate(1337, PropTypes.equal(1337));
+```
 
 ## Index
 
@@ -79,13 +122,13 @@ sidebar_label: "Equals"
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[constructor](wrapperpattern.md#constructor)*
 
-Creates an instance of a WrapperPattern.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`...expectations` | any[] | Expectations that will be assigned to pattern container.  |
+Name | Type |
+------ | ------ |
+`...expectations` | any[] |
 
 **Returns:** *[Equals](equals.md)*
 
@@ -97,6 +140,8 @@ Name | Type | Description |
 
 *Inherited from [Optional](optional.md).[length](optional.md#length)*
 
+*Overrides [Optional](optional.md).[length](optional.md#length)*
+
 Gets or sets the length of the array. This is a number one higher than the highest element defined in an array.
 
 ___
@@ -107,11 +152,13 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[describer](wrapperpattern.md#static-describer)*
 
+*Overrides void*
+
 ___
 
 ### `Static` kind
 
-▪ **kind**: *[KINDS](../enums/kinds.md)* = KINDS.EQUALS
+▪ **kind**: *KINDS* = KINDS.EQUALS
 
 *Overrides [WrapperPattern](wrapperpattern.md).[kind](wrapperpattern.md#static-kind)*
 
@@ -123,11 +170,9 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[isOptional](wrapperpattern.md#isoptional)*
 
-Make current pattern optional.
+*Overrides void*
 
 **Returns:** *[Optional](optional.md)*
-
-Pattern wrapped with instance of Optional pattern.
 
 ___
 
@@ -137,11 +182,9 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[isRequired](wrapperpattern.md#isrequired)*
 
-Ensures that current pattern is required.
+*Overrides void*
 
 **Returns:** *any*
-
-Pattern that is unwrapped from Optional pattern.
 
 ## Methods
 
@@ -150,6 +193,8 @@ Pattern that is unwrapped from Optional pattern.
 ▸ **concat**(...`items`: ConcatArray‹T›[]): *T[]*
 
 *Inherited from [Optional](optional.md).[concat](optional.md#concat)*
+
+*Overrides [Optional](optional.md).[concat](optional.md#concat)*
 
 Combines two or more arrays.
 
@@ -164,6 +209,8 @@ Name | Type | Description |
 ▸ **concat**(...`items`: T | ConcatArray‹T›[]): *T[]*
 
 *Inherited from [Optional](optional.md).[concat](optional.md#concat)*
+
+*Overrides [Optional](optional.md).[concat](optional.md#concat)*
 
 Combines two or more arrays.
 
@@ -183,17 +230,15 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[describe](wrapperpattern.md#describe)*
 
-Describes value in human readable form.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`value` | any | Value that needs to be described. |
+Name | Type |
+------ | ------ |
+`value` | any |
 
 **Returns:** *string*
-
-Human readable value described as a string.
 
 ___
 
@@ -202,6 +247,8 @@ ___
 ▸ **every**(`callbackfn`: function, `thisArg?`: any): *boolean*
 
 *Inherited from [Optional](optional.md).[every](optional.md#every)*
+
+*Overrides [Optional](optional.md).[every](optional.md#every)*
 
 Determines whether all the members of an array satisfy the specified test.
 
@@ -238,6 +285,8 @@ ___
 
 *Inherited from [Optional](optional.md).[filter](optional.md#filter)*
 
+*Overrides [Optional](optional.md).[filter](optional.md#filter)*
+
 Returns the elements of an array that meet the condition specified in a callback function.
 
 **Type parameters:**
@@ -270,6 +319,8 @@ An object to which the this keyword can refer in the callbackfn function. If thi
 
 *Inherited from [Optional](optional.md).[filter](optional.md#filter)*
 
+*Overrides [Optional](optional.md).[filter](optional.md#filter)*
+
 Returns the elements of an array that meet the condition specified in a callback function.
 
 **Parameters:**
@@ -301,6 +352,8 @@ ___
 ▸ **forEach**(`callbackfn`: function, `thisArg?`: any): *void*
 
 *Inherited from [Optional](optional.md).[forEach](optional.md#foreach)*
+
+*Overrides [Optional](optional.md).[forEach](optional.md#foreach)*
 
 Performs the specified action for each element in an array.
 
@@ -336,11 +389,9 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[getInitializer](wrapperpattern.md#getinitializer)*
 
-Returns the initializing value.
+*Overrides void*
 
 **Returns:** *any | undefined*
-
-Initializing value, else undefined.
 
 ___
 
@@ -352,11 +403,9 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[getKind](wrapperpattern.md#getkind)*
 
-Returns for which kind pattern is created.
+*Overrides void*
 
 **Returns:** *string*
-
-Kind represented as a string.
 
 ___
 
@@ -368,11 +417,9 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[hasInitializer](wrapperpattern.md#hasinitializer)*
 
-Evaluates if initializing value was assigned to type.
+*Overrides void*
 
 **Returns:** *boolean*
-
-Returns `true` if initializing value is set for type, else false.
 
 ___
 
@@ -381,6 +428,8 @@ ___
 ▸ **indexOf**(`searchElement`: T, `fromIndex?`: number): *number*
 
 *Inherited from [Optional](optional.md).[indexOf](optional.md#indexof)*
+
+*Overrides [Optional](optional.md).[indexOf](optional.md#indexof)*
 
 Returns the index of the first occurrence of a value in an array.
 
@@ -401,6 +450,8 @@ ___
 
 *Inherited from [Optional](optional.md).[join](optional.md#join)*
 
+*Overrides [Optional](optional.md).[join](optional.md#join)*
+
 Adds all the elements of an array separated by the specified separator string.
 
 **Parameters:**
@@ -418,6 +469,8 @@ ___
 ▸ **lastIndexOf**(`searchElement`: T, `fromIndex?`: number): *number*
 
 *Inherited from [Optional](optional.md).[lastIndexOf](optional.md#lastindexof)*
+
+*Overrides [Optional](optional.md).[lastIndexOf](optional.md#lastindexof)*
 
 Returns the index of the last occurrence of a specified value in an array.
 
@@ -437,6 +490,8 @@ ___
 ▸ **map**‹**U**›(`callbackfn`: function, `thisArg?`: any): *U[]*
 
 *Inherited from [Optional](optional.md).[map](optional.md#map)*
+
+*Overrides [Optional](optional.md).[map](optional.md#map)*
 
 Calls a defined callback function on each element of an array, and returns an array that contains the results.
 
@@ -495,6 +550,8 @@ ___
 
 *Inherited from [Optional](optional.md).[pop](optional.md#pop)*
 
+*Overrides [Optional](optional.md).[pop](optional.md#pop)*
+
 Removes the last element from an array and returns it.
 
 **Returns:** *T | undefined*
@@ -506,6 +563,8 @@ ___
 ▸ **push**(...`items`: T[]): *number*
 
 *Inherited from [Optional](optional.md).[push](optional.md#push)*
+
+*Overrides [Optional](optional.md).[push](optional.md#push)*
 
 Appends new elements to an array, and returns the new length of the array.
 
@@ -524,6 +583,8 @@ ___
 ▸ **reduce**(`callbackfn`: function): *T*
 
 *Inherited from [Optional](optional.md).[reduce](optional.md#reduce)*
+
+*Overrides [Optional](optional.md).[reduce](optional.md#reduce)*
 
 Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 
@@ -550,6 +611,8 @@ Name | Type |
 
 *Inherited from [Optional](optional.md).[reduce](optional.md#reduce)*
 
+*Overrides [Optional](optional.md).[reduce](optional.md#reduce)*
+
 **Parameters:**
 
 ▪ **callbackfn**: *function*
@@ -572,6 +635,8 @@ Name | Type |
 ▸ **reduce**‹**U**›(`callbackfn`: function, `initialValue`: U): *U*
 
 *Inherited from [Optional](optional.md).[reduce](optional.md#reduce)*
+
+*Overrides [Optional](optional.md).[reduce](optional.md#reduce)*
 
 Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 
@@ -610,6 +675,8 @@ ___
 
 *Inherited from [Optional](optional.md).[reduceRight](optional.md#reduceright)*
 
+*Overrides [Optional](optional.md).[reduceRight](optional.md#reduceright)*
+
 Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 
 **Parameters:**
@@ -635,6 +702,8 @@ Name | Type |
 
 *Inherited from [Optional](optional.md).[reduceRight](optional.md#reduceright)*
 
+*Overrides [Optional](optional.md).[reduceRight](optional.md#reduceright)*
+
 **Parameters:**
 
 ▪ **callbackfn**: *function*
@@ -657,6 +726,8 @@ Name | Type |
 ▸ **reduceRight**‹**U**›(`callbackfn`: function, `initialValue`: U): *U*
 
 *Inherited from [Optional](optional.md).[reduceRight](optional.md#reduceright)*
+
+*Overrides [Optional](optional.md).[reduceRight](optional.md#reduceright)*
 
 Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 
@@ -695,6 +766,8 @@ ___
 
 *Inherited from [Optional](optional.md).[reverse](optional.md#reverse)*
 
+*Overrides [Optional](optional.md).[reverse](optional.md#reverse)*
+
 Reverses the elements in an Array.
 
 **Returns:** *T[]*
@@ -709,13 +782,13 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[setInitializer](wrapperpattern.md#setinitializer)*
 
-Sets as non-enumerable the initializing value for type if present on conversion.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`initializer` | any | Initializer value provided on conversion.  |
+Name | Type |
+------ | ------ |
+`initializer` | any |
 
 **Returns:** *void*
 
@@ -726,6 +799,8 @@ ___
 ▸ **shift**(): *T | undefined*
 
 *Inherited from [Optional](optional.md).[shift](optional.md#shift)*
+
+*Overrides [Optional](optional.md).[shift](optional.md#shift)*
 
 Removes the first element from an array and returns it.
 
@@ -738,6 +813,8 @@ ___
 ▸ **slice**(`start?`: number, `end?`: number): *T[]*
 
 *Inherited from [Optional](optional.md).[slice](optional.md#slice)*
+
+*Overrides [Optional](optional.md).[slice](optional.md#slice)*
 
 Returns a section of an array.
 
@@ -757,6 +834,8 @@ ___
 ▸ **some**(`callbackfn`: function, `thisArg?`: any): *boolean*
 
 *Inherited from [Optional](optional.md).[some](optional.md#some)*
+
+*Overrides [Optional](optional.md).[some](optional.md#some)*
 
 Determines whether the specified callback function returns true for any element of an array.
 
@@ -793,6 +872,8 @@ ___
 
 *Inherited from [Optional](optional.md).[sort](optional.md#sort)*
 
+*Overrides [Optional](optional.md).[sort](optional.md#sort)*
+
 Sorts an array.
 
 **Parameters:**
@@ -825,6 +906,8 @@ ___
 
 *Inherited from [Optional](optional.md).[splice](optional.md#splice)*
 
+*Overrides [Optional](optional.md).[splice](optional.md#splice)*
+
 Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
 
 **Parameters:**
@@ -839,6 +922,8 @@ Name | Type | Description |
 ▸ **splice**(`start`: number, `deleteCount`: number, ...`items`: T[]): *T[]*
 
 *Inherited from [Optional](optional.md).[splice](optional.md#splice)*
+
+*Overrides [Optional](optional.md).[splice](optional.md#splice)*
 
 Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
 
@@ -860,6 +945,8 @@ ___
 
 *Inherited from [Optional](optional.md).[toLocaleString](optional.md#tolocalestring)*
 
+*Overrides [Optional](optional.md).[toLocaleString](optional.md#tolocalestring)*
+
 Returns a string representation of an array. The elements are converted to string using their toLocalString methods.
 
 **Returns:** *string*
@@ -872,6 +959,8 @@ ___
 
 *Inherited from [Optional](optional.md).[toString](optional.md#tostring)*
 
+*Overrides [Optional](optional.md).[toString](optional.md#tostring)*
+
 Returns a string representation of an array.
 
 **Returns:** *string*
@@ -883,6 +972,8 @@ ___
 ▸ **unshift**(...`items`: T[]): *number*
 
 *Inherited from [Optional](optional.md).[unshift](optional.md#unshift)*
+
+*Overrides [Optional](optional.md).[unshift](optional.md#unshift)*
 
 Inserts new elements at the start of an array.
 
@@ -902,11 +993,9 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[getDescriber](wrapperpattern.md#static-getdescriber)*
 
-Returns describing library.
+*Overrides void*
 
 **Returns:** *[Describer](../interfaces/types.describer.md)*
-
-Describer library instance.
 
 ___
 
@@ -916,12 +1005,12 @@ ___
 
 *Inherited from [WrapperPattern](wrapperpattern.md).[setDescriber](wrapperpattern.md#static-setdescriber)*
 
-Sets describing library.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`describer` | [Describer](../interfaces/types.describer.md) | Describer library instance.  |
+Name | Type |
+------ | ------ |
+`describer` | [Describer](../interfaces/types.describer.md) |
 
 **Returns:** *void*

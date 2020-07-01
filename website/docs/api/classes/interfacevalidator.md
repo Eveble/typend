@@ -8,11 +8,14 @@ sidebar_label: "InterfaceValidator"
 
 * [PatternValidator](patternvalidator.md)
 
+* PatternValidator
+
   ↳ **InterfaceValidator**
 
 ## Implements
 
 * [PatternValidator](../interfaces/types.patternvalidator.md)
+* PatternValidator
 
 ## Index
 
@@ -35,6 +38,8 @@ sidebar_label: "InterfaceValidator"
 ▪ **describer**: *[Describer](../interfaces/types.describer.md)*
 
 *Inherited from [PatternValidator](patternvalidator.md).[describer](patternvalidator.md#static-describer)*
+
+*Overrides void*
 
 ## Methods
 
@@ -62,23 +67,23 @@ ___
 
 *Inherited from [PatternValidator](patternvalidator.md).[describe](patternvalidator.md#describe)*
 
-Describes value in human readable form.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`value` | any | Value that needs to be described. |
+Name | Type |
+------ | ------ |
+`value` | any |
 
 **Returns:** *string*
-
-Human readable value described as a string.
 
 ___
 
 ###  validate
 
 ▸ **validate**(`value`: any, `pattern`: [Interface](interface.md), `validator`: [Validator](../interfaces/types.validator.md)): *boolean*
+
+*Implementation of [PatternValidator](../interfaces/types.patternvalidator.md)*
 
 Validates value against `Interface` pattern requiring it to match expected
 properties and available methods(compared only by name - and not by with method parameters).
@@ -111,11 +116,9 @@ ___
 
 *Inherited from [PatternValidator](patternvalidator.md).[getDescriber](patternvalidator.md#static-getdescriber)*
 
-Returns describing library.
+*Overrides void*
 
 **Returns:** *[Describer](../interfaces/types.describer.md)*
-
-Describer library instance.
 
 ___
 
@@ -125,12 +128,12 @@ ___
 
 *Inherited from [PatternValidator](patternvalidator.md).[setDescriber](patternvalidator.md#static-setdescriber)*
 
-Sets describing library.
+*Overrides void*
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`describer` | [Describer](../interfaces/types.describer.md) | Describer library instance.  |
+Name | Type |
+------ | ------ |
+`describer` | [Describer](../interfaces/types.describer.md) |
 
 **Returns:** *void*

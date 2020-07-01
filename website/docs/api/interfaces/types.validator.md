@@ -39,9 +39,17 @@ sidebar_label: "Validator"
 
 **Returns:** *Map‹string, [PatternValidator](types.patternvalidator.md)›*
 
+▸ **getAllValidators**(): *Map‹string, PatternValidator›*
+
+**Returns:** *Map‹string, PatternValidator›*
+
 ___
 
 ###  getOrder
+
+▸ **getOrder**(): *string[]*
+
+**Returns:** *string[]*
 
 ▸ **getOrder**(): *string[]*
 
@@ -61,6 +69,16 @@ Name | Type |
 
 **Returns:** *[PatternValidator](types.patternvalidator.md) | undefined*
 
+▸ **getValidator**(`kind`: string): *PatternValidator | undefined*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+
+**Returns:** *PatternValidator | undefined*
+
 ___
 
 ###  getValidatorOrThrow
@@ -75,6 +93,16 @@ Name | Type |
 
 **Returns:** *[PatternValidator](types.patternvalidator.md)*
 
+▸ **getValidatorOrThrow**(`kind`: string): *PatternValidator*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+
+**Returns:** *PatternValidator*
+
 ___
 
 ###  getValidators
@@ -82,6 +110,10 @@ ___
 ▸ **getValidators**(): *[PatternValidator](types.patternvalidator.md)[]*
 
 **Returns:** *[PatternValidator](types.patternvalidator.md)[]*
+
+▸ **getValidators**(): *PatternValidator[]*
+
+**Returns:** *PatternValidator[]*
 
 ___
 
@@ -97,9 +129,30 @@ Name | Type |
 
 **Returns:** *boolean*
 
+▸ **hasValidator**(`kind`: string): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+
+**Returns:** *boolean*
+
 ___
 
 ###  isInstanceOf
+
+▸ **isInstanceOf**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation)): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`value` | any |
+`expectation` | [Expectation](../modules/types.md#expectation) |
+
+**Returns:** *boolean*
 
 ▸ **isInstanceOf**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation)): *boolean*
 
@@ -128,6 +181,18 @@ Name | Type |
 
 **Returns:** *boolean*
 
+▸ **isValid**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation), `isStrict?`: boolean): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`value` | any |
+`expectation` | [Expectation](../modules/types.md#expectation) |
+`isStrict?` | boolean |
+
+**Returns:** *boolean*
+
 ___
 
 ###  overrideValidator
@@ -140,6 +205,17 @@ Name | Type |
 ------ | ------ |
 `kind` | string |
 `validator` | [PatternValidator](types.patternvalidator.md) |
+
+**Returns:** *void*
+
+▸ **overrideValidator**(`kind`: string, `validator`: PatternValidator): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+`validator` | PatternValidator |
 
 **Returns:** *void*
 
@@ -159,9 +235,31 @@ Name | Type |
 
 **Returns:** *void*
 
+▸ **registerValidator**(`kind`: string, `validator`: PatternValidator, `shouldOverride?`: boolean): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+`validator` | PatternValidator |
+`shouldOverride?` | boolean |
+
+**Returns:** *void*
+
 ___
 
 ###  removeValidator
+
+▸ **removeValidator**(`kind`: string): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`kind` | string |
+
+**Returns:** *void*
 
 ▸ **removeValidator**(`kind`: string): *void*
 
@@ -187,6 +285,16 @@ Name | Type |
 
 **Returns:** *void*
 
+▸ **setOrder**(`order`: string[]): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`order` | string[] |
+
+**Returns:** *void*
+
 ___
 
 ###  setValidators
@@ -201,9 +309,31 @@ Name | Type |
 
 **Returns:** *void*
 
+▸ **setValidators**(`validators`: Map‹string, PatternValidator›): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`validators` | Map‹string, PatternValidator› |
+
+**Returns:** *void*
+
 ___
 
 ###  validate
+
+▸ **validate**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation), `isStrict?`: boolean): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`value` | any |
+`expectation` | [Expectation](../modules/types.md#expectation) |
+`isStrict?` | boolean |
+
+**Returns:** *boolean*
 
 ▸ **validate**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation), `isStrict?`: boolean): *boolean*
 

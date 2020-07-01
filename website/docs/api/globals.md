@@ -8,6 +8,7 @@ sidebar_label: "Globals"
 
 ### Namespaces
 
+* [define](modules/define.md)
 * [types](modules/types.md)
 
 ### Enumerations
@@ -157,7 +158,6 @@ sidebar_label: "Globals"
 * [collection](globals.md#collection)
 * [collectionIncluding](globals.md#collectionincluding)
 * [collectionWithin](globals.md#collectionwithin)
-* [define](globals.md#define)
 * [eq](globals.md#eq)
 * [getMatchingParentProto](globals.md#getmatchingparentproto)
 * [getResolvablePath](globals.md#getresolvablepath)
@@ -197,7 +197,7 @@ sidebar_label: "Globals"
 
 * **__eveble_payload**: *T*
 
-* **__eveble_validation**: *[PROPERTIES_OF](enums/kinds.md#properties_of)*
+* **__eveble_validation**: *PROPERTIES_OF*
 
 ___
 
@@ -209,7 +209,7 @@ ___
 
 * **__eveble_payload**: *T*
 
-* **__eveble_validation**: *[TYPE_OF](enums/kinds.md#type_of)*
+* **__eveble_validation**: *TYPE_OF*
 
 ## Variables
 
@@ -305,7 +305,7 @@ ___
 
 ### `Const` any
 
-• **any**: *[Any](classes/any.md)‹›* = new Any()
+• **any**: *Any‹›* = new Any()
 
 ___
 
@@ -317,25 +317,25 @@ ___
 
 ### `Const` classTransformers
 
-• **classTransformers**: *Map‹string, [TypeTransformer](interfaces/types.typetransformer.md)›* = new Map()
+• **classTransformers**: *Map‹string, TypeTransformer›* = new Map()
 
 ___
 
 ### `Const` converter
 
-• **converter**: *[Converter](interfaces/types.converter.md)* = new TSRuntimeConverter()
+• **converter**: *Converter* = new TSRuntimeConverter()
 
 ___
 
 ### `Const` describer
 
-• **describer**: *[Describer](classes/describer.md)‹›* = new Describer()
+• **describer**: *Describer‹›* = new Describer()
 
 ___
 
 ### `Const` integer
 
-• **integer**: *[Integer](classes/integer.md)* = Integer
+• **integer**: *Integer* = Integer
 
 ___
 
@@ -353,7 +353,7 @@ ___
 
 ### `Const` never
 
-• **never**: *[Never](classes/never.md)‹›* = new Never()
+• **never**: *Never‹›* = new Never()
 
 ___
 
@@ -377,13 +377,13 @@ ___
 
 ### `Const` typend
 
-• **typend**: *[Library](interfaces/types.library.md)* = new Typend(converter, describer, validator)
+• **typend**: *Library* = new Typend(converter, describer, validator)
 
 ___
 
 ### `Const` unknown
 
-• **unknown**: *[Unknown](classes/unknown.md)‹›* = new Unknown()
+• **unknown**: *Unknown‹›* = new Unknown()
 
 ___
 
@@ -395,13 +395,13 @@ ___
 
 ### `Const` validator
 
-• **validator**: *[Validator](interfaces/types.validator.md)* = new Validator()
+• **validator**: *Validator* = new Validator()
 
 ___
 
 ### `Const` voided
 
-• **voided**: *[Void](classes/void.md)‹›* = new Void()
+• **voided**: *Void‹›* = new Void()
 
 ## Functions
 
@@ -444,30 +444,6 @@ Name | Type |
 `properties` | Record‹keyof any, any› |
 
 **Returns:** *[CollectionWithin](classes/collectionwithin.md)*
-
-___
-
-###  define
-
-▸ **define**(...`args`: any[]): *MarkReflective‹[ClassDecorator](modules/types.md#classdecorator)›*
-
-Defines a type by enabling declaration reflection so it can be converted later on for runtime validation.
-
-**`example`** 
-```ts
-define()
-class MyType {}
-```
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`...args` | any[] | Optional arguments that will be passed back to before/after hooks. |
-
-**Returns:** *MarkReflective‹[ClassDecorator](modules/types.md#classdecorator)›*
-
-Marked class as reflective.
 
 ___
 
@@ -879,15 +855,15 @@ ___
 
 ###  validable
 
-▸ **validable**(`isValidable`: boolean): *[ClassDecorator](modules/types.md#classdecorator)*
+▸ **validable**(`isValidable?`: boolean): *[ClassDecorator](modules/types.md#classdecorator)*
 
 Flags class as supporting(true) or disabling(false) validation.
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`isValidable` | boolean | true | Flag indicating if class supports validation. |
+Name | Type | Description |
+------ | ------ | ------ |
+`isValidable?` | boolean | Flag indicating if class supports validation. |
 
 **Returns:** *[ClassDecorator](modules/types.md#classdecorator)*
 
@@ -913,13 +889,9 @@ Name | Type |
 
 ### ▪ **PropTypes**: *object*
 
-###  Integer
-
-• **Integer**: *[Integer](classes/integer.md)*
-
 ###  any
 
-• **any**: *[Any](classes/any.md)‹›*
+• **any**: *Any‹›*
 
 ###  array
 
@@ -947,7 +919,7 @@ Name | Type |
 
 ###  integer
 
-• **integer**: *[Integer](classes/integer.md)*
+• **integer**: *Integer*
 
 ###  maybe
 
@@ -955,7 +927,7 @@ Name | Type |
 
 ###  never
 
-• **never**: *[Never](classes/never.md)‹›*
+• **never**: *Never‹›*
 
 ###  number
 
@@ -963,11 +935,7 @@ Name | Type |
 
 ###  object
 
-• **object**: *[Collection](classes/collection.md)‹›* = new Collection({})
-
-###  objectOf
-
-• **objectOf**: *[Collection](classes/collection.md)‹›* = new Collection({})
+• **object**: *Collection‹›* = new Collection({})
 
 ###  oneOf
 
@@ -991,7 +959,7 @@ Name | Type |
 
 ###  void
 
-• **void**: *[Void](classes/void.md)‹›* = voided
+• **void**: *Void‹›* = voided
 
 ###  where
 
@@ -999,7 +967,7 @@ Name | Type |
 
 ###  interface
 
-▸ **interface**(`properties`: Record‹keyof any, any›): *[Interface](classes/interface.md)*
+▸ **interface**(`properties`: Record‹keyof any, any›): *Interface*
 
 **Parameters:**
 
@@ -1007,11 +975,23 @@ Name | Type |
 ------ | ------ |
 `properties` | Record‹keyof any, any› |
 
-**Returns:** *[Interface](classes/interface.md)*
+**Returns:** *Interface*
+
+###  objectOf
+
+▸ **objectOf**(`_props`: any): *Collection‹›*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`_props` | any |
+
+**Returns:** *Collection‹›*
 
 ###  shape
 
-▸ **shape**(`properties`: Record‹keyof any, any›): *[Interface](classes/interface.md)*
+▸ **shape**(`properties`: Record‹keyof any, any›): *Collection*
 
 **Parameters:**
 
@@ -1019,4 +999,4 @@ Name | Type |
 ------ | ------ |
 `properties` | Record‹keyof any, any› |
 
-**Returns:** *[Interface](classes/interface.md)*
+**Returns:** *Collection*

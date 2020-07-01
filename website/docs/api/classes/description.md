@@ -11,6 +11,7 @@ sidebar_label: "Description"
 ## Implements
 
 * [Stringifiable](../interfaces/types.stringifiable.md)
+* Stringifiable
 
 ## Index
 
@@ -34,6 +35,7 @@ sidebar_label: "Description"
 
 \+ **new Description**(`props`: object): *[Description](description.md)*
 
+Creates an instance of Description.
 Creates an instance of Description.
 
 **Parameters:**

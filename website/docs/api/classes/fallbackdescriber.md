@@ -11,6 +11,7 @@ sidebar_label: "FallbackDescriber"
 ## Implements
 
 * [TypeDescriber](../interfaces/types.typedescriber.md)
+* TypeDescriber
 
 ## Index
 

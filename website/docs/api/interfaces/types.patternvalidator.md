@@ -54,6 +54,17 @@ Name | Type |
 
 **Returns:** *boolean*
 
+▸ **canValidate**(`expectation`: [Expectation](../modules/types.md#expectation), `isStrict?`: boolean): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`expectation` | [Expectation](../modules/types.md#expectation) |
+`isStrict?` | boolean |
+
+**Returns:** *boolean*
+
 ___
 
 ###  validate
@@ -67,5 +78,17 @@ Name | Type |
 `value?` | any |
 `expectation?` | [Expectation](../modules/types.md#expectation) |
 `validator?` | [Validator](types.validator.md) |
+
+**Returns:** *boolean*
+
+▸ **validate**(`value?`: any, `expectation?`: [Expectation](../modules/types.md#expectation), `validator?`: Validator): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`value?` | any |
+`expectation?` | [Expectation](../modules/types.md#expectation) |
+`validator?` | Validator |
 
 **Returns:** *boolean*

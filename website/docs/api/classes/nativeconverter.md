@@ -11,6 +11,7 @@ sidebar_label: "NativeConverter"
 ## Implements
 
 * [TypeConverter](../interfaces/types.typeconverter.md)
+* TypeConverter
 
 ## Index
 
@@ -86,12 +87,12 @@ Returns reflected type as instance of pattern `Any` for `any` | `Void` for `void
 
 ###  1
 
-• **1**: *[Any](any.md)‹›* = new Any()
+• **1**: *Any‹›* = new Any()
 
 ###  11
 
-• **11**: *[Void](void.md)‹›* = new Void()
+• **11**: *Void‹›* = new Void()
 
 ###  14
 
-• **14**: *[Never](never.md)‹›* = new Never()
+• **14**: *Never‹›* = new Never()

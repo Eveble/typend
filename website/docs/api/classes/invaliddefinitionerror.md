@@ -8,6 +8,8 @@ sidebar_label: "InvalidDefinitionError"
 
 * ExtendableError
 
+* ExtendableError
+
   ↳ **InvalidDefinitionError**
 
 ## Index
@@ -45,6 +47,8 @@ Name | Type |
 
 *Inherited from [TypeDescriberExistsError](typedescriberexistserror.md).[message](typedescriberexistserror.md#message)*
 
+*Overrides [TypeDescriberExistsError](typedescriberexistserror.md).[message](typedescriberexistserror.md#message)*
+
 ___
 
 ###  name
@@ -53,6 +57,8 @@ ___
 
 *Inherited from [TypeDescriberExistsError](typedescriberexistserror.md).[name](typedescriberexistserror.md#name)*
 
+*Overrides [TypeDescriberExistsError](typedescriberexistserror.md).[name](typedescriberexistserror.md#name)*
+
 ___
 
 ### `Optional` stack
@@ -60,3 +66,5 @@ ___
 • **stack**? : *string*
 
 *Inherited from [TypeDescriberExistsError](typedescriberexistserror.md).[stack](typedescriberexistserror.md#optional-stack)*
+
+*Overrides [TypeDescriberExistsError](typedescriberexistserror.md).[stack](typedescriberexistserror.md#optional-stack)*

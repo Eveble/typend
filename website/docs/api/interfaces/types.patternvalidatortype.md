@@ -37,11 +37,21 @@ Name | Type |
 
 **Returns:** *[PatternValidator](types.patternvalidator.md)*
 
+\+ **new PatternValidatorType**(`definition`: any): *PatternValidator*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`definition` | any |
+
+**Returns:** *PatternValidator*
+
 ## Properties
 
 ###  describer
 
-• **describer**: *[Describer](types.describer.md)*
+• **describer**: *Describer*
 
 ## Methods
 
@@ -50,6 +60,10 @@ Name | Type |
 ▸ **getDescriber**(): *[Describer](types.describer.md)*
 
 **Returns:** *[Describer](types.describer.md)*
+
+▸ **getDescriber**(): *Describer*
+
+**Returns:** *Describer*
 
 ___
 
@@ -62,5 +76,15 @@ ___
 Name | Type |
 ------ | ------ |
 `describer` | [Describer](types.describer.md) |
+
+**Returns:** *void*
+
+▸ **setDescriber**(`describer`: Describer): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`describer` | Describer |
 
 **Returns:** *void*

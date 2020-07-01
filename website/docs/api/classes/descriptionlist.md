@@ -11,6 +11,7 @@ sidebar_label: "DescriptionList"
 ## Implements
 
 * [Stringifiable](../interfaces/types.stringifiable.md)
+* Stringifiable
 
 ## Index
 
@@ -30,15 +31,16 @@ sidebar_label: "DescriptionList"
 
 ###  constructor
 
-\+ **new DescriptionList**(`descriptions`: [Stringifiable](../interfaces/types.stringifiable.md)[]): *[DescriptionList](descriptionlist.md)*
+\+ **new DescriptionList**(`descriptions?`: [Stringifiable](../interfaces/types.stringifiable.md)[]): *[DescriptionList](descriptionlist.md)*
 
+Creates an instance of DescriptionList.
 Creates an instance of DescriptionList.
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`descriptions` | [Stringifiable](../interfaces/types.stringifiable.md)[] | [] | Description list as an array.  |
+Name | Type | Description |
+------ | ------ | ------ |
+`descriptions?` | [Stringifiable](../interfaces/types.stringifiable.md)[] | Description list as an array.  |
 
 **Returns:** *[DescriptionList](descriptionlist.md)*
 
@@ -46,7 +48,7 @@ Name | Type | Default | Description |
 
 ###  descriptions
 
-• **descriptions**: *[Stringifiable](../interfaces/types.stringifiable.md)[]*
+• **descriptions**: *Stringifiable[]*
 
 ## Methods
 

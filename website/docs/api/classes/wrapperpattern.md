@@ -16,15 +16,27 @@ sidebar_label: "WrapperPattern"
 
 ▪ **T**
 
+▪ **T**
+
+▪ **T**
+
+▪ **T**
+
+▪ **T**
+
+▪ **T**
+
 ## Hierarchy
+
+* [Array](optional.md#static-array)
 
 * [Array](optional.md#static-array)
 
   ↳ **WrapperPattern**
 
-  ↳ [InstanceOf](instanceof.md)
-
   ↳ [Equals](equals.md)
+
+  ↳ [InstanceOf](instanceof.md)
 
   ↳ [Internal](internal.md)
 
@@ -115,6 +127,7 @@ sidebar_label: "WrapperPattern"
 \+ **new WrapperPattern**(...`expectations`: any[]): *[WrapperPattern](wrapperpattern.md)*
 
 Creates an instance of a WrapperPattern.
+Creates an instance of a WrapperPattern.
 
 **Parameters:**
 
@@ -132,6 +145,8 @@ Name | Type | Description |
 
 *Inherited from [Optional](optional.md).[length](optional.md#length)*
 
+*Overrides [Optional](optional.md).[length](optional.md#length)*
+
 Gets or sets the length of the array. This is a number one higher than the highest element defined in an array.
 
 ___
@@ -144,7 +159,7 @@ ___
 
 ### `Static` describer
 
-▪ **describer**: *[Describer](../interfaces/types.describer.md)*
+▪ **describer**: *Describer*
 
 ___
 
@@ -156,11 +171,11 @@ ___
 
 ###  isOptional
 
-• **get isOptional**(): *[Optional](optional.md)*
+• **get isOptional**(): *Optional*
 
 Make current pattern optional.
 
-**Returns:** *[Optional](optional.md)*
+**Returns:** *Optional*
 
 Pattern wrapped with instance of Optional pattern.
 
@@ -184,6 +199,8 @@ Pattern that is unwrapped from Optional pattern.
 
 *Inherited from [Optional](optional.md).[[Symbol.iterator]](optional.md#[symbol.iterator])*
 
+*Overrides [Optional](optional.md).[[Symbol.iterator]](optional.md#[symbol.iterator])*
+
 Iterator
 
 **Returns:** *IterableIterator‹T›*
@@ -195,6 +212,8 @@ ___
 ▸ **[Symbol.unscopables]**(): *object*
 
 *Inherited from [Optional](optional.md).[[Symbol.unscopables]](optional.md#[symbol.unscopables])*
+
+*Overrides [Optional](optional.md).[[Symbol.unscopables]](optional.md#[symbol.unscopables])*
 
 Returns an object whose properties have the value 'true'
 when they will be absent when used in a 'with' statement.
@@ -223,6 +242,8 @@ ___
 
 *Inherited from [Optional](optional.md).[concat](optional.md#concat)*
 
+*Overrides [Optional](optional.md).[concat](optional.md#concat)*
+
 Combines two or more arrays.
 
 **Parameters:**
@@ -236,6 +257,8 @@ Name | Type | Description |
 ▸ **concat**(...`items`: T | ConcatArray‹T›[]): *T[]*
 
 *Inherited from [Optional](optional.md).[concat](optional.md#concat)*
+
+*Overrides [Optional](optional.md).[concat](optional.md#concat)*
 
 Combines two or more arrays.
 
@@ -254,6 +277,8 @@ ___
 ▸ **copyWithin**(`target`: number, `start`: number, `end?`: number): *this*
 
 *Inherited from [Optional](optional.md).[copyWithin](optional.md#copywithin)*
+
+*Overrides [Optional](optional.md).[copyWithin](optional.md#copywithin)*
 
 Returns the this object after copying a section of the array identified by start and end
 to the same array starting at position target
@@ -294,6 +319,8 @@ ___
 
 *Inherited from [Optional](optional.md).[entries](optional.md#entries)*
 
+*Overrides [Optional](optional.md).[entries](optional.md#entries)*
+
 Returns an iterable of key, value pairs for every entry in the array
 
 **Returns:** *IterableIterator‹[number, T]›*
@@ -305,6 +332,8 @@ ___
 ▸ **every**(`callbackfn`: function, `thisArg?`: any): *boolean*
 
 *Inherited from [Optional](optional.md).[every](optional.md#every)*
+
+*Overrides [Optional](optional.md).[every](optional.md#every)*
 
 Determines whether all the members of an array satisfy the specified test.
 
@@ -341,6 +370,8 @@ ___
 
 *Inherited from [Optional](optional.md).[fill](optional.md#fill)*
 
+*Overrides [Optional](optional.md).[fill](optional.md#fill)*
+
 Returns the this object after filling the section identified by start and end with value
 
 **Parameters:**
@@ -360,6 +391,8 @@ ___
 ▸ **filter**‹**S**›(`callbackfn`: function, `thisArg?`: any): *S[]*
 
 *Inherited from [Optional](optional.md).[filter](optional.md#filter)*
+
+*Overrides [Optional](optional.md).[filter](optional.md#filter)*
 
 Returns the elements of an array that meet the condition specified in a callback function.
 
@@ -393,6 +426,8 @@ An object to which the this keyword can refer in the callbackfn function. If thi
 
 *Inherited from [Optional](optional.md).[filter](optional.md#filter)*
 
+*Overrides [Optional](optional.md).[filter](optional.md#filter)*
+
 Returns the elements of an array that meet the condition specified in a callback function.
 
 **Parameters:**
@@ -424,6 +459,8 @@ ___
 ▸ **find**‹**S**›(`predicate`: function, `thisArg?`: any): *S | undefined*
 
 *Inherited from [Optional](optional.md).[find](optional.md#find)*
+
+*Overrides [Optional](optional.md).[find](optional.md#find)*
 
 Returns the value of the first element in the array where predicate is true, and undefined
 otherwise.
@@ -462,6 +499,8 @@ predicate. If it is not provided, undefined is used instead.
 
 *Inherited from [Optional](optional.md).[find](optional.md#find)*
 
+*Overrides [Optional](optional.md).[find](optional.md#find)*
+
 **Parameters:**
 
 ▪ **predicate**: *function*
@@ -487,6 +526,8 @@ ___
 ▸ **findIndex**(`predicate`: function, `thisArg?`: any): *number*
 
 *Inherited from [Optional](optional.md).[findIndex](optional.md#findindex)*
+
+*Overrides [Optional](optional.md).[findIndex](optional.md#findindex)*
 
 Returns the index of the first element in the array where predicate is true, and -1
 otherwise.
@@ -523,6 +564,8 @@ ___
 ▸ **forEach**(`callbackfn`: function, `thisArg?`: any): *void*
 
 *Inherited from [Optional](optional.md).[forEach](optional.md#foreach)*
+
+*Overrides [Optional](optional.md).[forEach](optional.md#foreach)*
 
 Performs the specified action for each element in an array.
 
@@ -592,6 +635,8 @@ ___
 
 *Inherited from [Optional](optional.md).[includes](optional.md#includes)*
 
+*Overrides [Optional](optional.md).[includes](optional.md#includes)*
+
 Determines whether an array includes a certain element, returning true or false as appropriate.
 
 **Parameters:**
@@ -610,6 +655,8 @@ ___
 ▸ **indexOf**(`searchElement`: T, `fromIndex?`: number): *number*
 
 *Inherited from [Optional](optional.md).[indexOf](optional.md#indexof)*
+
+*Overrides [Optional](optional.md).[indexOf](optional.md#indexof)*
 
 Returns the index of the first occurrence of a value in an array.
 
@@ -630,6 +677,8 @@ ___
 
 *Inherited from [Optional](optional.md).[join](optional.md#join)*
 
+*Overrides [Optional](optional.md).[join](optional.md#join)*
+
 Adds all the elements of an array separated by the specified separator string.
 
 **Parameters:**
@@ -648,6 +697,8 @@ ___
 
 *Inherited from [Optional](optional.md).[keys](optional.md#keys)*
 
+*Overrides [Optional](optional.md).[keys](optional.md#keys)*
+
 Returns an iterable of keys in the array
 
 **Returns:** *IterableIterator‹number›*
@@ -659,6 +710,8 @@ ___
 ▸ **lastIndexOf**(`searchElement`: T, `fromIndex?`: number): *number*
 
 *Inherited from [Optional](optional.md).[lastIndexOf](optional.md#lastindexof)*
+
+*Overrides [Optional](optional.md).[lastIndexOf](optional.md#lastindexof)*
 
 Returns the index of the last occurrence of a specified value in an array.
 
@@ -678,6 +731,8 @@ ___
 ▸ **map**‹**U**›(`callbackfn`: function, `thisArg?`: any): *U[]*
 
 *Inherited from [Optional](optional.md).[map](optional.md#map)*
+
+*Overrides [Optional](optional.md).[map](optional.md#map)*
 
 Calls a defined callback function on each element of an array, and returns an array that contains the results.
 
@@ -731,6 +786,8 @@ ___
 
 *Inherited from [Optional](optional.md).[pop](optional.md#pop)*
 
+*Overrides [Optional](optional.md).[pop](optional.md#pop)*
+
 Removes the last element from an array and returns it.
 
 **Returns:** *T | undefined*
@@ -742,6 +799,8 @@ ___
 ▸ **push**(...`items`: T[]): *number*
 
 *Inherited from [Optional](optional.md).[push](optional.md#push)*
+
+*Overrides [Optional](optional.md).[push](optional.md#push)*
 
 Appends new elements to an array, and returns the new length of the array.
 
@@ -760,6 +819,8 @@ ___
 ▸ **reduce**(`callbackfn`: function): *T*
 
 *Inherited from [Optional](optional.md).[reduce](optional.md#reduce)*
+
+*Overrides [Optional](optional.md).[reduce](optional.md#reduce)*
 
 Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 
@@ -786,6 +847,8 @@ Name | Type |
 
 *Inherited from [Optional](optional.md).[reduce](optional.md#reduce)*
 
+*Overrides [Optional](optional.md).[reduce](optional.md#reduce)*
+
 **Parameters:**
 
 ▪ **callbackfn**: *function*
@@ -808,6 +871,8 @@ Name | Type |
 ▸ **reduce**‹**U**›(`callbackfn`: function, `initialValue`: U): *U*
 
 *Inherited from [Optional](optional.md).[reduce](optional.md#reduce)*
+
+*Overrides [Optional](optional.md).[reduce](optional.md#reduce)*
 
 Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 
@@ -846,6 +911,8 @@ ___
 
 *Inherited from [Optional](optional.md).[reduceRight](optional.md#reduceright)*
 
+*Overrides [Optional](optional.md).[reduceRight](optional.md#reduceright)*
+
 Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 
 **Parameters:**
@@ -871,6 +938,8 @@ Name | Type |
 
 *Inherited from [Optional](optional.md).[reduceRight](optional.md#reduceright)*
 
+*Overrides [Optional](optional.md).[reduceRight](optional.md#reduceright)*
+
 **Parameters:**
 
 ▪ **callbackfn**: *function*
@@ -893,6 +962,8 @@ Name | Type |
 ▸ **reduceRight**‹**U**›(`callbackfn`: function, `initialValue`: U): *U*
 
 *Inherited from [Optional](optional.md).[reduceRight](optional.md#reduceright)*
+
+*Overrides [Optional](optional.md).[reduceRight](optional.md#reduceright)*
 
 Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 
@@ -931,6 +1002,8 @@ ___
 
 *Inherited from [Optional](optional.md).[reverse](optional.md#reverse)*
 
+*Overrides [Optional](optional.md).[reverse](optional.md#reverse)*
+
 Reverses the elements in an Array.
 
 **Returns:** *T[]*
@@ -959,6 +1032,8 @@ ___
 
 *Inherited from [Optional](optional.md).[shift](optional.md#shift)*
 
+*Overrides [Optional](optional.md).[shift](optional.md#shift)*
+
 Removes the first element from an array and returns it.
 
 **Returns:** *T | undefined*
@@ -970,6 +1045,8 @@ ___
 ▸ **slice**(`start?`: number, `end?`: number): *T[]*
 
 *Inherited from [Optional](optional.md).[slice](optional.md#slice)*
+
+*Overrides [Optional](optional.md).[slice](optional.md#slice)*
 
 Returns a section of an array.
 
@@ -989,6 +1066,8 @@ ___
 ▸ **some**(`callbackfn`: function, `thisArg?`: any): *boolean*
 
 *Inherited from [Optional](optional.md).[some](optional.md#some)*
+
+*Overrides [Optional](optional.md).[some](optional.md#some)*
 
 Determines whether the specified callback function returns true for any element of an array.
 
@@ -1025,6 +1104,8 @@ ___
 
 *Inherited from [Optional](optional.md).[sort](optional.md#sort)*
 
+*Overrides [Optional](optional.md).[sort](optional.md#sort)*
+
 Sorts an array.
 
 **Parameters:**
@@ -1057,6 +1138,8 @@ ___
 
 *Inherited from [Optional](optional.md).[splice](optional.md#splice)*
 
+*Overrides [Optional](optional.md).[splice](optional.md#splice)*
+
 Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
 
 **Parameters:**
@@ -1071,6 +1154,8 @@ Name | Type | Description |
 ▸ **splice**(`start`: number, `deleteCount`: number, ...`items`: T[]): *T[]*
 
 *Inherited from [Optional](optional.md).[splice](optional.md#splice)*
+
+*Overrides [Optional](optional.md).[splice](optional.md#splice)*
 
 Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
 
@@ -1092,6 +1177,8 @@ ___
 
 *Inherited from [Optional](optional.md).[toLocaleString](optional.md#tolocalestring)*
 
+*Overrides [Optional](optional.md).[toLocaleString](optional.md#tolocalestring)*
+
 Returns a string representation of an array. The elements are converted to string using their toLocalString methods.
 
 **Returns:** *string*
@@ -1104,6 +1191,8 @@ ___
 
 *Inherited from [Optional](optional.md).[toString](optional.md#tostring)*
 
+*Overrides [Optional](optional.md).[toString](optional.md#tostring)*
+
 Returns a string representation of an array.
 
 **Returns:** *string*
@@ -1115,6 +1204,8 @@ ___
 ▸ **unshift**(...`items`: T[]): *number*
 
 *Inherited from [Optional](optional.md).[unshift](optional.md#unshift)*
+
+*Overrides [Optional](optional.md).[unshift](optional.md#unshift)*
 
 Inserts new elements at the start of an array.
 
@@ -1133,6 +1224,8 @@ ___
 ▸ **values**(): *IterableIterator‹T›*
 
 *Inherited from [Optional](optional.md).[values](optional.md#values)*
+
+*Overrides [Optional](optional.md).[values](optional.md#values)*
 
 Returns an iterable of values in the array
 

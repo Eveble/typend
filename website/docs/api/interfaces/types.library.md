@@ -37,23 +37,33 @@ sidebar_label: "Library"
 
 ###  converter
 
-• **converter**: *[Converter](types.converter.md)*
+• **converter**: *Converter*
 
 ___
 
 ###  describer
 
-• **describer**: *[Describer](types.describer.md)*
+• **describer**: *Describer*
 
 ___
 
 ###  validator
 
-• **validator**: *[Validator](types.validator.md)*
+• **validator**: *Validator*
 
 ## Methods
 
 ###  debug
+
+▸ **debug**(`isDebugging?`: boolean): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`isDebugging?` | boolean |
+
+**Returns:** *void*
 
 ▸ **debug**(`isDebugging?`: boolean): *void*
 
@@ -73,6 +83,10 @@ ___
 
 **Returns:** *[Converter](types.converter.md)*
 
+▸ **getConverter**(): *Converter*
+
+**Returns:** *Converter*
+
 ___
 
 ###  getDescriber
@@ -80,6 +94,10 @@ ___
 ▸ **getDescriber**(): *[Describer](types.describer.md)*
 
 **Returns:** *[Describer](types.describer.md)*
+
+▸ **getDescriber**(): *Describer*
+
+**Returns:** *Describer*
 
 ___
 
@@ -89,9 +107,24 @@ ___
 
 **Returns:** *[Validator](types.validator.md)*
 
+▸ **getValidator**(): *Validator*
+
+**Returns:** *Validator*
+
 ___
 
 ###  isInstanceOf
+
+▸ **isInstanceOf**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation)): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`value` | any |
+`expectation` | [Expectation](../modules/types.md#expectation) |
+
+**Returns:** *boolean*
 
 ▸ **isInstanceOf**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation)): *boolean*
 
@@ -120,6 +153,18 @@ Name | Type |
 
 **Returns:** *boolean*
 
+▸ **isValid**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation) | Utility, `isStrict?`: boolean): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`value` | any |
+`expectation` | [Expectation](../modules/types.md#expectation) &#124; Utility |
+`isStrict?` | boolean |
+
+**Returns:** *boolean*
+
 ___
 
 ###  setConverter
@@ -131,6 +176,16 @@ ___
 Name | Type |
 ------ | ------ |
 `converter` | [Converter](types.converter.md) |
+
+**Returns:** *void*
+
+▸ **setConverter**(`converter`: Converter): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`converter` | Converter |
 
 **Returns:** *void*
 
@@ -148,6 +203,16 @@ Name | Type |
 
 **Returns:** *void*
 
+▸ **setDescriber**(`describer`: Describer): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`describer` | Describer |
+
+**Returns:** *void*
+
 ___
 
 ###  setValidator
@@ -159,6 +224,16 @@ ___
 Name | Type |
 ------ | ------ |
 `validator` | [Validator](types.validator.md) |
+
+**Returns:** *void*
+
+▸ **setValidator**(`validator`: Validator): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`validator` | Validator |
 
 **Returns:** *void*
 
@@ -174,6 +249,18 @@ Name | Type |
 ------ | ------ |
 `value` | any |
 `expectation` | [Expectation](../modules/types.md#expectation) &#124; [Utility](types.utility.md) |
+`isStrict?` | boolean |
+
+**Returns:** *boolean*
+
+▸ **validate**(`value`: any, `expectation`: [Expectation](../modules/types.md#expectation) | Utility, `isStrict?`: boolean): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`value` | any |
+`expectation` | [Expectation](../modules/types.md#expectation) &#124; Utility |
 `isStrict?` | boolean |
 
 **Returns:** *boolean*

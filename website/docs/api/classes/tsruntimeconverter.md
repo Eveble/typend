@@ -11,6 +11,7 @@ sidebar_label: "TSRuntimeConverter"
 ## Implements
 
 * [Converter](../interfaces/types.converter.md)
+* Converter
 
 ## Index
 
@@ -39,6 +40,7 @@ sidebar_label: "TSRuntimeConverter"
 \+ **new TSRuntimeConverter**(`typeConverters?`: Map‹string, [TypeConverter](../interfaces/types.typeconverter.md)›): *[TSRuntimeConverter](tsruntimeconverter.md)*
 
 Creates an instance of TSRuntimeConverter.
+Creates an instance of TSRuntimeConverter.
 
 **Parameters:**
 
@@ -52,7 +54,7 @@ Name | Type | Description |
 
 ###  typeConverters
 
-• **typeConverters**: *Map‹string, [TypeConverter](../interfaces/types.typeconverter.md)›*
+• **typeConverters**: *Map‹string, TypeConverter›*
 
 *Implementation of [Converter](../interfaces/types.converter.md).[typeConverters](../interfaces/types.converter.md#typeconverters)*
 
@@ -165,7 +167,7 @@ ___
 
 ###  registerConverter
 
-▸ **registerConverter**(`kind`: string, `typeConverter`: [TypeConverter](../interfaces/types.typeconverter.md), `shouldOverride`: boolean): *void*
+▸ **registerConverter**(`kind`: string, `typeConverter`: [TypeConverter](../interfaces/types.typeconverter.md), `shouldOverride?`: boolean): *void*
 
 *Implementation of [Converter](../interfaces/types.converter.md)*
 
@@ -176,11 +178,11 @@ Thrown if mapping would overridden on existing type converter without explicit c
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`kind` | string | - | Kind for which type converter mapping is registered. |
-`typeConverter` | [TypeConverter](../interfaces/types.typeconverter.md) | - | `TypeConverter` instance for registration. |
-`shouldOverride` | boolean | false | Optional flag indicating that type mapping should be overridden if exist. |
+Name | Type | Description |
+------ | ------ | ------ |
+`kind` | string | Kind for which type converter mapping is registered. |
+`typeConverter` | [TypeConverter](../interfaces/types.typeconverter.md) | `TypeConverter` instance for registration. |
+`shouldOverride?` | boolean | Optional flag indicating that type mapping should be overridden if exist. |
 
 **Returns:** *void*
 

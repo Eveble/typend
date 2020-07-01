@@ -49,6 +49,17 @@ Name | Type |
 
 **Returns:** *[Type](../modules/types.md#type)*
 
+▸ **convert**(`reflectedType?`: any, `converter?`: Converter): *[Type](../modules/types.md#type)*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`reflectedType?` | any |
+`converter?` | Converter |
+
+**Returns:** *[Type](../modules/types.md#type)*
+
 ___
 
 ###  isConvertible
@@ -64,6 +75,17 @@ Name | Type |
 
 **Returns:** *boolean*
 
+▸ **isConvertible**(`reflectedType`: any, `converter?`: Converter): *boolean*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`reflectedType` | any |
+`converter?` | Converter |
+
+**Returns:** *boolean*
+
 ___
 
 ###  reflect
@@ -76,5 +98,16 @@ Name | Type |
 ------ | ------ |
 `reflectedType?` | any |
 `converter?` | [Converter](types.converter.md) |
+
+**Returns:** *[Type](../modules/types.md#type)*
+
+▸ **reflect**(`reflectedType?`: any, `converter?`: Converter): *[Type](../modules/types.md#type)*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`reflectedType?` | any |
+`converter?` | Converter |
 
 **Returns:** *[Type](../modules/types.md#type)*

@@ -48,9 +48,17 @@ sidebar_label: "Pattern"
 
 **Returns:** *any | undefined*
 
+▸ **getInitializer**(): *any | undefined*
+
+**Returns:** *any | undefined*
+
 ___
 
 ###  getKind
+
+▸ **getKind**(): *string*
+
+**Returns:** *string*
 
 ▸ **getKind**(): *string*
 
@@ -64,9 +72,23 @@ ___
 
 **Returns:** *boolean*
 
+▸ **hasInitializer**(): *boolean*
+
+**Returns:** *boolean*
+
 ___
 
 ###  setInitializer
+
+▸ **setInitializer**(`initializer`: any): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`initializer` | any |
+
+**Returns:** *void*
 
 ▸ **setInitializer**(`initializer`: any): *void*
 

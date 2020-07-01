@@ -11,6 +11,7 @@ sidebar_label: "Describer"
 ## Implements
 
 * [Describer](../interfaces/types.describer.md)
+* Describer
 
 ## Index
 
@@ -40,6 +41,7 @@ sidebar_label: "Describer"
 
 \+ **new Describer**(`describers?`: Map‹string, [TypeDescriber](../interfaces/types.typedescriber.md)›): *[Describer](describer.md)*
 
+Creates an instance of Describer.
 Creates an instance of Describer.
 
 **Parameters:**
@@ -155,7 +157,7 @@ ___
 
 ###  registerDescriber
 
-▸ **registerDescriber**(`type`: string, `describer`: [TypeDescriber](../interfaces/types.typedescriber.md), `shouldOverride`: boolean): *void*
+▸ **registerDescriber**(`type`: string, `describer`: [TypeDescriber](../interfaces/types.typedescriber.md), `shouldOverride?`: boolean): *void*
 
 Registers describer on describer.
 
@@ -164,11 +166,11 @@ Thrown if mapping would overridden on describer without explicit call.
 
 **Parameters:**
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`type` | string | - | Type for which mapping will be created. |
-`describer` | [TypeDescriber](../interfaces/types.typedescriber.md) | - | Describer for registration. |
-`shouldOverride` | boolean | false | Flag indicating that mapping should be overriden if exist. |
+Name | Type | Description |
+------ | ------ | ------ |
+`type` | string | Type for which mapping will be created. |
+`describer` | [TypeDescriber](../interfaces/types.typedescriber.md) | Describer for registration. |
+`shouldOverride?` | boolean | Flag indicating that mapping should be overriden if exist. |
 
 **Returns:** *void*
 
@@ -214,28 +216,28 @@ Name | Type | Description |
 
 ###  [KINDS.ARRAY]
 
-• **[KINDS.ARRAY]**: *[ArrayDescriber](arraydescriber.md)* = ArrayDescriber
+• **[KINDS.ARRAY]**: *ArrayDescriber* = ArrayDescriber
 
 ###  [KINDS.CLASS]
 
-• **[KINDS.CLASS]**: *[ClassDescriber](classdescriber.md)* = ClassDescriber
+• **[KINDS.CLASS]**: *ClassDescriber* = ClassDescriber
 
 ###  [KINDS.DESCRIPTION_LIST]
 
-• **[KINDS.DESCRIPTION_LIST]**: *[DescriptionListDescriber](descriptionlistdescriber.md)* = DescriptionListDescriber
+• **[KINDS.DESCRIPTION_LIST]**: *DescriptionListDescriber* = DescriptionListDescriber
 
 ###  [KINDS.ERROR]
 
-• **[KINDS.ERROR]**: *[ErrorDescriber](errordescriber.md)* = ErrorDescriber
+• **[KINDS.ERROR]**: *ErrorDescriber* = ErrorDescriber
 
 ###  [KINDS.NATIVE]
 
-• **[KINDS.NATIVE]**: *[NativeTypeDescriber](nativetypedescriber.md)* = NativeTypeDescriber
+• **[KINDS.NATIVE]**: *NativeTypeDescriber* = NativeTypeDescriber
 
 ###  [KINDS.OBJECT]
 
-• **[KINDS.OBJECT]**: *[ObjectDescriber](objectdescriber.md)* = ObjectDescriber
+• **[KINDS.OBJECT]**: *ObjectDescriber* = ObjectDescriber
 
 ###  [KINDS.UNKNOWN]
 
-• **[KINDS.UNKNOWN]**: *[FallbackDescriber](fallbackdescriber.md)* = FallbackDescriber
+• **[KINDS.UNKNOWN]**: *FallbackDescriber* = FallbackDescriber

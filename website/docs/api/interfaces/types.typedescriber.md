@@ -40,3 +40,14 @@ Name | Type |
 `describer?` | [Describer](types.describer.md) |
 
 **Returns:** *[Stringifiable](types.stringifiable.md)*
+
+▸ **describe**(`arg`: any, `describer?`: Describer): *Stringifiable*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`arg` | any |
+`describer?` | Describer |
+
+**Returns:** *Stringifiable*

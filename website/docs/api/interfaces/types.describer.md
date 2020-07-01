@@ -33,9 +33,29 @@ Name | Type |
 
 **Returns:** *string*
 
+▸ **describe**(`source`: any): *string*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`source` | any |
+
+**Returns:** *string*
+
 ___
 
 ###  setFormatting
+
+▸ **setFormatting**(`formatting`: [DescriberFormatting](../modules/types.md#describerformatting)): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`formatting` | [DescriberFormatting](../modules/types.md#describerformatting) |
+
+**Returns:** *void*
 
 ▸ **setFormatting**(`formatting`: [DescriberFormatting](../modules/types.md#describerformatting)): *void*
 
