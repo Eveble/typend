@@ -241,7 +241,7 @@ expect(() => new Unicorn('🦄🦄 Charrlieee! 🍌👑').to.throw(
 );
 ```
 
-[expectations]: TODO:
-[creating-patterns]: TODO:
+[expectations]: ../../guides/03-patterns/01-introduction#expectations
+[creating-patterns]: ../../guides/04-advanced/03-creating-pattern
 [react]: https://reactjs.org/
 [prop-types]: https://github.com/facebook/prop-types

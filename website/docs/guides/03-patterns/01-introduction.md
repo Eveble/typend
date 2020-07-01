@@ -29,7 +29,7 @@ expect(PersonInterface).to.be.eql({
 });
 ```
 
-for [more learn about classes][classes]
+For more about classes [learn here][classes].
 
 ## Expectations
 
@@ -147,7 +147,6 @@ Under the hood its simple as defining:
 const string: Function = String;
 ```
 
-[patterns]: TODO:
 [react]: https://reactjs.org/
 [prop-types]: https://github.com/facebook/prop-types
-[classes]: TODO:
+[classes]: ../../guides/04-advanced/01-defining-classes
