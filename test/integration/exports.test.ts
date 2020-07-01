@@ -814,7 +814,9 @@ describe('exports', () => {
       });
 
       it('PropTypes.objectOf', () => {
-        expect(PropTypes.objectOf).to.be.instanceof(Collection);
+        expect(PropTypes.objectOf(PropTypes.number)).to.be.instanceof(
+          Collection
+        );
       });
 
       it('PropTypes.oneOf', () => {
@@ -826,7 +828,7 @@ describe('exports', () => {
       });
 
       it('PropTypes.shape', () => {
-        expect(PropTypes.shape({})).to.be.instanceof(Interface);
+        expect(PropTypes.shape({})).to.be.instanceof(Collection);
       });
 
       it('PropTypes.string', () => {

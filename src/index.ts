@@ -364,7 +364,9 @@ const PropTypes = {
   never,
   number: Number,
   object: new Collection({}),
-  objectOf: (_props) => new Collection(), // TODO: add support
+  objectOf: (_props) => {
+    return new Collection();
+  }, // TODO: add support
   oneOf,
   oneOfType: oneOf,
   shape(properties: Record<keyof any, any>): Collection {
