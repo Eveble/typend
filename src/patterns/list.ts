@@ -4,6 +4,22 @@ import { KINDS } from '../constants/literal-keys';
 import { WrapperPattern } from '../wrapper-pattern';
 import { types } from '../types';
 
+/**
+ * Validates if value matches list expectation.
+ * @returns Returns `true` if value is matching expectation list, else throws.
+ * @example
+ * ```ts
+ * import { expect } from 'chai';
+ * import { check, validate, PropTypes, List, ValidationError } from 'typend';
+ *
+ * check<string[]>(['foo']);
+ * expect(() => check<number>(['foo'])).to.throw(ValidationError);
+ *
+ * validate(['foo'], [String]);
+ * validate(['foo'], PropTypes.arrayOf(String));
+ * validate(['foo'], new List(String));
+ * ```
+ */
 export class List extends WrapperPattern implements types.Pattern {
   public static kind = KINDS.ARRAY;
 

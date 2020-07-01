@@ -6,6 +6,28 @@ import { KINDS } from '../constants/literal-keys';
 import { WrapperPattern } from '../wrapper-pattern';
 import { types } from '../types';
 
+/**
+ * Validates value against expectation function.
+ * @returns Returns `true` if expectation function is truthful for value, else throws.
+ * @example
+ * ```ts
+ * import { expect } from 'chai';
+ * import { validate, ValidationError, PropTypes } from '../../../src/index';
+ *
+ * function validateFoo(value: string): boolean {
+ *   if (value !== 'foo') {
+ *     throw new ValidationError('my-error');
+ *   }
+ *   return true;
+ * }
+ *
+ * validate('foo', PropTypes.where(validateFoo));
+ *
+ * expect(() => {
+ *   validate('bar', PropTypes.where(validateFoo));
+ * }).to.throw(ValidationError);
+ * ```
+ */
 export class Where extends WrapperPattern implements types.Pattern {
   public static kind = KINDS.WHERE;
 
