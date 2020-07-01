@@ -55,10 +55,10 @@ describe('introduction', () => {
     validate({ age: 10 }, PropTypes.objectOf(PropTypes.number));
 
     // PropTypes.oneOf
-    validate('red', PropTypes.oneOf('red', 'green'));
+    validate('red', PropTypes.oneOf(['red', 'green']));
 
     // PropTypes.oneOfType
-    validate('foo', PropTypes.oneOfType(PropTypes.string, PropTypes.number));
+    validate('foo', PropTypes.oneOfType([PropTypes.string, PropTypes.number]));
 
     // PropTypes.shape
     validate({ name: 'Jane Doe' }, PropTypes.shape({ name: PropTypes.string }));

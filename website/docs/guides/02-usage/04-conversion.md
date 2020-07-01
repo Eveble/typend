@@ -60,7 +60,7 @@ expect(convert<Date>()).to.be.eql(PropTypes.instanceOf(Date));
 // Literals
 expect(convert<'foo'>()).to.be.eql(PropTypes.equal('foo'));
 expect(convert<'foo' | 'bar'>()).to.be.eql(
-  PropTypes.oneOf(PropTypes.equal('foo'), PropTypes.equal('bar'))
+  PropTypes.oneOf([PropTypes.equal('foo'), PropTypes.equal('bar')])
 );
 expect(convert<1337>()).to.be.eql(PropTypes.equal(1337));
 expect(convert<true>()).to.be.eql(PropTypes.equal(true));

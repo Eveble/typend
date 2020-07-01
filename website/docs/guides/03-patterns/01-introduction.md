@@ -52,8 +52,8 @@ As introduction, since we believe that simplicity is key to success, we exposed 
 | `PropTypes.number`     | PropTypes.number;                                          |
 | `PropTypes.object`     | PropTypes.object;                                          |
 | `PropTypes.objectOf`   | PropTypes.objectOf(PropTypes.number);                      |
-| `PropTypes.oneOf`      | PropTypes.oneOf('red', 'green');                           |
-| `PropTypes.oneOfType`  | PropTypes.oneOfType(PropTypes.string, PropTypes.number);   |
+| `PropTypes.oneOf`      | PropTypes.oneOf(['red', 'green']);                         |
+| `PropTypes.oneOfType`  | PropTypes.oneOfType([PropTypes.string, PropTypes.number]); |
 | `PropTypes.shape`      | PropTypes.shape({name: PropTypes.string});                 |
 | `PropTypes.string`     | PropTypes.string;                                          |
 | `PropTypes.symbol`     | PropTypes.symbol;                                          |
@@ -109,7 +109,7 @@ validate({}, PropTypes.object);
 validate({age: 10}, PropTypes.objectOf(PropTypes.number));
 
 // PropTypes.oneOf
-validate('red', PropTypes.oneOf('red', 'green'));
+validate('red', PropTypes.oneOf(['red', 'green']));
 
 // PropTypes.oneOfType
 validate('foo', PropTypes.oneOfType([PropTypes.string, PropTypes.number]));

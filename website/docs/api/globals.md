@@ -937,14 +937,6 @@ Name | Type |
 
 • **object**: *Collection‹›* = new Collection({})
 
-###  oneOf
-
-• **oneOf**: *[oneOf](globals.md#oneof)*
-
-###  oneOfType
-
-• **oneOfType**: *[oneOf](globals.md#oneof)* = oneOf
-
 ###  string
 
 • **string**: *StringConstructor* = String
@@ -988,6 +980,30 @@ Name | Type |
 `_props` | any |
 
 **Returns:** *Collection‹›*
+
+###  oneOf
+
+▸ **oneOf**(`expectations`: any[]): *OneOf‹›*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`expectations` | any[] |
+
+**Returns:** *OneOf‹›*
+
+###  oneOfType
+
+▸ **oneOfType**(`expectations`: any[]): *OneOf‹›*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`expectations` | any[] |
+
+**Returns:** *OneOf‹›*
 
 ###  shape
 

@@ -366,9 +366,18 @@ const PropTypes = {
   object: new Collection({}),
   objectOf: (_props) => {
     return new Collection();
-  }, // TODO: add support
-  oneOf,
-  oneOfType: oneOf,
+  },
+  // Normalize oneOf to be used in React's fashion i.e. require array to
+  // be passed:
+  // PropTypes.oneOf(['News', 'Photos'])
+  // vs typend's:
+  // new OneOf('News', 'Photos')
+  oneOf: (expectations: any[]) => {
+    return new OneOf(...expectations);
+  },
+  oneOfType: (expectations: any[]) => {
+    return new OneOf(...expectations);
+  },
   shape(properties: Record<keyof any, any>): Collection {
     return new Collection(properties);
   },
