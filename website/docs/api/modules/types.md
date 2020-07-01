@@ -75,7 +75,7 @@ ___
 
 ###  Expectation
 
-Ƭ **Expectation**: *[Pattern](../interfaces/types.pattern.md) | any*
+Ƭ **Expectation**: *Pattern | any*
 
 ___
 
