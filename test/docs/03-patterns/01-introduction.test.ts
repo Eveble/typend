@@ -22,7 +22,9 @@ describe('introduction', () => {
     validate(true, PropTypes.bool);
 
     // PropTypes.func
-    validate(() => {}, PropTypes.func);
+    validate((): boolean => {
+      return true;
+    }, PropTypes.func);
 
     // PropTypes.equal
     validate('foo', PropTypes.equal('foo'));
