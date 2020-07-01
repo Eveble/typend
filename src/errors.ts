@@ -88,7 +88,7 @@ export class PatternValidatorNotFoundError extends ExtendableError {
 }
 
 export class UndefinableClassError extends ExtendableError {
-  constructor(typeName) {
+  constructor(typeName: string) {
     super(
       `${typeName}: provided argument must be a class that implements '@define()' decorator`
     );

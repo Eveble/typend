@@ -33,7 +33,7 @@ export class TypeOf extends WrapperPattern implements types.Utility {
   public generate(library: types.Library): Class | Any {
     const type = this[0];
     if (!isDefined(type)) {
-      throw new UndefinableClassError(getTypeName(type));
+      throw new UndefinableClassError(getTypeName(type) as string);
     }
     if (!isValidable(type)) {
       return new Any();
