@@ -367,8 +367,8 @@ const PropTypes = {
   objectOf: new Collection({}),
   oneOf,
   oneOfType: oneOf,
-  shape(properties: Record<keyof any, any>): Interface {
-    return new Interface(properties);
+  shape(properties: Record<keyof any, any>): Collection {
+    return new Collection(properties);
   },
   string: String,
   symbol: Symbol,
