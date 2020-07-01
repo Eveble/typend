@@ -357,7 +357,6 @@ const PropTypes = {
   equal: eq,
   instanceOf: iof,
   integer,
-  Integer,
   interface(properties: Record<keyof any, any>): Interface {
     return new Interface(properties);
   },
@@ -522,7 +521,7 @@ export {
   collectionIncluding,
   collectionWithin,
   eq,
-  integer,
+  Integer as integer,
   list,
   maybe,
   never,
