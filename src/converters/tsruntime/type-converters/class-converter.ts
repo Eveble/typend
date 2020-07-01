@@ -9,6 +9,7 @@ import {
   getMatchingParentProto,
   isDefined,
   isPlainRecord,
+  isPatternClass,
 } from '../../../helpers';
 import {
   PROPERTIES_KEY,
@@ -55,8 +56,12 @@ export class ClassConverter implements types.TypeConverter {
       | (tsrTypes.ReflectedType | tsrTypes.ReferenceType | tsrTypes.ClassType)
       | types.Class,
     converter: types.Converter
-  ): Class {
+  ): Class | any {
     const type: types.Class = this.resolveType(reflectedType);
+    // Allow for custom Pattern types like `Integer`
+    if (isPatternClass(type)) {
+      return type;
+    }
     const properties: Record<keyof any, any> = this.resolveProperties(
       type,
       converter,
