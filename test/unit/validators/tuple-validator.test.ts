@@ -104,10 +104,9 @@ describe(`TupleValidator`, function () {
       it('throws NotAMemberError on failed validation result of value not matching one of provided expectations delegated to validator', () => {
         const tupleValidator = new TupleValidator();
         const val = ['my-string'];
-        const tuple = new Tuple(String, Number);
+        const tuple = new Tuple(Number);
         const error = new ValidationError('my-error');
-        validator.validate.withArgs('my-string', String).returns(true);
-        validator.validate.withArgs(undefined, Number).throws(error);
+        validator.validate.withArgs('my-string', Number).throws(error);
 
         const tupleStr = inspect(tuple);
         describer.describe.withArgs(tuple).returns(tupleStr);
@@ -116,12 +115,51 @@ describe(`TupleValidator`, function () {
           NotAMemberError,
           `Expected undefined to be matching an ${tupleStr}`
         );
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWithExactly('my-string', String);
-        expect(validator.validate).to.be.calledWithExactly(undefined, Number);
+        expect(validator.validate).to.be.calledOnce;
+        expect(validator.validate).to.be.calledWithExactly('my-string', Number);
         expect(describer.describe).to.be.calledTwice;
         expect(describer.describe).to.be.calledWithExactly(tuple);
         expect(describer.describe).to.be.calledWithExactly(val);
+      });
+
+      it('throws NotAMemberError when there are more values in tuple then expected ones', () => {
+        const tupleValidator = new TupleValidator();
+        const val = ['my-string', 1234];
+        const tuple = new Tuple(String);
+
+        const valStr = inspect(val[1]);
+        const tupleStr = inspect(tuple[1]);
+        describer.describe.withArgs(val[1]).returns(valStr);
+        describer.describe.withArgs(tuple[1]).returns(tupleStr);
+
+        expect(() => tupleValidator.validate(val, tuple, validator)).to.throw(
+          NotAMemberError,
+          `Expected ${valStr} to be matching an ${tupleStr}`
+        );
+        expect(validator.validate).to.not.be.called;
+        expect(describer.describe).to.be.calledTwice;
+        expect(describer.describe).to.be.calledWithExactly(tuple[1]);
+        expect(describer.describe).to.be.calledWithExactly(val[1]);
+      });
+
+      it('throws NotAMemberError when there are less values in tuple then expected ones', () => {
+        const tupleValidator = new TupleValidator();
+        const val = ['my-string'];
+        const tuple = new Tuple(String, Number);
+
+        const valStr = inspect(val[1]);
+        const tupleStr = inspect(tuple[1]);
+        describer.describe.withArgs(val[1]).returns(valStr);
+        describer.describe.withArgs(tuple[1]).returns(tupleStr);
+
+        expect(() => tupleValidator.validate(val, tuple, validator)).to.throw(
+          NotAMemberError,
+          `Expected ${valStr} to be matching an ${tupleStr}`
+        );
+        expect(validator.validate).to.not.be.called;
+        expect(describer.describe).to.be.calledTwice;
+        expect(describer.describe).to.be.calledWithExactly(tuple[1]);
+        expect(describer.describe).to.be.calledWithExactly(val[1]);
       });
     });
   });
