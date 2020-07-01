@@ -224,7 +224,7 @@ const check = createReflective((reflectedType: any) => {
 });
 
 /**
- * Validates if a value matches a expectation.
+ * Validates if a value matches an expectation.
  * @param value - Value that needs to validated.
  * @param isStrict - Flag indicating that evaluation should be done in strict mode.
  * @returns Returns `true` if validation is successful, else `false`.

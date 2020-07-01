@@ -29,7 +29,7 @@ class Typend implements types.Library {
   }
 
   /**
-   * Validates if a value matches a expectation or throws.
+   * Validates if a value matches an expectation or throws.
    * @param value - Value that needs to validated.
    * @param expectation - Expectation as explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated.
    * @param isStrict - Flag indicating that evaluation should be done in strict mode.
@@ -50,7 +50,7 @@ class Typend implements types.Library {
   }
 
   /**
-   * Validates if a value matches a expectation.
+   * Validates if a value matches an expectation.
    * @param value - Value that needs to validated.
    * @param expectation - Expectation as explicit `Pattern` instance, instance of `Utility` or implicit expectation against which value will be validated.
    * @param isStrict - Flag indicating that evaluation should be done in strict mode.

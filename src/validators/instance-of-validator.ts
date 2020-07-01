@@ -39,7 +39,7 @@ export class InstanceOfValidator extends PatternValidator
   }
 
   /**
-   * Validates if value is instance of a expectation type.
+   * Validates if value is instance of an expectation type.
    * @param value - Value that is validated against expectation.
    * @param instanceOfOrExpect - Explicit pattern as `InstanceOf` instance or a native type class, nil,
    * class constructor, error constructor against which value is validated.
