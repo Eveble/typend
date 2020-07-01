@@ -40,7 +40,7 @@ export class OneOfValidator extends PatternValidator
     let readableDef = this.describe(oneOf);
     if (!isArray(oneOf[0])) {
       readableDef = readableDef
-        .replace(/^OneOf /, '')
+        .replace(/^OneOf\([\d+]\) /, '')
         .replace(/^\[/, '')
         .replace(/\]$/, '')
         .trim();
