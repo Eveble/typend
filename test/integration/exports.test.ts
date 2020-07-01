@@ -790,7 +790,7 @@ describe('exports', () => {
       });
 
       it('PropTypes.Integer', () => {
-        expect(PropTypes.Integer).to.be.equal(Integer);
+        expect(PropTypes.integer).to.be.equal(Integer);
       });
 
       it('PropTypes.interface', () => {
