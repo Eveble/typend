@@ -37,7 +37,7 @@ export const QuickStart = () => {
               a) Add library to dependencies in existing project:
             </SubTitle>
             <Terminal className="terminal">
-              <Code>yarn add {siteConfig.title}</Code>
+              <Code>npm install {siteConfig.title}</Code>
             </Terminal>
             <SubTitle>
               b) Use our boilerplate project to create a new one:
@@ -47,8 +47,8 @@ export const QuickStart = () => {
                 git clone https://github.com/eveble/eveble-boilerplate
               </Code>
               <Code>cd eveble-boilerplate</Code>
-              <Code>yarn install</Code>
-              <Code>yarn add {siteConfig.title}</Code>
+              <Code>npm run setup</Code>
+              <Code>npm install typend</Code>
             </Terminal>
             <SubTitle>
               {' '}
