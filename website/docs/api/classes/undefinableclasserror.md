@@ -28,13 +28,13 @@ sidebar_label: "UndefinableClassError"
 
 ###  constructor
 
-\+ **new UndefinableClassError**(`typeName`: any): *[UndefinableClassError](undefinableclasserror.md)*
+\+ **new UndefinableClassError**(`typeName`: string): *[UndefinableClassError](undefinableclasserror.md)*
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`typeName` | any |
+`typeName` | string |
 
 **Returns:** *[UndefinableClassError](undefinableclasserror.md)*
 

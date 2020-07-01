@@ -119,7 +119,7 @@ export class Describer implements types.Describer {
    * Registers describer on describer.
    * @param type - Type for which mapping will be created.
    * @param describer - Describer for registration.
-   * @param shouldOverride - Flag indicating that mapping should be overriden if exist.
+   * @param shouldOverride - Flag indicating that mapping should be overridden if exist.
    * @throws {TypeDescriberExistsError}
    * Thrown if mapping would overridden on describer without explicit call.
    */
@@ -136,7 +136,7 @@ export class Describer implements types.Describer {
 
   /**
    * Overrides already existing describer by mapping on describer.
-   * @param type - Type for which mapping will be created or overriden.
+   * @param type - Type for which mapping will be created or overridden.
    * @param describer - Describer for registration.
    */
   public overrideDescriber(type: string, describer: types.TypeDescriber): void {

@@ -148,7 +148,7 @@ Overrides already existing describer by mapping on describer.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`type` | string | Type for which mapping will be created or overriden. |
+`type` | string | Type for which mapping will be created or overridden. |
 `describer` | [TypeDescriber](../interfaces/types.typedescriber.md) | Describer for registration.  |
 
 **Returns:** *void*
@@ -170,7 +170,7 @@ Name | Type | Description |
 ------ | ------ | ------ |
 `type` | string | Type for which mapping will be created. |
 `describer` | [TypeDescriber](../interfaces/types.typedescriber.md) | Describer for registration. |
-`shouldOverride?` | boolean | Flag indicating that mapping should be overriden if exist. |
+`shouldOverride?` | boolean | Flag indicating that mapping should be overridden if exist. |
 
 **Returns:** *void*
 
