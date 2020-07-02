@@ -170,12 +170,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "packageManager": "yarn",
-  "repositoryUrl": "git://github.com/eveble/typend.git",
-  "reviewer": "desivi",
-  "isRemovable": true,
-  "isEvebleRequired": false,
-  "isTestingRequired": false,
-  "private": true
+  }
 }
