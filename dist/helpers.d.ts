@@ -1,0 +1,14 @@
+import 'reflect-metadata';
+import { Types as tsrTypes } from 'tsruntime';
+import { types } from './types';
+export declare function getResolvablePath(path: string, properties: Record<keyof any, any>): string;
+export declare function isResolvablePath(key: string, properties: Record<keyof any, any>): boolean;
+export declare function getMatchingParentProto(childProto: any, matcher: (proto: types.Prototype) => boolean): types.Prototype | undefined;
+export declare function isPatternClass(arg: any): boolean;
+export declare function isPattern(arg: any): boolean;
+export declare function isInstanceOfExpectation(arg: any): boolean;
+export declare function isUtility(arg: any): boolean;
+export declare function isDefined(ctor: any): boolean;
+export declare function isValidable(ctor: any): boolean;
+export declare function isSpecial(reflectedType: tsrTypes.ReflectedType): boolean;
+export declare function isPlainRecord(arg: any): boolean;

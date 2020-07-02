@@ -1,0 +1,10 @@
+export declare const DEFINABLE_KEY: unique symbol;
+export declare const PROPERTIES_KEY: unique symbol;
+export declare const REFLECTION_KEY: unique symbol;
+export declare const INJECTABLE_PROPERTIES_KEY: unique symbol;
+export declare const INTERNAL_PROPS_KEY: unique symbol;
+export declare const INTERNAL_METHODS_KEY: unique symbol;
+export declare const PATTERN_KEY: unique symbol;
+export declare const VALIDATION_KEY: unique symbol;
+export declare const INTERFACE_NAME_KEY: unique symbol;
+export declare const INITIALIZER_KEY: unique symbol;
