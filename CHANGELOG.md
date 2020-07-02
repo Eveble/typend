@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/eveble/typend/compare/v1.0.0...v1.0.1) (2020-07-02)
+
+
+### Bug Fixes
+
+* remove leftovers from boilerplate setup ([629d9a1](https://github.com/eveble/typend/commit/629d9a13c1023b16333a10296b94a0e529265edb))
+
 # 1.0.0 (2020-07-02)
 
 
