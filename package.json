@@ -45,7 +45,7 @@
     "reflect-metadata": "^0.1.13",
     "tsruntime": "^3.0.0-beta.1",
     "ttypescript": "^1.5.10",
-    "@eveble/helpers": "^1.0.1",
+    "@eveble/helpers": "^1.0.3",
     "deep-diff": "^1.0.2",
     "deepmerge": "^4.2.2",
     "es6-error": "^4.1.1",
