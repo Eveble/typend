@@ -4,6 +4,8 @@
 <br />
 
 <div align="center"><strong>Runtime validation for TypeScript</strong></div>
+<br />
+
 <div align="center">
 <strong>Typend</strong> allows for runtime validation, conversion & reflection of TypeScript declarations and is can be used as building block for any <strong>DDD</strong>(<strong>D</strong>omain <strong>D</strong>riven <strong>D</strong>esign) focused framework or similar architectures.
 </div>
@@ -155,7 +157,7 @@ This package uses [tsruntime][tsruntime] done by [Vadym Holoveichuk@goloveychuk]
 
 ## Requirements
 
-- [Node.js][nodejs] MUST be v14.0 or later.
+- [Node.js][nodejs] MUST be v14.0 or later
 
 ## Installation
 
