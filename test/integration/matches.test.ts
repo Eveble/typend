@@ -15,6 +15,7 @@ import {
   typeOf,
   iof,
   list,
+  tuple,
 } from '../../src/index';
 
 @define()
@@ -216,6 +217,17 @@ describe(`matching`, () => {
       oneOf('win', /fai/g),
       'Expected String("fail") to be one of: "win", /fai/g',
     ],
+    // Tuple
+    [
+      [1, 2, 3],
+      tuple(Number, Number, optional(Number)),
+      'Expected String("fail") to be one of: "fail", "win"',
+    ],
+    [
+      [1, 2],
+      tuple(Number, Number, optional(Number)),
+      'Expected String("fail") to be one of: "fail", "win"',
+    ],
     // Maybe
     [undefined, maybe(String), 'Expected undefined to be a String'],
     [null, maybe(String), 'Expected null to be a String'],
@@ -288,7 +300,7 @@ describe(`matching`, () => {
     // Where
     [
       'yes',
-      where(value => {
+      where((value) => {
         return value === 'yes';
       }),
       'Failed Where validation',
