@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/eveble/typend/compare/v1.0.1...v1.0.2) (2020-07-12)
+
+
+### Bug Fixes
+
+* **validators:** optional expectation on tuple ([dfa51fb](https://github.com/eveble/typend/commit/dfa51fb4bcc3ef3f4900164bceabb2af5db7f855))
+
 ## [1.0.1](https://github.com/eveble/typend/compare/v1.0.0...v1.0.1) (2020-07-02)
 
 
