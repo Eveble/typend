@@ -37,7 +37,7 @@ export const QuickStart = () => {
               a) Add library to dependencies in existing project:
             </SubTitle>
             <Terminal className="terminal">
-              <Code>npm install {siteConfig.title}</Code>
+              <Code>npm install {siteConfig.projectName}</Code>
             </Terminal>
             <SubTitle>
               b) Use our boilerplate project to create a new one:
@@ -48,7 +48,7 @@ export const QuickStart = () => {
               </Code>
               <Code>cd eveble-boilerplate</Code>
               <Code>npm run setup</Code>
-              <Code>npm install typend</Code>
+              <Code>npm install {siteConfig.projectName}</Code>
             </Terminal>
             <SubTitle>
               {' '}

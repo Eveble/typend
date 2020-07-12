@@ -12,13 +12,13 @@ sidebar_label: Getting Started
 1. To use typend with your app:
 
 ```bash
-npm install typend
+npm install typend tsruntime ttypescript reflect-metadata
 ```
 
 or
 
 ```bash
-yarn add typend
+yarn add typend tsruntime ttypescript reflect-metadata
 ```
 
 2. Add new `tsconfig.json`:
