@@ -42,27 +42,11 @@ export class TupleValidator extends PatternValidator
       );
     }
 
-    if (value.length !== tupleOrExpect.length) {
-      let valueElement: any;
-      let expectationItem: any;
-      if (value.length < tupleOrExpect.length) {
-        valueElement = value[value.length];
-        expectationItem = tupleOrExpect[value.length];
-      }
-
-      if (value.length > tupleOrExpect.length) {
-        valueElement = value[tupleOrExpect.length];
-        expectationItem = tupleOrExpect[tupleOrExpect.length];
-      }
-
-      throw new NotAMemberError(
-        `Expected %s to be matching an %s`,
-        this.describe(valueElement),
-        this.describe(expectationItem)
-      );
+    let source = tupleOrExpect;
+    if (value.length > tupleOrExpect.length) {
+      source = value;
     }
-
-    for (let i = 0; i < tupleOrExpect.length; i++) {
+    for (let i = 0; i < source.length; i++) {
       const valueElement = value[i];
       const expectationItem = tupleOrExpect[i];
       try {
