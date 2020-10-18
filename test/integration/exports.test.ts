@@ -59,6 +59,7 @@ import { IntegerValidator } from '../../src/validators/integer-validator';
 import { InterfaceValidator } from '../../src/validators/interface-validator';
 import { InternalValidator } from '../../src/validators/internal-validator';
 import { ListValidator } from '../../src/validators/list-validator';
+import { LocaleStringValidator } from '../../src/validators/locale-string-validator';
 import { MaybeValidator } from '../../src/validators/maybe-validator';
 import { NeverValidator } from '../../src/validators/never-validator';
 import { OneOfValidator } from '../../src/validators/one-of-validator';
@@ -172,6 +173,7 @@ import {
   InterfaceValidator as InterfaceValidatorExported,
   InternalValidator as InternalValidatorExported,
   ListValidator as ListValidatorExported,
+  LocaleStringValidator as LocaleStringValidatorExported,
   MaybeValidator as MaybeValidatorExported,
   NeverValidator as NeverValidatorExported,
   OneOfValidator as OneOfValidatorExported,
@@ -464,6 +466,9 @@ describe('exports', () => {
     });
     it('ListValidator', () => {
       expect(ListValidator).to.be.equal(ListValidatorExported);
+    });
+    it('LocaleStringValidator', () => {
+      expect(LocaleStringValidator).to.be.equal(LocaleStringValidatorExported);
     });
     it('MaybeValidator', () => {
       expect(MaybeValidator).to.be.equal(MaybeValidatorExported);

@@ -66,6 +66,7 @@ import { IntegerValidator } from './validators/integer-validator';
 import { InterfaceValidator } from './validators/interface-validator';
 import { InternalValidator } from './validators/internal-validator';
 import { ListValidator } from './validators/list-validator';
+import { LocaleStringValidator } from './validators/locale-string-validator';
 import { MaybeValidator } from './validators/maybe-validator';
 import { NeverValidator } from './validators/never-validator';
 import { OneOfValidator } from './validators/one-of-validator';
@@ -112,6 +113,7 @@ import { Describer } from './describer';
 import { Description, DescriptionList } from './description';
 import { Pattern } from './pattern';
 import { PatternValidator } from './pattern-validator';
+
 import {
   isInstanceOfExpectation,
   getResolvablePath,
@@ -160,6 +162,7 @@ validator.registerValidator(KINDS.ANY, new AnyValidator());
 validator.registerValidator(KINDS.ARRAY, new ListValidator());
 validator.registerValidator(KINDS.CLASS, new ClassValidator());
 validator.registerValidator(KINDS.EQUALS, new EqualsValidator());
+validator.registerValidator(KINDS.LOCALE_STRING, new LocaleStringValidator());
 validator.registerValidator(KINDS.INSTANCE_OF, new InstanceOfValidator());
 validator.registerValidator(KINDS.INTEGER, new IntegerValidator());
 validator.registerValidator(KINDS.INTERNAL, new InternalValidator());
@@ -452,6 +455,7 @@ export {
   InterfaceValidator,
   InternalValidator,
   ListValidator,
+  LocaleStringValidator,
   MaybeValidator,
   NeverValidator,
   OneOfValidator,
