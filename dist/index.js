@@ -54,6 +54,7 @@ var KINDS;
     KINDS["INTERFACE"] = "interface";
     KINDS["INTERNAL"] = "internal";
     KINDS["LITERAL"] = "literal";
+    KINDS["LOCALE_STRING"] = "localeString";
     KINDS["MAYBE"] = "maybe";
     KINDS["NATIVE"] = "native";
     KINDS["NEVER"] = "never";
@@ -426,6 +427,10 @@ class List extends WrapperPattern {
     }
 }
 List.kind = KINDS.ARRAY;
+
+class LocaleString extends Pattern {
+}
+LocaleString.kind = KINDS.LOCALE_STRING;
 
 class Maybe extends WrapperPattern {
 }
@@ -992,6 +997,18 @@ class ListValidator extends PatternValidator {
             }
         }
         return true;
+    }
+}
+
+class LocaleStringValidator extends PatternValidator {
+    canValidate(expectation) {
+        return expectation instanceof LocaleString;
+    }
+    validate(value) {
+        if (value === undefined || typeof value === 'string') {
+            return true;
+        }
+        throw new ValidationError('Expected value to never be assigned, got %s', this.describe(value));
     }
 }
 
@@ -2260,6 +2277,7 @@ validator.registerValidator(KINDS$1.ANY, new AnyValidator());
 validator.registerValidator(KINDS$1.ARRAY, new ListValidator());
 validator.registerValidator(KINDS$1.CLASS, new ClassValidator());
 validator.registerValidator(KINDS$1.EQUALS, new EqualsValidator());
+validator.registerValidator(KINDS$1.LOCALE_STRING, new LocaleStringValidator());
 validator.registerValidator(KINDS$1.INSTANCE_OF, new InstanceOfValidator());
 validator.registerValidator(KINDS$1.INTEGER, new IntegerValidator());
 validator.registerValidator(KINDS$1.INTERNAL, new InternalValidator());
@@ -2281,6 +2299,7 @@ validator.setOrder([
     KINDS$1.OBJECT,
     KINDS$1.ARRAY,
     KINDS$1.TUPLE,
+    KINDS$1.LOCALE_STRING,
     KINDS$1.INSTANCE_OF,
     KINDS$1.CLASS,
     KINDS$1.EQUALS,
@@ -2446,6 +2465,8 @@ exports.LITERAL_KEYS = literalKeys;
 exports.List = List;
 exports.ListValidator = ListValidator;
 exports.LiteralConverter = LiteralConverter;
+exports.LocaleString = LocaleString;
+exports.LocaleStringValidator = LocaleStringValidator;
 exports.METADATA_KEYS = metadataKeys;
 exports.Maybe = Maybe;
 exports.MaybeValidator = MaybeValidator;

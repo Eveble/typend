@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/eveble/typend/compare/v1.0.2...v1.1.0) (2020-10-18)
+
+
+### Features
+
+* **patterns:** add LocaleString ([ab4a63d](https://github.com/eveble/typend/commit/ab4a63d7fac199a5c214891c6fdc554116e6d6d7))
+* **validators:** add LocaleStringValidator ([ff9706c](https://github.com/eveble/typend/commit/ff9706c5e4ab0549e4036a14184552e78ef056df))
+
 ## [1.0.2](https://github.com/eveble/typend/compare/v1.0.1...v1.0.2) (2020-07-12)
 
 

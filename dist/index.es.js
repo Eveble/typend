@@ -48,6 +48,7 @@ var KINDS;
     KINDS["INTERFACE"] = "interface";
     KINDS["INTERNAL"] = "internal";
     KINDS["LITERAL"] = "literal";
+    KINDS["LOCALE_STRING"] = "localeString";
     KINDS["MAYBE"] = "maybe";
     KINDS["NATIVE"] = "native";
     KINDS["NEVER"] = "never";
@@ -420,6 +421,10 @@ class List extends WrapperPattern {
     }
 }
 List.kind = KINDS.ARRAY;
+
+class LocaleString extends Pattern {
+}
+LocaleString.kind = KINDS.LOCALE_STRING;
 
 class Maybe extends WrapperPattern {
 }
@@ -986,6 +991,18 @@ class ListValidator extends PatternValidator {
             }
         }
         return true;
+    }
+}
+
+class LocaleStringValidator extends PatternValidator {
+    canValidate(expectation) {
+        return expectation instanceof LocaleString;
+    }
+    validate(value) {
+        if (value === undefined || typeof value === 'string') {
+            return true;
+        }
+        throw new ValidationError('Expected value to never be assigned, got %s', this.describe(value));
     }
 }
 
@@ -2254,6 +2271,7 @@ validator.registerValidator(KINDS$1.ANY, new AnyValidator());
 validator.registerValidator(KINDS$1.ARRAY, new ListValidator());
 validator.registerValidator(KINDS$1.CLASS, new ClassValidator());
 validator.registerValidator(KINDS$1.EQUALS, new EqualsValidator());
+validator.registerValidator(KINDS$1.LOCALE_STRING, new LocaleStringValidator());
 validator.registerValidator(KINDS$1.INSTANCE_OF, new InstanceOfValidator());
 validator.registerValidator(KINDS$1.INTEGER, new IntegerValidator());
 validator.registerValidator(KINDS$1.INTERNAL, new InternalValidator());
@@ -2275,6 +2293,7 @@ validator.setOrder([
     KINDS$1.OBJECT,
     KINDS$1.ARRAY,
     KINDS$1.TUPLE,
+    KINDS$1.LOCALE_STRING,
     KINDS$1.INSTANCE_OF,
     KINDS$1.CLASS,
     KINDS$1.EQUALS,
@@ -2398,4 +2417,4 @@ const PropTypes = {
     where,
 };
 
-export { Any, AnyValidator, ArrayConverter, ArrayDescriber, Class, ClassConverter, ClassDescriber, ClassValidator, Collection, CollectionIncluding, CollectionIncludingValidator, CollectionValidator, CollectionWithin, CollectionWithinValidator, CompactDescriber, DebugDescriber, Describer, Description, DescriptionList, DescriptionListDescriber, Equals, EqualsValidator, ErrorDescriber, FallbackDescriber, FunctionConverter, InjectingPropsTransformer, InstanceOf, InstanceOfValidator, Integer, IntegerValidator, Interface, InterfaceValidator, Internal, InternalPropsTransformer, InternalValidator, InvalidDefinitionError, InvalidTypeError, InvalidValueError, literalKeys as LITERAL_KEYS, List, ListValidator, LiteralConverter, metadataKeys as METADATA_KEYS, Maybe, MaybeValidator, NativeConverter, NativeTypeDescriber, Never, NeverValidator, NilConverter, NotAMemberError, ObjectConverter, ObjectDescriber, OneOf, OneOfValidator, Optional, OptionalValidator, Pattern, PatternValidator, PatternValidatorExistError, PatternValidatorNotFoundError, PrimitiveConverter, PropTypes, PropsOf, PropsOfConverter, ReferenceConverter, TSRuntimeConverter, Tuple, TupleConverter, TupleValidator, TypeConverterExists, TypeDescriberExistsError, TypeDescriberNotFoundError, TypeOf, TypeOfConverter, Typend, UndefinableClassError, UnequalValueError, UnexpectedKeyError, UnionConverter, Unknown, UnknownConverter, UnknownError, UnknownValidator, UnmatchedTypeError, Unrecognized, UnrecognizedConverter, UnrecognizedValidator, ValidationError, Validator, Void, VoidValidator, Where, WhereValidator, any, boolean, check, collection, collectionIncluding, collectionWithin, convert, converter, define, describer, eq, getMatchingParentProto, getResolvablePath, instanceOf, Integer as integer, internal, iof, is, isDefined, isInstanceOf, isInstanceOfExpectation, isPattern, isPatternClass, isResolvablePath, isSpecial, isUtility, isValid, isValidable, list, maybe, never, number, oneOf, optional, propsOf, reflect, string, symbol, tuple, typeOf, typend, unknown, unrecognized, validable, validate, validator, voided, where };
+export { Any, AnyValidator, ArrayConverter, ArrayDescriber, Class, ClassConverter, ClassDescriber, ClassValidator, Collection, CollectionIncluding, CollectionIncludingValidator, CollectionValidator, CollectionWithin, CollectionWithinValidator, CompactDescriber, DebugDescriber, Describer, Description, DescriptionList, DescriptionListDescriber, Equals, EqualsValidator, ErrorDescriber, FallbackDescriber, FunctionConverter, InjectingPropsTransformer, InstanceOf, InstanceOfValidator, Integer, IntegerValidator, Interface, InterfaceValidator, Internal, InternalPropsTransformer, InternalValidator, InvalidDefinitionError, InvalidTypeError, InvalidValueError, literalKeys as LITERAL_KEYS, List, ListValidator, LiteralConverter, LocaleString, LocaleStringValidator, metadataKeys as METADATA_KEYS, Maybe, MaybeValidator, NativeConverter, NativeTypeDescriber, Never, NeverValidator, NilConverter, NotAMemberError, ObjectConverter, ObjectDescriber, OneOf, OneOfValidator, Optional, OptionalValidator, Pattern, PatternValidator, PatternValidatorExistError, PatternValidatorNotFoundError, PrimitiveConverter, PropTypes, PropsOf, PropsOfConverter, ReferenceConverter, TSRuntimeConverter, Tuple, TupleConverter, TupleValidator, TypeConverterExists, TypeDescriberExistsError, TypeDescriberNotFoundError, TypeOf, TypeOfConverter, Typend, UndefinableClassError, UnequalValueError, UnexpectedKeyError, UnionConverter, Unknown, UnknownConverter, UnknownError, UnknownValidator, UnmatchedTypeError, Unrecognized, UnrecognizedConverter, UnrecognizedValidator, ValidationError, Validator, Void, VoidValidator, Where, WhereValidator, any, boolean, check, collection, collectionIncluding, collectionWithin, convert, converter, define, describer, eq, getMatchingParentProto, getResolvablePath, instanceOf, Integer as integer, internal, iof, is, isDefined, isInstanceOf, isInstanceOfExpectation, isPattern, isPatternClass, isResolvablePath, isSpecial, isUtility, isValid, isValidable, list, maybe, never, number, oneOf, optional, propsOf, reflect, string, symbol, tuple, typeOf, typend, unknown, unrecognized, validable, validate, validator, voided, where };

@@ -12,6 +12,7 @@ export declare enum KINDS {
     INTERFACE = "interface",
     INTERNAL = "internal",
     LITERAL = "literal",
+    LOCALE_STRING = "localeString",
     MAYBE = "maybe",
     NATIVE = "native",
     NEVER = "never",
