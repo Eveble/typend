@@ -26,6 +26,7 @@ class MyClass {
     this.value = value;
   }
 }
+@define()
 class MyOtherClass {
   public value: string;
 
