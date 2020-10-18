@@ -34,6 +34,7 @@ import { Integer } from '../../src/patterns/integer';
 import { Interface } from '../../src/patterns/interface';
 import { Internal } from '../../src/patterns/internal';
 import { List } from '../../src/patterns/list';
+import { LocaleString } from '../../src/patterns/locale-string';
 import { Maybe } from '../../src/patterns/maybe';
 import { Never } from '../../src/patterns/never';
 import { OneOf } from '../../src/patterns/one-of';
@@ -146,6 +147,7 @@ import {
   Interface as InterfaceExported,
   Internal as InternalExported,
   List as ListExported,
+  LocaleString as LocaleStringExported,
   Maybe as MaybeExported,
   Never as NeverExported,
   OneOf as OneOfExported,
@@ -383,6 +385,9 @@ describe('exports', () => {
     });
     it('List', () => {
       expect(List).to.be.equal(ListExported);
+    });
+    it('LocaleString', () => {
+      expect(LocaleString).to.be.equal(LocaleStringExported);
     });
     it('Maybe', () => {
       expect(Maybe).to.be.equal(MaybeExported);

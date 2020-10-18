@@ -41,6 +41,7 @@ import { Integer } from './patterns/integer';
 import { Interface } from './patterns/interface';
 import { Internal } from './patterns/internal';
 import { List } from './patterns/list';
+import { LocaleString } from './patterns/locale-string';
 import { Maybe } from './patterns/maybe';
 import { Never } from './patterns/never';
 import { OneOf } from './patterns/one-of';
@@ -188,6 +189,7 @@ validator.setOrder([
   KINDS.OBJECT,
   KINDS.ARRAY,
   KINDS.TUPLE,
+  KINDS.LOCALE_STRING,
   KINDS.INSTANCE_OF,
   KINDS.CLASS,
   KINDS.EQUALS,
@@ -425,6 +427,7 @@ export {
   Interface,
   Internal,
   List,
+  LocaleString,
   Maybe,
   Never,
   OneOf,
