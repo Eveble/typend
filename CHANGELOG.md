@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/eveble/typend/compare/v1.1.0...v1.1.1) (2021-05-08)
+
+
+### Bug Fixes
+
+* export WrapperPattern ([cb312d9](https://github.com/eveble/typend/commit/cb312d986b6ae05bffd58e0e8cbabd973e8d036c))
+
 # [1.1.0](https://github.com/eveble/typend/compare/v1.0.2...v1.1.0) (2020-10-18)
 
 

@@ -2519,6 +2519,7 @@ exports.Void = Void;
 exports.VoidValidator = VoidValidator;
 exports.Where = Where;
 exports.WhereValidator = WhereValidator;
+exports.WrapperPattern = WrapperPattern;
 exports.any = any;
 exports.boolean = boolean;
 exports.check = check;
