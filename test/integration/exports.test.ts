@@ -44,6 +44,7 @@ import { Unknown } from '../../src/patterns/unknown';
 import { Unrecognized } from '../../src/patterns/unrecognized';
 import { Void } from '../../src/patterns/void';
 import { Where } from '../../src/patterns/where';
+import { WrapperPattern } from '../../src/wrapper-pattern';
 // Utilities
 import { PropsOf } from '../../src/utilities/props-of';
 import { TypeOf } from '../../src/utilities/type-of';
@@ -158,6 +159,7 @@ import {
   Unrecognized as UnrecognizedExported,
   Void as VoidExported,
   Where as WhereExported,
+  WrapperPattern as WrapperPatternExported,
   // Utilities
   PropsOf as PropsOfExported,
   TypeOf as TypeOfExported,
@@ -417,6 +419,9 @@ describe('exports', () => {
     });
     it('Where', () => {
       expect(Where).to.be.equal(WhereExported);
+    });
+    it('WrapperPattern', () => {
+      expect(WrapperPattern).to.be.equal(WrapperPatternExported);
     });
   });
 

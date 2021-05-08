@@ -51,6 +51,7 @@ import { Unknown } from './patterns/unknown';
 import { Void } from './patterns/void';
 import { Where } from './patterns/where';
 import { Unrecognized } from './patterns/unrecognized';
+import { WrapperPattern } from './wrapper-pattern';
 // Utilities
 import { PropsOf } from './utilities/props-of';
 import { TypeOf } from './utilities/type-of';
@@ -440,6 +441,7 @@ export {
   Unrecognized,
   Void,
   Where,
+  WrapperPattern,
   // Utilities
   PropsOf,
   TypeOf,
