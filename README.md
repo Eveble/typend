@@ -279,7 +279,7 @@ Please be aware that this is experimental module and using it has some drawbacks
 1. Compilation time will be increased(its less visible on more modern computer builds).
 2. **Making changes to referenced types will be not reflected real-time in testing environment in watch mode.** Tests need to be rerunned again(this includes types defined in separate, dedicated file also).
 3. Not every declaration of TypeScript generic type will work for validation.
-4. We did our best to flush out most applicable architecture for this concept, however AP can be subjected to change upon valid reasons.
+4. We did our best to flush out most applicable architecture for this concept, however API can be subjected to change upon valid reasons.
 
 ## Under the hood
 
