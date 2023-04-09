@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/eveble/typend/compare/v1.1.2...v1.1.3) (2023-04-09)
+
+
+### Bug Fixes
+
+* **github:** update actions ([2fdbdf2](https://github.com/eveble/typend/commit/2fdbdf25b2f6457a6d3763966ee4b91d2ef5997d))
+
 ## [1.1.2](https://github.com/eveble/typend/compare/v1.1.1...v1.1.2) (2023-04-09)
 
 
