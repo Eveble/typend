@@ -36,12 +36,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - name: Release with Semantic-Release
-        uses: cycjimmy/semantic-release-action@v2
+        uses: cycjimmy/semantic-release-action@v3
         id: semantic
         env:
           SEMANTIC_RELEASE_PACKAGE: '@${{ github.repository }}'
         with:
-          semantic_version: 17.0.8
+          semantic_version: 19.0.5
           dry_run: false
           extra_plugins: |
             @semantic-release/changelog
