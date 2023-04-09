@@ -44,7 +44,7 @@ jobs:
           NPM_TOKEN: ${{ env.NPM_TOKEN }}
           SEMANTIC_RELEASE_PACKAGE: '@${{ github.repository }}'
         with:
-          semantic_version: 17.0.8
+          semantic_version: 17
           dry_run: false
           extra_plugins: |
             @semantic-release/changelog
