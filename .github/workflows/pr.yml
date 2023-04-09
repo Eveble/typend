@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Assign reviewers
     steps:
-      - uses: kentaro-m/auto-assign-action@v1.1.0
+      - uses: kentaro-m/auto-assign-action@v1.2.5
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
   misspell:
@@ -32,9 +32,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v1
+      - uses: wagoid/commitlint-github-action@v5
       - name: Failed - remove conventional label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: failure() && contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -45,7 +45,7 @@ jobs:
               })
             }
       - name: Success - add conventional label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -83,7 +83,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - run: yarn test
       - name: Failed - remove test label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: failure() && contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -94,7 +94,7 @@ jobs:
               })
             }
       - name: Success - add test label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -129,13 +129,13 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - run: yarn test:coverage
       - run: yarn coverage:ci # Generate coverage.lcov report
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.lcov
           fail_ci_if_error: true
       - name: Failed - remove covered label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: failure() && contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -146,7 +146,7 @@ jobs:
               })
             }
       - name: Success - add covered label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -168,7 +168,7 @@ jobs:
           reporter: github-check
           eslint_flags: 'src/**/*.ts'
       - name: Failed - remove linted label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: failure()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -179,7 +179,7 @@ jobs:
               })
             }
       - name: Success - add linted label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -227,7 +227,7 @@ jobs:
           git diff-index --quiet HEAD || git commit --allow-empty -m "style: add format changes 🤖" -a
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:refs/heads/${{ github.head_ref }} && exit 0
       - name: Failed - remove formatted label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: failure() && contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -238,7 +238,7 @@ jobs:
               })
             }
       - name: Success - add formatted label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -296,7 +296,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - run: yarn build
       - name: Failed - remove builds label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: failure() && contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -307,7 +307,7 @@ jobs:
               })
             }
       - name: Success - add builds label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -338,7 +338,7 @@ jobs:
           yarn install
       - run: yarn docs:build
       - name: Failed - remove documented label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: failure() && contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -349,7 +349,7 @@ jobs:
               })
             }
       - name: Success - add documented label
-        uses: actions/github-script@0.6.0
+        uses: actions/github-script@v6
         if: contains(env.isFork, 'false')
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
