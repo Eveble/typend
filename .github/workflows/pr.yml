@@ -58,6 +58,16 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
+    services:
+      mongodb:
+        image: mongo:4.2
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: password
+    env:
+      USERNAME: ${{ github.event.github.actor }}
     name: Tests / Node@${{ matrix.node-version}}
     steps:
       - uses: actions/checkout@v2
@@ -65,8 +75,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: ${{ env.USERNAME }}
       - name: Install dependencies
         uses: jaid/action-npm-install@v1.2.1
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - run: yarn test
       - name: Failed - remove test label
         uses: actions/github-script@0.6.0
@@ -90,19 +104,34 @@ jobs:
             })
   test_coverage:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:4.2
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: password
+    env:
+      USERNAME: ${{ github.event.github.actor }}
     name: Validate test coverage
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node@14.x
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: 14
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: ${{ env.USERNAME }}
       - name: Install dependencies
         uses: jaid/action-npm-install@v1.2.1
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - run: yarn test:coverage
       - run: yarn coverage:ci # Generate coverage.lcov report
       - uses: codecov/codecov-action@v1
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.lcov
           fail_ci_if_error: true
       - name: Failed - remove covered label
@@ -128,6 +157,8 @@ jobs:
   test_lint:
     name: Test lint(with reviewdog)
     runs-on: ubuntu-latest
+    env:
+      USERNAME: ${{ github.event.github.actor }}
     steps:
       - uses: actions/checkout@v2
       - name: Lint and report push
@@ -160,6 +191,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      USERNAME: ${{ github.event.github.actor }}
     steps:
       - uses: actions/checkout@v2 # checkout for forks
         if: contains(env.isFork, 'true')
@@ -174,9 +206,13 @@ jobs:
       - name: Setup Node@14.x
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: 14
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: ${{ env.USERNAME }}
       - name: Install dependencies
         uses: jaid/action-npm-install@v1.2.1
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - run: yarn test:format
       - name: Format and commit changes if check failed
         if: failure() && github.actor != 'github-actions' && contains(env.isFork, 'false')
@@ -244,14 +280,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build
+    env:
+      USERNAME: ${{ github.event.github.actor }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node@14.x
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: 14
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: ${{ env.USERNAME }}
       - name: Install dependencies
         uses: jaid/action-npm-install@v1.2.1
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - run: yarn build
       - name: Failed - remove builds label
         uses: actions/github-script@0.6.0
@@ -276,14 +318,20 @@ jobs:
   build_docs:
     runs-on: ubuntu-latest
     name: Build documentation
+    env:
+      USERNAME: ${{ github.event.github.actor }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node@14.x
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: 14
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: ${{ env.USERNAME }}
       - name: Install dependencies
         uses: jaid/action-npm-install@v1.2.1
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - name: Install dependencies on Docusaurus
         run: |
           cd ./website
