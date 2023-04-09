@@ -32,7 +32,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
           scope: ${{ env.USERNAME }}
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: yarn install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - name: Release with Semantic-Release
@@ -88,7 +88,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
           scope: ${{ env.USERNAME }}
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: yarn install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - run: yarn test
@@ -104,7 +104,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
           scope: ${{ env.USERNAME }}
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: yarn install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - run: yarn build
@@ -120,7 +120,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
           scope: ${{ env.USERNAME }}
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: yarn install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - name: Install dependencies on Docusaurus
@@ -142,7 +142,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
           scope: ${{ env.USERNAME }}
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: yarn install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.EVEBLE_TYPES_AUTH_TOKEN }}
       - name: Install dependencies on Docusaurus
