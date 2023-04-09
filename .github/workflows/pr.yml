@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Fix misspells
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: reviewdog/action-misspell@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -29,7 +29,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     name: Lint commits
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: wagoid/commitlint-github-action@v1
@@ -70,9 +70,9 @@ jobs:
       USERNAME: ${{ github.event.github.actor }}
     name: Tests / Node@${{ matrix.node-version}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Node@${{ matrix.node-version}}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://npm.pkg.github.com/'
@@ -116,9 +116,9 @@ jobs:
       USERNAME: ${{ github.event.github.actor }}
     name: Validate test coverage
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Node@16.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: 'https://npm.pkg.github.com/'
@@ -160,7 +160,7 @@ jobs:
     env:
       USERNAME: ${{ github.event.github.actor }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Lint and report push
         uses: reviewdog/action-eslint@v1
         with:
@@ -193,18 +193,18 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       USERNAME: ${{ github.event.github.actor }}
     steps:
-      - uses: actions/checkout@v2 # checkout for forks
+      - uses: actions/checkout@v3 # checkout for forks
         if: contains(env.isFork, 'true')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/checkout@v2 # checkout for PR
+      - uses: actions/checkout@v3 # checkout for PR
         if: contains(env.isFork, 'false')
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
       - name: Setup Node@16.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: 'https://npm.pkg.github.com/'
@@ -252,11 +252,11 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v2 # checkout for forks
+      - uses: actions/checkout@v3 # checkout for forks
         if: contains(env.isFork, 'true')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/checkout@v2 # checkout for PR
+      - uses: actions/checkout@v3 # checkout for PR
         if: contains(env.isFork, 'false')
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -283,9 +283,9 @@ jobs:
     env:
       USERNAME: ${{ github.event.github.actor }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Node@16.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: 'https://npm.pkg.github.com/'
@@ -321,9 +321,9 @@ jobs:
     env:
       USERNAME: ${{ github.event.github.actor }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Node@16.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: 'https://npm.pkg.github.com/'
