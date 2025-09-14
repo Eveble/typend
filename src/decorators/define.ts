@@ -8,6 +8,9 @@ import {
 import { DEFINABLE_KEY } from '../constants/metadata-keys';
 import { types } from '../types';
 
+export const REFLECTIVE_KEY: '__is_ts_runtime_reflective_decorator' =
+  '__is_ts_runtime_reflective_decorator';
+
 /**
  * Defines a type by enabling declaration reflection so it can be converted later on for runtime validation.
  * @param args - Optional arguments that will be passed back to before/after hooks.
@@ -27,7 +30,7 @@ export function define(...args: any[]): MarkReflective<types.ClassDecorator> {
       define.beforeDefine(target, reflectedType, ...args);
 
       defineReflectMetadata(target, reflectedType);
-      Reflect.defineMetadata(DEFINABLE_KEY, true, target);
+      Reflect.defineMetadata(DEFINABLE_KEY, true, target as any);
 
       define.afterDefine(target, reflectedType, ...args);
       return target;

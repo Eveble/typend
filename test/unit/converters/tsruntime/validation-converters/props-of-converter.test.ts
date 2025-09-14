@@ -18,7 +18,7 @@ describe(`PropsOfConverter`, function () {
   let converter: any;
   let classConverter: any;
   let typeConverter: PropsOfConverter;
-  const validPayload = { kind: 18, type: MyClass, arguments: [] };
+  const validPayload = { kind: 18, modifiers: 0, type: MyClass, arguments: [] };
 
   beforeEach(() => {
     converter = stubInterface<types.Converter>();
@@ -38,10 +38,14 @@ describe(`PropsOfConverter`, function () {
     });
 
     it(`returns false for reflected utility type 'PropsOf' with passed invalid generic as non-class`, () => {
-      classConverter.isConvertible.withArgs({ kind: 8 }).returns(false);
-      classConverter.isConvertible.withArgs({ kind: 7 }).returns(false);
       classConverter.isConvertible
-        .withArgs({ kind: 15, properties: {} })
+        .withArgs({ kind: 8, modifiers: 0 })
+        .returns(false);
+      classConverter.isConvertible
+        .withArgs({ kind: 7, modifiers: 0 })
+        .returns(false);
+      classConverter.isConvertible
+        .withArgs({ kind: 15, modifiers: 0, properties: {} })
         .returns(false);
 
       expect(

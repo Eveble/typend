@@ -75,6 +75,7 @@ export class ObjectConverter implements types.TypeConverter {
     const props: Record<keyof any, any> = {};
     for (const key of Reflect.ownKeys(properties)) {
       const reflectedProp: tsrTypes.ReflectedType = properties[key as any];
+
       // Skips internal('native') keys that are reflected by Reflect.ownKeys like 'length' etc.
       if (!isPlainObject(reflectedProp)) continue;
 
@@ -86,7 +87,6 @@ export class ObjectConverter implements types.TypeConverter {
 
       if (classConverter?.isConvertible(reflectedProp)) {
         const reflectedRefType = reflectedProp as tsrTypes.ReferenceType;
-
         let expectation: any;
         if (isConverting) {
           if (isPatternClass(reflectedRefType.type)) {
@@ -115,7 +115,6 @@ export class ObjectConverter implements types.TypeConverter {
         props[key as any] = expectation;
         continue;
       }
-
       props[key as any] = isConverting
         ? converter.convert(reflectedProp)
         : converter.reflect(reflectedProp);

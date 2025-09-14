@@ -9,7 +9,7 @@ import { types } from '../types';
  */
 export function validable(isValidable = true): types.ClassDecorator {
   return <T>(target: T): T => {
-    Reflect.defineMetadata(VALIDATION_KEY, isValidable, target);
+    Reflect.defineMetadata(VALIDATION_KEY, isValidable, target as any);
     return target;
   };
 }

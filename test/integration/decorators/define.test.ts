@@ -28,8 +28,10 @@ describe(`define`, function () {
           properties: {
             key: {
               kind: 2,
+              modifiers: 0,
             },
           },
+          constructors: [{ modifiers: 0, parameters: [] }],
         });
       }
     }
@@ -46,8 +48,10 @@ describe(`define`, function () {
           properties: {
             otherKey: {
               kind: 3,
+              modifiers: 0,
             },
           },
+          constructors: [{ modifiers: 0, parameters: [] }],
           extends: { kind: 18, type: Parent, arguments: [] },
         });
       }

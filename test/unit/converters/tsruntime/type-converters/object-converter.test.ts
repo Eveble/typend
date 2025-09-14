@@ -105,7 +105,7 @@ describe(`ObjectConverter`, function () {
     });
 
     it('returns reflected object literal with key and value', () => {
-      converter.reflect.withArgs({ kind: 2 }).returns(String);
+      converter.reflect.withArgs({ kind: 2, modifiers: 0 }).returns(String);
       const objType = typeConverter.reflect(
         reflect<{ key: string }>() as tsrTypes.ObjectType,
         converter
@@ -115,8 +115,8 @@ describe(`ObjectConverter`, function () {
     });
 
     it('returns reflected interface with properties', () => {
-      converter.reflect.withArgs({ kind: 2 }).returns(String);
-      converter.reflect.withArgs({ kind: 21 }).returns(Function);
+      converter.reflect.withArgs({ kind: 2, modifiers: 0 }).returns(String);
+      converter.reflect.withArgs({ kind: 21, modifiers: 0 }).returns(Function);
       const objType = typeConverter.reflect(
         reflect<MyInterface>() as tsrTypes.ObjectType,
         converter
@@ -126,7 +126,7 @@ describe(`ObjectConverter`, function () {
     });
 
     it('ensures tha property key as symbol is preserved on properties', () => {
-      converter.reflect.withArgs({ kind: 2 }).returns(String);
+      converter.reflect.withArgs({ kind: 2, modifiers: 0 }).returns(String);
       const objType = typeConverter.reflect(
         reflect<{ [symbolAsAKey]: string }>() as tsrTypes.ObjectType,
         converter
@@ -136,7 +136,7 @@ describe(`ObjectConverter`, function () {
     });
 
     it(`ensures tha use of 'Reflect.ownKeys' does not impact on properties with key names matching build-in native ones`, () => {
-      converter.reflect.withArgs({ kind: 3 }).returns(Number);
+      converter.reflect.withArgs({ kind: 3, modifiers: 0 }).returns(Number);
       const objType = typeConverter.reflect(
         reflect<{ length: number }>() as tsrTypes.ObjectType,
         converter
@@ -148,7 +148,7 @@ describe(`ObjectConverter`, function () {
     it('returns converted object literal with property value as a type', () => {
       converter.getConverter.withArgs(KINDS.CLASS).returns(classConverter);
       classConverter.isConvertible
-        .withArgs({ kind: 18, type: MyClass, arguments: [] })
+        .withArgs({ kind: 18, modifiers: 0, type: MyClass, arguments: [] })
         .returns(true);
 
       const objType = typeConverter.reflect(
@@ -175,7 +175,9 @@ describe(`ObjectConverter`, function () {
     });
 
     it('returns converted object literal with key and value as Collection instance', () => {
-      converter.convert.withArgs({ kind: 2 }).returns(new InstanceOf(String));
+      converter.convert
+        .withArgs({ kind: 2, modifiers: 0 })
+        .returns(new InstanceOf(String));
       const objType = typeConverter.convert(
         reflect<{ key: string }>() as tsrTypes.ObjectType,
         converter
@@ -192,10 +194,12 @@ describe(`ObjectConverter`, function () {
         initializer: (): any => {
           return { key: 'my-string' };
         },
-        properties: { key: { kind: 2 } },
+        properties: { key: { kind: 2, modifiers: 0 } },
       };
 
-      converter.convert.withArgs({ kind: 2 }).returns(new InstanceOf(String));
+      converter.convert
+        .withArgs({ kind: 2, modifiers: 0 })
+        .returns(new InstanceOf(String));
       const objType = typeConverter.convert(reflectedType, converter);
       expect(objType).to.be.instanceof(Collection);
       expect(objType).to.be.eql(
@@ -208,9 +212,11 @@ describe(`ObjectConverter`, function () {
     });
 
     it('returns converted interface with properties as Interface instance', () => {
-      converter.convert.withArgs({ kind: 2 }).returns(new InstanceOf(String));
       converter.convert
-        .withArgs({ kind: 21 })
+        .withArgs({ kind: 2, modifiers: 0 })
+        .returns(new InstanceOf(String));
+      converter.convert
+        .withArgs({ kind: 21, modifiers: 0 })
         .returns(new InstanceOf(Function));
       const intfType: Interface = typeConverter.convert(
         reflect<MyInterface>() as tsrTypes.ObjectType,
@@ -227,7 +233,9 @@ describe(`ObjectConverter`, function () {
     });
 
     it('ensures tha property key as symbol is preserved on properties', () => {
-      converter.convert.withArgs({ kind: 2 }).returns(new InstanceOf(String));
+      converter.convert
+        .withArgs({ kind: 2, modifiers: 0 })
+        .returns(new InstanceOf(String));
       const objType = typeConverter.convert(
         reflect<{ [symbolAsAKey]: string }>() as tsrTypes.ObjectType,
         converter
@@ -239,7 +247,9 @@ describe(`ObjectConverter`, function () {
     });
 
     it(`ensures tha use of 'Reflect.ownKeys' does not impact on properties with key names matching build-in native ones`, () => {
-      converter.convert.withArgs({ kind: 3 }).returns(new InstanceOf(Number));
+      converter.convert
+        .withArgs({ kind: 3, modifiers: 0 })
+        .returns(new InstanceOf(Number));
       const objType = typeConverter.convert(
         reflect<{ length: number }>() as tsrTypes.ObjectType,
         converter
@@ -253,7 +263,7 @@ describe(`ObjectConverter`, function () {
     it('returns converted object literal with property value as a type', () => {
       converter.getConverter.withArgs(KINDS.CLASS).returns(classConverter);
       classConverter.isConvertible
-        .withArgs({ kind: 18, type: MyClass, arguments: [] })
+        .withArgs({ kind: 18, modifiers: 0, type: MyClass, arguments: [] })
         .returns(true);
 
       const objType = typeConverter.convert(

@@ -18,7 +18,7 @@ describe(`TypeOfConverter`, function () {
   let converter: any;
   let classConverter: any;
   let typeConverter: TypeOfConverter;
-  const validPayload = { kind: 18, type: MyClass, arguments: [] };
+  const validPayload = { kind: 18, modifiers: 0, type: MyClass, arguments: [] };
 
   beforeEach(() => {
     converter = stubInterface<types.Converter>();
@@ -38,10 +38,14 @@ describe(`TypeOfConverter`, function () {
     });
 
     it(`returns false for reflected utility type 'TypeOf' with passed invalid generic as non-class`, () => {
-      classConverter.isConvertible.withArgs({ kind: 8 }).returns(false);
-      classConverter.isConvertible.withArgs({ kind: 7 }).returns(false);
       classConverter.isConvertible
-        .withArgs({ kind: 15, properties: {} })
+        .withArgs({ kind: 8, modifiers: 0 })
+        .returns(false);
+      classConverter.isConvertible
+        .withArgs({ kind: 7, modifiers: 0 })
+        .returns(false);
+      classConverter.isConvertible
+        .withArgs({ kind: 15, modifiers: 0, properties: {} })
         .returns(false);
 
       expect(

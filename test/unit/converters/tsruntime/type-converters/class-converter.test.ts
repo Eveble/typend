@@ -71,7 +71,8 @@ describe(`ClassConverter`, function () {
         .withArgs({
           kind: 19,
           name: 'MyExample',
-          properties: { key: { kind: 2 } },
+          properties: { key: { kind: 2, modifiers: 0 } },
+          constructors: [{ modifiers: 0, parameters: [] }],
         })
         .returns({
           key: String,
@@ -92,7 +93,8 @@ describe(`ClassConverter`, function () {
         .withArgs({
           kind: 19,
           name: 'MyExample',
-          properties: { key: { kind: 3 } },
+          properties: { key: { kind: 3, modifiers: 0 } },
+          constructors: [{ modifiers: 0, parameters: [] }],
         })
         .returns({
           key: Number,
@@ -126,9 +128,10 @@ describe(`ClassConverter`, function () {
           kind: 19,
           name: 'Parent',
           properties: {
-            firstParent: { kind: 2 },
-            secondParent: { kind: 3 },
+            firstParent: { kind: 2, modifiers: 0 },
+            secondParent: { kind: 3, modifiers: 0 },
           },
+          constructors: [{ modifiers: 0, parameters: [] }],
         })
         .returns({
           firstParent: String,
@@ -140,9 +143,10 @@ describe(`ClassConverter`, function () {
           kind: 19,
           name: 'Child',
           properties: {
-            firstChild: { kind: 4 },
-            secondChild: { kind: 5, value: 'my-value' },
+            firstChild: { kind: 4, modifiers: 0 },
+            secondChild: { kind: 5, modifiers: 0, value: 'my-value' },
           },
+          constructors: [{ modifiers: 0, parameters: [] }],
           extends: { kind: 18, type: Parent, arguments: [] },
         })
         .returns({
@@ -186,7 +190,8 @@ describe(`ClassConverter`, function () {
         .withArgs({
           kind: 19,
           name: 'MyExample',
-          properties: { key: { kind: 2 } },
+          properties: { key: { kind: 2, modifiers: 0 } },
+          constructors: [{ modifiers: 0, parameters: [] }],
         })
         .returns(properties);
 
@@ -214,7 +219,8 @@ describe(`ClassConverter`, function () {
           .withArgs({
             kind: 19,
             name: 'MyExample',
-            properties: { key: { kind: 2 } },
+            properties: { key: { kind: 2, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
           })
           .returns({
             key: String,
@@ -239,7 +245,8 @@ describe(`ClassConverter`, function () {
           .withArgs({
             kind: 19,
             name: 'MyExample',
-            properties: { key: { kind: 2 } },
+            properties: { key: { kind: 2, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
           })
           .returns({
             key: String,
@@ -271,7 +278,8 @@ describe(`ClassConverter`, function () {
         .withArgs({
           kind: 19,
           name: 'MyExample',
-          properties: { key: { kind: 2 } },
+          properties: { key: { kind: 2, modifiers: 0 } },
+          constructors: [{ modifiers: 0, parameters: [] }],
         })
         .returns(
           new Collection({
@@ -296,7 +304,8 @@ describe(`ClassConverter`, function () {
         .withArgs({
           kind: 19,
           name: 'MyExample',
-          properties: { key: { kind: 3 } },
+          properties: { key: { kind: 3, modifiers: 0 } },
+          constructors: [{ modifiers: 0, parameters: [] }],
         })
         .returns(
           new Collection({
@@ -334,9 +343,10 @@ describe(`ClassConverter`, function () {
           kind: 19,
           name: 'Parent',
           properties: {
-            firstParent: { kind: 2 },
-            secondParent: { kind: 3 },
+            firstParent: { kind: 2, modifiers: 0 },
+            secondParent: { kind: 3, modifiers: 0 },
           },
+          constructors: [{ modifiers: 0, parameters: [] }],
         })
         .returns(
           new Collection({
@@ -350,9 +360,10 @@ describe(`ClassConverter`, function () {
           kind: 19,
           name: 'Child',
           properties: {
-            firstChild: { kind: 4 },
-            secondChild: { kind: 5, value: 'my-value' },
+            firstChild: { kind: 4, modifiers: 0 },
+            secondChild: { kind: 5, modifiers: 0, value: 'my-value' },
           },
+          constructors: [{ modifiers: 0, parameters: [] }],
           extends: { kind: 18, type: Parent, arguments: [] },
         })
         .returns(
@@ -401,7 +412,8 @@ describe(`ClassConverter`, function () {
         .withArgs({
           kind: 19,
           name: 'MyExample',
-          properties: { key: { kind: 2 } },
+          properties: { key: { kind: 2, modifiers: 0 } },
+          constructors: [{ modifiers: 0, parameters: [] }],
         })
         .returns(collProperties);
 
@@ -427,7 +439,8 @@ describe(`ClassConverter`, function () {
           .withArgs({
             kind: 19,
             name: 'MyExample',
-            properties: { key: { kind: 2 } },
+            properties: { key: { kind: 2, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
           })
           .returns(
             new Collection({
@@ -454,7 +467,8 @@ describe(`ClassConverter`, function () {
           .withArgs({
             kind: 19,
             name: 'MyExample',
-            properties: { key: { kind: 2 } },
+            properties: { key: { kind: 2, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
           })
           .returns(
             new Collection({

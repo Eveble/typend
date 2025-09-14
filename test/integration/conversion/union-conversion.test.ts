@@ -147,9 +147,9 @@ describe(`Union conversion`, function () {
             reflect<1 | 2 | 3 | 4>(),
             // Its reflected this way...
             new OneOf(
-              new Equals(3),
               new Equals(1),
               new Equals(2),
+              new Equals(3),
               new Equals(4)
             ),
           ],
