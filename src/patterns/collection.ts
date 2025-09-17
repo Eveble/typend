@@ -1,8 +1,8 @@
-import { isPlainObject } from 'lodash';
 import { Pattern } from '../pattern';
 import { InvalidTypeError } from '../errors';
 import { types } from '../types';
 import { KINDS } from '../constants/literal-keys';
+import { isPlainObjectFast } from '../helpers';
 
 /**
  * Validates an Object with the given keys and with values matching the given pattern.
@@ -60,7 +60,7 @@ export class Collection extends Pattern implements types.Pattern {
    */
   constructor(properties: Record<keyof any, any> = {}) {
     super();
-    if (!isPlainObject(properties)) {
+    if (!isPlainObjectFast(properties)) {
       throw new InvalidTypeError(
         `Collection properties are invalid. Expected properties to be a plain object, got ${this.describe(
           properties

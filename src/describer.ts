@@ -8,7 +8,7 @@ import {
   isClassInstance,
   hasTypeName,
 } from '@eveble/helpers';
-import { isArray, isPlainObject } from 'lodash';
+import { isArray } from 'lodash';
 import { DebugDescriber } from './describers/debug-describer';
 import { CompactDescriber } from './describers/compact-describer';
 import { DescriptionList } from './description';
@@ -22,6 +22,7 @@ import { ClassDescriber } from './describers/class-describer';
 import { FallbackDescriber } from './describers/fallback-describer';
 import { DescriptionListDescriber } from './describers/description-list-describer';
 import { KINDS } from './constants/literal-keys';
+import { isPlainObjectFast } from './helpers';
 
 export class Describer implements types.Describer {
   static describers: Record<string, any> = {
@@ -83,7 +84,7 @@ export class Describer implements types.Describer {
     let type = KINDS.UNKNOWN;
     if (isArray(arg)) {
       type = KINDS.ARRAY;
-    } else if (isPlainObject(arg)) {
+    } else if (isPlainObjectFast(arg)) {
       type = KINDS.OBJECT;
     } else if (
       (isNativeType(arg) || isNativeTypeInstance(arg)) &&

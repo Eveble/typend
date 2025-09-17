@@ -1,9 +1,9 @@
-import { isPlainObject, get, isEmpty } from 'lodash';
+import {  get, isEmpty } from 'lodash';
 import { diff } from 'deep-diff';
 import { isClassInstance } from '@eveble/helpers';
 import { PatternValidator } from '../pattern-validator';
 import { InvalidTypeError, UnexpectedKeyError } from '../errors';
-import { getResolvablePath, isResolvablePath } from '../helpers';
+import { getResolvablePath, isPlainObjectFast, isResolvablePath } from '../helpers';
 import { types } from '../types';
 import { Collection } from '../patterns/collection';
 import { Optional } from '../patterns/optional';
@@ -21,7 +21,7 @@ export class CollectionValidator extends PatternValidator
   ): boolean {
     return (
       expectation instanceof Collection ||
-      (isStrict === true && isPlainObject(expectation))
+      (isStrict === true && isPlainObjectFast(expectation))
     );
   }
 
@@ -40,33 +40,39 @@ export class CollectionValidator extends PatternValidator
    * @throws {ValidationError}
    * Thrown if the value does not match expected properties.
    */
+
   public validate(
     value: any,
-    collOrExpect: Collection | Record<keyof any, any>,
+    collOrExpected: Collection | Record<keyof any, any>,
     validator: types.Validator
   ): boolean {
-    if (!isClassInstance(value) && !isPlainObject(value)) {
+    // Early type validation
+    if (!isClassInstance(value) && !isPlainObjectFast(value)) {
       throw new InvalidTypeError(
         'Expected %s to be an Object',
         this.describe(value)
       );
     }
-    /*
-    Handle TypScript expectations decelerated as:
 
-    Record<keyof any, any>
-    { [key: string]: any }
-
-    and similar.
-    */
-    if (isEmpty(collOrExpect)) {
+    // Handle empty expectations early
+    if (isEmpty(collOrExpected)) {
       return true;
     }
 
-    const differences = diff(collOrExpect, value);
+    const differences = diff(collOrExpected, value);
     if (differences === undefined || isEmpty(differences)) {
       return true;
     }
+
+    // Pre-compute stringified value for error messages
+    let stringifiedValue: string | undefined;
+    const getStringifiedValue = () => {
+      if (stringifiedValue === undefined) {
+        stringifiedValue = this.describe(value);
+      }
+      return stringifiedValue;
+    };
+
     for (const difference of differences) {
       if (difference === undefined || difference.path === undefined) {
         continue;
@@ -79,43 +85,40 @@ export class CollectionValidator extends PatternValidator
       //   > referenced by diff tool on difference.path as `prop[0]`, so it would end up
       //     comparing first element from expectation without taking Optional pattern instance
       //     in to account(equal to failed validation)
-      if (
-        get(
-          collOrExpect,
-          difference.path.join('.').replace('.0', '')
-        ) instanceof Optional
-      ) {
-        diffPath = difference.path.join('.').replace('.0', '');
-      } else {
-        diffPath = difference.path.join('.');
-      }
-      const key: string = getResolvablePath(diffPath, collOrExpect);
+      const joinedPath = difference.path.join('.');
+      const optionalPath = joinedPath.replace('.0', '');
 
-      if (!isResolvablePath(key, collOrExpect)) {
-        const stringifiedValue = this.describe(value);
+      if (get(collOrExpected, optionalPath) instanceof Optional) {
+        diffPath = optionalPath;
+      } else {
+        diffPath = joinedPath;
+      }
+
+      const key: string = getResolvablePath(diffPath, collOrExpected);
+
+      if (!isResolvablePath(key, collOrExpected)) {
         throw new UnexpectedKeyError(
           `Unexpected key '%s' in %s`,
           diffPath,
-          stringifiedValue
+          getStringifiedValue()
         );
       }
 
       const valueFromPath = get(value, key);
-      const expectationFromPath = get(collOrExpect, key);
+      const expectationFromPath = get(collOrExpected, key);
 
       try {
         validator.validate(valueFromPath, expectationFromPath);
       } catch (err) {
-        const stringifiedValue = this.describe(value);
         if (err.message.includes('to be a undefined')) {
           throw new UnexpectedKeyError(
             `Unexpected key '%s' in %s`,
             key,
-            stringifiedValue
+            getStringifiedValue()
           );
         } else {
           throw new err.constructor(
-            `(Key '${key}': ${err.message} in ${stringifiedValue})`
+            `(Key '${key}': ${err.message} in ${getStringifiedValue()})`
           );
         }
       }

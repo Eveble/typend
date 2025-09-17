@@ -1,12 +1,11 @@
 import 'reflect-metadata';
 import { Types as tsrTypes } from 'tsruntime';
-import { isPlainObject } from 'lodash';
 import { types } from '../../../types';
 import { Collection } from '../../../patterns/collection';
 import { InstanceOf } from '../../../patterns/instance-of';
 import { KINDS } from '../../../constants/literal-keys';
 import { Interface } from '../../../patterns/interface';
-import { isSpecial, isPatternClass } from '../../../helpers';
+import { isSpecial, isPatternClass, isPlainObjectFast } from '../../../helpers';
 
 export class ObjectConverter implements types.TypeConverter {
   /**
@@ -77,7 +76,7 @@ export class ObjectConverter implements types.TypeConverter {
       const reflectedProp: tsrTypes.ReflectedType = properties[key as any];
 
       // Skips internal('native') keys that are reflected by Reflect.ownKeys like 'length' etc.
-      if (!isPlainObject(reflectedProp)) continue;
+      if (!isPlainObjectFast(reflectedProp)) continue;
 
       // If object contains a value, that is a class type as properties, point to the
       // type constructor without resolving type's properties.

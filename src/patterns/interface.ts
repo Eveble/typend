@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { isPlainObject } from 'lodash';
 import { Pattern } from '../pattern';
 import { InvalidTypeError } from '../errors';
 import { types } from '../types';
 import { KINDS } from '../constants/literal-keys';
 import { Collection } from './collection';
 import { INTERFACE_NAME_KEY } from '../constants/metadata-keys';
+import { isPlainObjectFast } from '../helpers';
 
 /**
  *
@@ -62,7 +62,7 @@ export class Interface extends Pattern implements types.Pattern {
    */
   constructor(properties: Record<keyof any, any>) {
     super();
-    if (!isPlainObject(properties) && !(properties instanceof Collection)) {
+    if (!isPlainObjectFast(properties) && !(properties instanceof Collection)) {
       throw new InvalidTypeError(
         `Interface properties are invalid. Expected properties to be a plain object or Collection instance describing interface properties, got ${this.describe(
           properties

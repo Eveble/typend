@@ -47,12 +47,15 @@ export class ListValidator extends PatternValidator
 
     // Scenario 1: Definition just requires that the type is Array(like: `[]`, `any[]`, `Array`)
     if (
-      isArray(values) &&
       // Array class or simple notation([])
       (listOrExpect === Array || listOrExpect.length === 0)
     ) {
       return true;
     }
+
+
+    // Cache first expectation and value length
+    const firstExpectation = listOrExpect[0];
 
     // Scenario 2: types.PatternValidator by provided type definition
     for (let i = 0; i < values.length; i++) {
@@ -63,7 +66,6 @@ export class ListValidator extends PatternValidator
       // new List(new OneOf(String, Number)) etc...
       // We always assume that first element of array is the required definition for all the checked values.
       // For mor tuple a like behavior in arrays use TuplePattern.
-      const firstExpectation = listOrExpect[0];
       try {
         validator.validate(valueItem, firstExpectation);
       } catch (err) {

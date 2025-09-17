@@ -1,9 +1,10 @@
-import { isArray, isPlainObject } from 'lodash';
+import { isArray } from 'lodash';
 import { Pattern } from '../pattern';
 import { InvalidTypeError } from '../errors';
 import { KINDS } from '../constants/literal-keys';
 import { WrapperPattern } from '../wrapper-pattern';
 import { types } from '../types';
+import { isPlainObjectFast } from '../helpers';
 
 /**
  * Validates if value is equal to expectation.
@@ -35,7 +36,7 @@ export class Equals extends WrapperPattern implements types.Pattern {
    * Thrown if provided expectation is an array or plain object(use List or Collection patterns for that).
    */
   onValidation(expectation: any): boolean {
-    if (isArray(expectation) || isPlainObject(expectation)) {
+    if (isArray(expectation) || isPlainObjectFast(expectation)) {
       throw new InvalidTypeError(
         `Equality pattern expectation is invalid. Expected expectation to not be an plain object nor an array, got ${Pattern.describer.describe(
           expectation

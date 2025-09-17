@@ -185,3 +185,15 @@ export function isSpecial(reflectedType: tsrTypes.ReflectedType): boolean {
 export function isPlainRecord(arg: any): boolean {
   return isPlainObject(arg) || arg instanceof Collection;
 }
+
+
+/**
+ * Determines whether plain object
+ * @param obj - Evaluated object.
+ * @returns `True` if object is a plain object, otherwise `false`.
+ */
+export function isPlainObjectFast(obj: any): boolean {
+  if (obj === null || typeof obj !== 'object') return false;
+  const proto = Object.getPrototypeOf(obj);
+  return proto === Object.prototype || proto === null;
+}

@@ -1,9 +1,8 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { isPlainObject } from 'lodash';
 import { types } from '../../../types';
 import { InstanceOf } from '../../../patterns/instance-of';
 import { KINDS } from '../../../constants/literal-keys';
-import { isPatternClass } from '../../../helpers';
+import { isPatternClass, isPlainObjectFast } from '../../../helpers';
 import { Collection } from '../../../patterns/collection';
 
 export class ReferenceConverter implements types.TypeConverter {
@@ -26,7 +25,7 @@ export class ReferenceConverter implements types.TypeConverter {
     reflectedType: tsruntimeTypes.ReferenceType,
     converter: types.Converter
   ): any {
-    if (isPlainObject(reflectedType.type)) {
+    if (isPlainObjectFast(reflectedType.type)) {
       return new Collection(reflectedType.type);
     }
 
@@ -60,7 +59,7 @@ export class ReferenceConverter implements types.TypeConverter {
     reflectedType: tsruntimeTypes.ReferenceType,
     converter: types.Converter
   ): any {
-    if (isPlainObject(reflectedType.type)) {
+    if (isPlainObjectFast(reflectedType.type)) {
       return reflectedType.type;
     }
 

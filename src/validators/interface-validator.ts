@@ -1,10 +1,10 @@
-import { get, isEmpty, isPlainObject } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { diff } from 'deep-diff';
 import { isClassInstance } from '@eveble/helpers';
 import { Interface } from '../patterns/interface';
 import { types } from '../types';
 import { PatternValidator } from '../pattern-validator';
-import { getResolvablePath } from '../helpers';
+import { getResolvablePath, isPlainObjectFast } from '../helpers';
 import { InvalidTypeError } from '../errors';
 
 export class InterfaceValidator extends PatternValidator
@@ -37,7 +37,7 @@ export class InterfaceValidator extends PatternValidator
     pattern: Interface,
     validator: types.Validator
   ): boolean {
-    if (!isClassInstance(value) && !isPlainObject(value)) {
+    if (!isClassInstance(value) && !isPlainObjectFast(value)) {
       throw new InvalidTypeError(
         'Expected %s to be an Object or class instance',
         this.describe(value)
@@ -76,13 +76,13 @@ export class InterfaceValidator extends PatternValidator
       try {
         validator.validate(valueFromPath, expectationFromPath);
       } catch (err) {
-        const stringifiedValue = this.describe(value);
         if (
           err.message.includes('Unexpected key') ||
           err.message.includes('to be a undefined')
         ) {
           continue;
         } else {
+          const stringifiedValue = this.describe(value);
           throw new err.constructor(
             `(Key '${key}': ${err.message} in ${stringifiedValue})`
           );

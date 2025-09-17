@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import merge from 'deepmerge';
-import { isPlainObject } from 'lodash';
 import { INJECTABLE_PROPERTIES_KEY } from '../../constants/metadata-keys';
 import { types } from '../../types';
 import { Class } from '../../patterns/class';
+import { isPlainObjectFast } from '../../helpers';
 
 export class InjectingPropsTransformer implements types.TypeTransformer {
   /**
@@ -27,7 +27,7 @@ export class InjectingPropsTransformer implements types.TypeTransformer {
     const injectableProps: types.Type =
       Reflect.getOwnMetadata(INJECTABLE_PROPERTIES_KEY, classType.type) || {};
     classType.properties = merge(classType.properties, injectableProps, {
-      isMergeableObject: isPlainObject,
+      isMergeableObject: isPlainObjectFast,
     });
     return classType;
   }

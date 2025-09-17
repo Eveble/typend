@@ -13,9 +13,9 @@ import { InstanceOf } from '../patterns/instance-of';
 
 export class InstanceOfValidator extends PatternValidator
   implements types.PatternValidator {
-  static MAPPINGS = {
-    symbol: Symbol,
-  };
+    static MAPPINGS = {
+      symbol: Symbol,
+    } as const;
 
   /**
    * Evaluates if validator can handle provided explicit pattern or implicit expectation.
@@ -86,12 +86,10 @@ export class InstanceOfValidator extends PatternValidator
         true/false -> Boolean
       */
     } else if (isScalarType(expectation)) {
-      isValid = typeof value === getScalarType(expectation);
-    } else if (
-      Object.values(InstanceOfValidator.MAPPINGS).includes(expectation)
-    ) {
-      const typeofValue = typeof value;
-      isValid = InstanceOfValidator.MAPPINGS[typeofValue] === expectation;
+      const valueType = typeof value;
+      isValid = valueType === getScalarType(expectation);
+    } else if (expectation === Symbol) {
+      isValid = typeof value === 'symbol';
     }
 
     if (!isValid) {

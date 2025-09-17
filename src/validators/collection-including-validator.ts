@@ -1,8 +1,8 @@
-import { isPlainObject, get, isEmpty } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { diff } from 'deep-diff';
 import { PatternValidator } from '../pattern-validator';
 import { InvalidTypeError } from '../errors';
-import { getResolvablePath } from '../helpers';
+import { getResolvablePath, isPlainObjectFast } from '../helpers';
 import { types } from '../types';
 import { CollectionIncluding } from '../patterns/collection-including';
 
@@ -19,7 +19,7 @@ export class CollectionIncludingValidator extends PatternValidator
   ): boolean {
     return (
       expectation instanceof CollectionIncluding ||
-      (!isStrict && isPlainObject(expectation))
+      (!isStrict && isPlainObjectFast(expectation))
     );
   }
 
@@ -42,7 +42,7 @@ export class CollectionIncludingValidator extends PatternValidator
     collIncOrExpect: CollectionIncluding | Record<keyof any, any>,
     validator: types.Validator
   ): boolean {
-    if (!isPlainObject(value)) {
+    if (!isPlainObjectFast(value)) {
       throw new InvalidTypeError(
         'Expected %s to be an Object',
         this.describe(value)
@@ -71,13 +71,13 @@ export class CollectionIncludingValidator extends PatternValidator
       try {
         validator.validate(valueFromPath, expectationFromPath);
       } catch (err) {
-        const stringifiedValue = this.describe(value);
         if (
           err.message.includes('Unexpected key') ||
           err.message.includes('to be a undefined')
         ) {
           continue;
         } else {
+          const stringifiedValue = this.describe(value);
           throw new err.constructor(
             `(Key '${key}': ${err.message} in ${stringifiedValue})`
           );

@@ -1,8 +1,8 @@
-import { isPlainObject } from 'lodash';
 import { Pattern } from '../pattern';
 import { InvalidDefinitionError } from '../errors';
 import { types } from '../types';
 import { KINDS } from '../constants/literal-keys';
+import { isPlainObjectFast } from '../helpers';
 
 /**
  * Validates if value matches an Object with expected keys and values matching the
@@ -63,7 +63,7 @@ export class CollectionWithin extends Pattern implements types.Pattern {
    */
   constructor(properties: Record<keyof any, any>) {
     super();
-    if (!isPlainObject(properties)) {
+    if (!isPlainObjectFast(properties)) {
       throw new InvalidDefinitionError(
         `CollectionWithin properties is invalid. Expected properties to be a plain object, got ${this.describe(
           properties
