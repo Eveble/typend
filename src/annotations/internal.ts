@@ -15,7 +15,8 @@ import { types } from '../types';
  *```ts
  * class MyClass {
  *  name: string;
- *  @internal engine: Engine
+ *  @internal
+ *  engine: Engine
  *
  *  @internal
  *  MyMessage(message: MyMessage): void {}
