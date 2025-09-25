@@ -12,9 +12,14 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
   function reflectiveFn(reflectedType: tsruntimeTypes.ReflectedType): any {
     return <T extends { new (...cargs: any[]): any }>(target: T): T => {
       Type.beforeDefine(target, reflectedType, ...args);
+
+      // Store the reflected type BEFORE any wrapping
+      Reflect.defineMetadata(REFLECTED_TYPE_PROPS_KEY, reflectedType, target);
+      Reflect.defineMetadata(TYPE_KEY, true, target);
       defineReflectMetadata(target, reflectedType);
 
       Type.afterDefine(target, reflectedType, ...args);
+
 
       /**
        * [⚠️][⚠️][⚠️]
@@ -23,117 +28,157 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
        * **Property initializers** on current implementation of TypeScript v3.7 are counterintuitive
        * when inheritance is involved. If we define a PARENT class like:
        *
-       * class Struct {
-       *   constructor(props: Partial<Struct> = {}) {
+       * class Parent {
+       *   constructor(props: Partial<Parent> = {}) {
        *    Object.assign(this, props);
        *   }
        * }
        * and then a CHILD:
        *
        * ```ts
-       * @define('MyClass')
-       * class MyClass extends Struct {
-       *  foo = 'default-value';
+       * @define('Child')
+       * class Child extends Parent {
+       *  foo = 'child-value';
        *  // [⚠️] there is no constructor here
        * }
        * expect(
-       * new MyClass({foo: 'set-value'}).foo
-       * ).to.be.equal('set-value'); // false, its 'default-value' [⚠️]
+       * new Child({foo: 'set-value'}).foo
+       * ).to.be.equal('set-value'); // false, its 'child-value' [⚠️]
        * ```
        *
        * Normally in such cases developer expects, that - since underlying parent of
-       * `MyClass` i.e. `Struct` class assings properties via `Object.assign` - they will
-       * override the default values of property initializer(so the `default-value` will be
+       * `Child` i.e. `Parent` class assings properties via `Object.assign` - they will
+       * override the default values of property initializer(so the `child-value` will be
        * overridden by `set-value`).
        *
-       * **However since `MyClass` does not override constructor - that will not happen.**
+       * **However since `Child` does not override constructor - that will not happen.**
        *
-       * This will instantiate `MyClass` with the `default-value`, and not the
+       * This will instantiate `Child` with the `child-value`, and not the
        * expected one - `set-value`.
        * Conclusion from this is that property initializers are set **AFTER** the
        * construction - not before(where inheritance is in play).
        *
        * To **fix this issue** - define custom constructor for derived class:
        *```ts
-       * @define('MyClass')
-       * class MyClass extends Struct {
-       *  foo = 'default-value';
+       * @define('Child')
+       * class Child extends Struct {
+       *  foo = 'child-value';
        *
-       *  constructor(props: Partial<MyClass>) {
+       *  constructor(props: Partial<Child>) {
        *    super();
        *    Object.assign(this, this.processProps(props));
        *  }
        * }
        *
        * expect(
-       * new MyClass({foo: 'set-value'}).foo
+       * new Child({foo: 'set-value'}).foo
        * ).to.be.equal('set-value'); // true
        * ```
        * or use the wrapper below, that will do it for you.
        */
 
-      /**
-       * Defining class via `class extends target` breaks multiple tests
-       * const Wrapped = class extends target {
-       *   constructor(...ctorArgs: any[]) {
-       *     super(...ctorArgs);
-       *     const props = ctorArgs[0];
-       *     if (props && typeof props === "object") {
-       *       Object.assign(this, props);
-       *     }
-       *   }
-       * };
-       */
 
-      const Wrapped = new Function(
-        'target',
-        `return class ${target.name} extends target {
-           constructor(...ctorArgs) {
-             super(...ctorArgs);
-             const props = ctorArgs[0];
-             if (props && typeof props === "object") {
-               Object.assign(this, props);
+      // Detection of custom constructors:
+      // 1. Check if the class source contains explicit constructor definition
+      // 2. Check if constructor has parameters (length > 0) but parent doesn't
+      // 3. Check if constructor body contains more than just super() call
+      const classSource = target.toString();
+      const hasExplicitConstructor = /constructor\s*\([^)]*\)\s*\{[\s\S]*?\}/m.test(classSource);
+
+      // Check if this is likely a custom constructor by looking for method calls other than super()
+      const hasCustomLogic = hasExplicitConstructor &&
+        (/this\.\w+\([^)]*\)/.test(classSource) || // calls to this.methodName()
+         /console\.log/.test(classSource) ||        // console.log calls
+         /throw\s+/.test(classSource) ||           // throw statements
+         /if\s*\(/.test(classSource) ||            // conditional logic
+         /for\s*\(/.test(classSource) ||           // loops
+         /while\s*\(/.test(classSource));          // while loops
+
+      let Wrapped: any;
+
+      if (hasCustomLogic) {
+        // If class has custom constructor logic, don't wrap it
+        // Just apply the metadata and return the original class
+        Wrapped = target;
+      } else {
+        // Apply the wrapper for classes without custom constructors or with simple constructors
+        // (to handle property initializer issue)
+
+        Wrapped = new Function(
+          'target',
+          `return class ${target.name} extends target {
+             constructor(...ctorArgs) {
+               super(...ctorArgs);
+               const props = ctorArgs[0];
+               if (props && typeof props === "object") {
+                 Object.assign(this, props);
+               }
              }
-           }
-         }`
-      )(target);
+           }`
+        )(target);
 
-      // Don't break prototype chain!
-      // Handle inheritance chain
-      // Only patch if parentCtor is a real class/function and not Object or null
-      const parentCtor = Object.getPrototypeOf(target);
-      if (parentCtor && parentCtor !== Function.prototype) {
-        Object.setPrototypeOf(Wrapped, parentCtor);
-      }
-      const parentProto = Object.getPrototypeOf(target.prototype);
-      if (parentProto) {
-        Object.setPrototypeOf(Wrapped.prototype, parentProto);
-      }
+        // CRITICAL: Ensure prototype chain is properly maintained
+        // The wrapped class must have the same prototype chain as the original
+        const originalPrototype = Object.getPrototypeOf(target);
+        const originalInstancePrototype = Object.getPrototypeOf(target.prototype);
 
-      // Copy *own* properties (like symbols, non-enumerables)
-      // but do NOT replace `prototype`.
-      for (const key of Reflect.ownKeys(target.prototype)) {
-        if (key !== 'constructor' && !Wrapped.prototype.hasOwnProperty(key)) {
-          const descriptor = Object.getOwnPropertyDescriptor(
-            target.prototype,
-            key
-          );
-          if (descriptor) {
-            Object.defineProperty(Wrapped.prototype, key, descriptor);
+        // Set up the constructor prototype chain
+        if (originalPrototype && originalPrototype !== Function.prototype) {
+          Object.setPrototypeOf(Wrapped, originalPrototype);
+        }
+
+        // Set up the instance prototype chain
+        if (originalInstancePrototype) {
+          Object.setPrototypeOf(Wrapped.prototype, originalInstancePrototype);
+        }
+
+        // Copy *own* properties from original prototype to wrapped prototype
+        // This is crucial for preserving method definitions and property descriptors
+        for (const key of Reflect.ownKeys(target.prototype)) {
+          if (key !== 'constructor' && !Wrapped.prototype.hasOwnProperty(key)) {
+            const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);
+            if (descriptor) {
+              Object.defineProperty(Wrapped.prototype, key, descriptor);
+            }
           }
         }
+
+        // Copy static properties from original class
+        for (const key of Reflect.ownKeys(target)) {
+          if (key !== 'prototype' && key !== 'name' && key !== 'length') {
+            const descriptor = Object.getOwnPropertyDescriptor(target, key);
+            if (descriptor) {
+              Object.defineProperty(Wrapped, key, descriptor);
+            }
+          }
+        }
+
+        // CRITICAL: Copy ALL metadata from original to wrapped class
+        // This includes both reflect-metadata and any custom metadata
+        const metadataKeys = Reflect.getMetadataKeys(target);
+        for (const key of metadataKeys) {
+          const value = Reflect.getMetadata(key, target);
+          Reflect.defineMetadata(key, value, Wrapped);
+        }
+
+        // Also copy metadata from the prototype
+        const prototypeMetadataKeys = Reflect.getMetadataKeys(target.prototype);
+        for (const key of prototypeMetadataKeys) {
+          const value = Reflect.getMetadata(key, target.prototype);
+          Reflect.defineMetadata(key, value, Wrapped.prototype);
+        }
+
+        // Set the name for debugging
+        Object.defineProperty(Wrapped, "name", { value: target.name });
       }
 
-      // Copy metadata to wrapped class
-      defineReflectMetadata(Wrapped, reflectedType);
-
-      // Copy metadata back to wrapped class
+      // ALWAYS ensure the reflected type metadata is on the final class
+      // Store the reflected type metadata on the wrapped class
       Reflect.defineMetadata(REFLECTED_TYPE_PROPS_KEY, reflectedType, Wrapped);
-
       Reflect.defineMetadata(TYPE_KEY, true, Wrapped);
 
-      // Rename the constructor for debugging
-      // Object.defineProperty(Wrapped, "name", { value: target.name });
+      // Apply tsruntime metadata to the wrapped class
+      defineReflectMetadata(Wrapped, reflectedType);
 
       return Wrapped as any as T;
     };
@@ -143,19 +188,20 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
     createReflective(reflectiveFn);
   return reflect;
 }
+
 /**
- * Before define hook.
+ * Before Type hook.
  * @param target - Class constructor.
- * @param args - Optional arguments that were passed back to define decorator.
+ * @param args - Optional arguments that were passed back to Type decorator.
  */
 Type.beforeDefine = function (target: any, ...args: any[]): void {
   return target && args ? undefined : undefined;
 };
 
 /**
- * After define hook.
+ * After Type hook.
  * @param target - Class constructor.
- * @param args - Optional arguments that were passed back to define decorator.
+ * @param args - Optional arguments that were passed back to Type decorator.
  */
 Type.afterDefine = function (target: any, ...args: any[]): void {
   return target && args ? undefined : undefined;

@@ -55,23 +55,42 @@ export class ClassConverter implements types.TypeConverter {
     converter: types.Converter
   ): Class | any {
     const type: types.Class = this.resolveType(reflectedType);
+
+    // console.log(`Converting class: ${type.name}`);
+
     // Allow for custom Pattern types like `Integer`
     if (isPatternClass(type)) {
       return type;
     }
 
-    let properties: Record<keyof any, any> = Reflect.getMetadata(
-      this.getCacheMetadataKey(true),
-      reflectedType
-    );
+    // CRITICAL FIX: Don't use cache during initial resolution phase
+    // The problem is that caching interferes with proper inheritance resolution
+    // We need to always resolve properties fresh, then cache the final result
 
-    if (properties === undefined) {
+    let properties: Record<keyof any, any>;
+
+    // Only use cache if this exact class has been fully processed before
+    // Use a more specific cache key that includes class identity
+    const cacheKey = this.getClassSpecificCacheKey(type, true);
+    const cachedProperties = Reflect.getOwnMetadata(cacheKey, type);
+
+    if (cachedProperties !== undefined) {
+      // console.log(`Using cached properties for ${type.name}:`, cachedProperties);
+      properties = cachedProperties;
+    } else {
+      // console.log(`Resolving fresh properties for ${type.name}`);
       properties = this.resolveProperties(type, converter, true);
+
+      // Cache the resolved properties with the specific cache key
+      Reflect.defineMetadata(cacheKey, properties, type);
+      // console.log(`Cached properties for ${type.name}:`, properties);
     }
 
     const classType = new Class(type, properties);
     const transformedClassType = this.transformType(classType);
     const transformedProps = transformedClassType.properties;
+
+    // Also cache with the old method for backward compatibility
     this.cacheProperties(type, transformedProps, true);
 
     return transformedClassType;
@@ -95,11 +114,24 @@ export class ClassConverter implements types.TypeConverter {
   ): Record<keyof any, any> {
     const type: types.Class = this.resolveType(reflectedType);
 
-    const properties: Record<keyof any, any> = this.resolveProperties(
-      type,
-      converter,
-      false
-    );
+    // console.log(`Reflecting class: ${type.name}`);
+
+    let properties: Record<keyof any, any>;
+
+    const cacheKey = this.getClassSpecificCacheKey(type, false);
+    const cachedProperties = Reflect.getOwnMetadata(cacheKey, type);
+
+    if (cachedProperties !== undefined) {
+      // console.log(`Using cached reflection for ${type.name}:`, cachedProperties);
+      properties = cachedProperties;
+    } else {
+      // console.log(`Resolving fresh reflection for ${type.name}`);
+      properties = this.resolveProperties(type, converter, false);
+
+      Reflect.defineMetadata(cacheKey, properties, type);
+      // console.log(`Cached reflection for ${type.name}:`, properties);
+    }
+
     const transformedClassType = this.transformType(
       new Class(type, properties)
     );
@@ -122,39 +154,61 @@ export class ClassConverter implements types.TypeConverter {
     converter: types.Converter,
     isConverted: boolean
   ): Record<keyof any, any> {
-    let properties: Record<keyof any, any>;
+    // console.log(`Resolving properties for: ${type.name}, isConverted: ${isConverted}`);
 
-    if (this.isCached(type, isConverted)) {
-      properties = this.resolveCached(type, isConverted);
+    const storedReflectedType = Reflect.getMetadata(
+      REFLECTED_TYPE_PROPS_KEY,
+      type
+    );
+
+    let reflectedClass: tsruntimeTypes.ClassType;
+    if (storedReflectedType !== undefined) {
+      reflectedClass = storedReflectedType;
+      // console.log(`Using stored reflected type for ${type.name}`);
     } else {
-      const storedReflectedType = Reflect.getMetadata(
-        REFLECTED_TYPE_PROPS_KEY,
-        type
-      );
-      let reflectedClass: tsruntimeTypes.ClassType;
-      if (storedReflectedType !== undefined) {
-        reflectedClass = storedReflectedType;
-      } else {
-        reflectedClass = this.reflectClassType(type);
-      }
-
-      const parentProperties: Record<keyof any, any> =
-        this.resolveParentProperties(type, converter, isConverted);
-
-      const objConverter = converter.getConverter(
-        TypeKind.Object
-      ) as types.TypeConverter;
-
-      const classProperties: Record<keyof any, any> = isConverted
-        ? objConverter.convert(reflectedClass, converter)
-        : objConverter.reflect(reflectedClass, converter);
-
-      properties = merge(parentProperties, classProperties, {
-        isMergeableObject: isPlainRecord,
-      });
-      properties = isConverted ? new Collection(properties) : properties;
+      reflectedClass = this.reflectClassType(type);
+      // console.log(`Generated new reflected type for ${type.name}`);
     }
-    return properties;
+
+    // First resolve parent properties
+    const parentProperties: Record<keyof any, any> =
+      this.resolveParentProperties(type, converter, isConverted);
+
+    // console.log(`Parent properties for ${type.name}:`, parentProperties);
+
+    // Then resolve this class's own properties
+    const objConverter = converter.getConverter(
+      TypeKind.Object
+    ) as types.TypeConverter;
+
+    const classProperties: Record<keyof any, any> = isConverted
+      ? objConverter.convert(reflectedClass, converter)
+      : objConverter.reflect(reflectedClass, converter);
+
+    // console.log(`Own properties for ${type.name}:`, classProperties);
+
+    // Merge parent and own properties
+    const properties = merge(parentProperties, classProperties, {
+      isMergeableObject: isPlainRecord,
+    });
+
+    // console.log(`Merged properties for ${type.name}:`, properties);
+
+    const finalProperties = isConverted ? new Collection(properties) : properties;
+
+    // console.log(`Final properties for ${type.name}:`, finalProperties);
+
+    return finalProperties;
+  }
+
+  /**
+   * Creates a class-specific cache key that includes the class identity
+   */
+  protected getClassSpecificCacheKey(type: types.Class, isConverted: boolean): string {
+    const baseKey = isConverted ? 'converted' : 'reflected';
+    const className = type.name || 'Anonymous';
+    // Use the constructor function itself as part of the key to ensure uniqueness
+    return `${baseKey}_${className}_${type.toString().slice(0, 50)}`;
   }
 
   /**
@@ -247,6 +301,8 @@ export class ClassConverter implements types.TypeConverter {
     converter: types.Converter,
     isConverted: boolean
   ): Record<keyof any, any> {
+    // console.log(`Resolving parent properties for: ${type.name}`);
+
     // Support 'classes' from 'polytype' for multi inheritance(mixin/traits etc.)
     const matcher = (evaluatedProto: types.Prototype): boolean => {
       return isType(evaluatedProto.constructor);
@@ -257,9 +313,13 @@ export class ClassConverter implements types.TypeConverter {
       matcher
     );
 
-    if (parentProto === undefined) return {};
+    if (parentProto === undefined) {
+      // console.log(`No parent found for: ${type.name}`);
+      return {};
+    }
 
     const parentCtor = parentProto.constructor as types.Class;
+    // console.log(`Found parent for ${type.name}: ${parentCtor.name}`);
 
     const parentProperties = isConverted
       ? this.convert(parentCtor, converter)

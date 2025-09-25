@@ -32,6 +32,7 @@ export class PropsOf extends WrapperPattern implements types.Utility {
   public generate(library: types.Library): Collection {
     const type = this[0];
     const classType: Class = library.converter.convert(type) as Class;
+
     // Unwrap from Class pattern so properties are only validated and not matching type
     return new Collection({ ...classType.properties });
   }
