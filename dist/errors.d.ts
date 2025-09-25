@@ -1,4 +1,5 @@
 import ExtendableError from 'es6-error';
+import { TypeKind } from './enums/type-kind.enum';
 export declare class TypeDescriberExistsError extends ExtendableError {
     constructor(type: string);
 }
@@ -9,7 +10,7 @@ export declare class InvalidDefinitionError extends ExtendableError {
     constructor(message: string, ...args: string[]);
 }
 export declare class TypeConverterExists extends TypeError {
-    constructor(type: string);
+    constructor(type: TypeKind);
 }
 export declare class ValidationError extends ExtendableError {
     constructor(message: string, ...args: string[]);

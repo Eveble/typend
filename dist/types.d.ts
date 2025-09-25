@@ -1,3 +1,4 @@
+import { TypeKind } from './enums/type-kind.enum';
 export declare namespace types {
     type Class<T = unknown, Arguments extends any[] = any[]> = new (...arguments_: Arguments) => T;
     type Primitive = null | undefined | string | number | boolean | symbol | bigint;
@@ -12,16 +13,17 @@ export declare namespace types {
     type ClassDecorator = <TFunction extends Function>(target: TFunction) => TFunction | void;
     type Type = any;
     interface Converter {
-        typeConverters: Map<string, TypeConverter>;
+        typeConverters: Array<types.TypeConverter | undefined>;
         convert(reflectedType: any): Type;
         reflect(reflectedType: any): Type;
-        registerConverter(kind: string, converter: TypeConverter, shouldOverride?: boolean): void;
-        overrideConverter(kind: string, converter: TypeConverter): void;
-        getConverter(kind: string): TypeConverter | undefined;
-        hasConverter(kind: string): boolean;
-        removeConverter(kind: string): void;
+        registerConverter(kind: TypeKind, converter: TypeConverter, shouldOverride?: boolean): void;
+        overrideConverter(kind: TypeKind, converter: TypeConverter): void;
+        getConverter(type: TypeKind): types.TypeConverter;
+        hasConverter(kind: TypeKind): boolean;
+        removeConverter(kind: TypeKind): void;
     }
     interface TypeConverter {
+        priority?: number;
         isConvertible(reflectedType: any, converter?: Converter): boolean;
         convert(reflectedType?: any, converter?: Converter): Type;
         reflect(reflectedType?: any, converter?: Converter): Type;
@@ -35,14 +37,18 @@ export declare namespace types {
         canTransform(type: Type, ...args: any[]): boolean;
         transform(type: Type, ...args: any[]): Type;
     }
+    interface TypeDefinition {
+        kind: string;
+        name?: string;
+        properties?: Record<string, any>;
+        pattern?: Pattern;
+        originalType?: any;
+    }
     interface Stringifiable {
         toString(): string;
     }
     interface Pattern {
         getKind(): string;
-        setInitializer(initializer: any): void;
-        hasInitializer(): boolean;
-        getInitializer(): any | undefined;
     }
     interface PatternType {
         new (arg: any): Pattern;

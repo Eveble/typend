@@ -1,3 +1,28 @@
+# [2.0.0](https://github.com/eveble/typend/compare/v1.1.3...v2.0.0) (2025-09-25)
+
+
+### Bug Fixes
+
+* exports ([6811a8e](https://github.com/eveble/typend/commit/6811a8ed0071f38e6bdf7c1bf97b50b0d18930c2))
+* improve performance ([aebe971](https://github.com/eveble/typend/commit/aebe971d0d159b964a3c5fcd6e30fa23fde939d4))
+* inheritance issues while using Type decorator on classes ([e962607](https://github.com/eveble/typend/commit/e962607aeef1a2298aba9ff1f5670a147b39c62e))
+* use Type decorator instead of define ([2337cb0](https://github.com/eveble/typend/commit/2337cb0df8a58f4f5b0202df7ecfffcaa31adb1e))
+
+
+* refactor!: remove property initializers ([e4fa70c](https://github.com/eveble/typend/commit/e4fa70cd9749cd403582c9b55474ca2cb456ae20))
+* feat!: improve performance ([074ae75](https://github.com/eveble/typend/commit/074ae7562b1b920b32072fc684e8595434a1c901))
+
+
+### Features
+
+* support for tsruntime 5.0.1 ([5099ffc](https://github.com/eveble/typend/commit/5099ffc4f1357b7670960db10281fbc558104c34))
+
+
+### BREAKING CHANGES
+
+* remove property initializers
+* replace define with Type, improve performance
+
 ## [1.1.3](https://github.com/eveble/typend/compare/v1.1.2...v1.1.3) (2023-04-09)
 
 

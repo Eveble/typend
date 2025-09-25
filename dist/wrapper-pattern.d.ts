@@ -12,7 +12,4 @@ export declare abstract class WrapperPattern extends Array {
     describe(value: any): string;
     getKind(): string;
     onValidation(...expectations: any[]): boolean;
-    setInitializer(initializer: any): void;
-    hasInitializer(): boolean;
-    getInitializer(): any | undefined;
 }

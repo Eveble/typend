@@ -1,20 +1,16 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
 var tsruntime = require('tsruntime');
 require('reflect-metadata');
-var ExtendableError = _interopDefault(require('es6-error'));
+var ExtendableError = require('es6-error');
 var util = require('util');
-var lodash = require('lodash');
 var helpers = require('@eveble/helpers');
+var lodash = require('lodash');
 var polytype = require('polytype');
 var deepDiff = require('deep-diff');
-var merge = _interopDefault(require('deepmerge'));
+var merge = require('deepmerge');
 
-const DEFINABLE_KEY = Symbol('eveble:flags:definable');
+const TYPE_KEY = Symbol('eveble:flags:type');
 const PROPERTIES_KEY = Symbol('eveble:containers:definition');
 const REFLECTION_KEY = Symbol('eveble:containers:reflection');
 const INJECTABLE_PROPERTIES_KEY = Symbol('eveble:containers:injectable-definition');
@@ -23,23 +19,21 @@ const INTERNAL_METHODS_KEY = Symbol('eveble:containers:internal:methods');
 const PATTERN_KEY = Symbol('eveble:pattern-kind');
 const VALIDATION_KEY = Symbol('eveble:flags:validation');
 const INTERFACE_NAME_KEY = Symbol('eveble:interface-name');
-const INITIALIZER_KEY = Symbol('eveble:initializer');
 
 var metadataKeys = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  DEFINABLE_KEY: DEFINABLE_KEY,
+  INJECTABLE_PROPERTIES_KEY: INJECTABLE_PROPERTIES_KEY,
+  INTERFACE_NAME_KEY: INTERFACE_NAME_KEY,
+  INTERNAL_METHODS_KEY: INTERNAL_METHODS_KEY,
+  INTERNAL_PROPS_KEY: INTERNAL_PROPS_KEY,
+  PATTERN_KEY: PATTERN_KEY,
   PROPERTIES_KEY: PROPERTIES_KEY,
   REFLECTION_KEY: REFLECTION_KEY,
-  INJECTABLE_PROPERTIES_KEY: INJECTABLE_PROPERTIES_KEY,
-  INTERNAL_PROPS_KEY: INTERNAL_PROPS_KEY,
-  INTERNAL_METHODS_KEY: INTERNAL_METHODS_KEY,
-  PATTERN_KEY: PATTERN_KEY,
-  VALIDATION_KEY: VALIDATION_KEY,
-  INTERFACE_NAME_KEY: INTERFACE_NAME_KEY,
-  INITIALIZER_KEY: INITIALIZER_KEY
+  TYPE_KEY: TYPE_KEY,
+  VALIDATION_KEY: VALIDATION_KEY
 });
 
-var KINDS;
+var KINDS$1;
 (function (KINDS) {
     KINDS["ANY"] = "any";
     KINDS["ARRAY"] = "array";
@@ -75,16 +69,16 @@ var KINDS;
     KINDS["VOID"] = "void";
     KINDS["WITHIN"] = "within";
     KINDS["WHERE"] = "where";
-})(KINDS || (KINDS = {}));
+})(KINDS$1 || (KINDS$1 = {}));
 const VALIDATION_TYPE_KEY = '__eveble_validation';
 const VALIDATION_PAYLOAD_KEY = '__eveble_payload';
 const VALIDATION_TYPE_PROPS_OF_KEY = '__eveble_validation_type_props_of';
 
 var literalKeys = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  get KINDS () { return KINDS; },
-  VALIDATION_TYPE_KEY: VALIDATION_TYPE_KEY,
+  get KINDS () { return KINDS$1; },
   VALIDATION_PAYLOAD_KEY: VALIDATION_PAYLOAD_KEY,
+  VALIDATION_TYPE_KEY: VALIDATION_TYPE_KEY,
   VALIDATION_TYPE_PROPS_OF_KEY: VALIDATION_TYPE_PROPS_OF_KEY
 });
 
@@ -102,30 +96,95 @@ function internal(proto, propertyKey) {
     Reflect.defineMetadata(typeKey, internals, target);
 }
 
-function validable(isValidable = true) {
+function Validable(isValidable = true) {
     return (target) => {
         Reflect.defineMetadata(VALIDATION_KEY, isValidable, target);
         return target;
     };
 }
 
-function define(...args) {
+const REFLECTED_TYPE_PROPS_KEY = 'REFLECTED_TYPE';
+
+function Type(...args) {
     function reflectiveFn(reflectedType) {
         return (target) => {
-            define.beforeDefine(target, reflectedType, ...args);
+            Type.beforeDefine(target, reflectedType, ...args);
+            Reflect.defineMetadata(REFLECTED_TYPE_PROPS_KEY, reflectedType, target);
+            Reflect.defineMetadata(TYPE_KEY, true, target);
             tsruntime.defineReflectMetadata(target, reflectedType);
-            Reflect.defineMetadata(DEFINABLE_KEY, true, target);
-            define.afterDefine(target, reflectedType, ...args);
-            return target;
+            Type.afterDefine(target, reflectedType, ...args);
+            const classSource = target.toString();
+            const hasExplicitConstructor = /constructor\s*\([^)]*\)\s*\{[\s\S]*?\}/m.test(classSource);
+            const hasCustomLogic = hasExplicitConstructor &&
+                (/this\.\w+\([^)]*\)/.test(classSource) ||
+                    /console\.log/.test(classSource) ||
+                    /throw\s+/.test(classSource) ||
+                    /if\s*\(/.test(classSource) ||
+                    /for\s*\(/.test(classSource) ||
+                    /while\s*\(/.test(classSource));
+            let Wrapped;
+            if (hasCustomLogic) {
+                Wrapped = target;
+            }
+            else {
+                Wrapped = new Function('target', `return class ${target.name} extends target {
+             constructor(...ctorArgs) {
+               super(...ctorArgs);
+               const props = ctorArgs[0];
+               if (props && typeof props === "object") {
+                 Object.assign(this, props);
+               }
+             }
+           }`)(target);
+                const originalPrototype = Object.getPrototypeOf(target);
+                const originalInstancePrototype = Object.getPrototypeOf(target.prototype);
+                if (originalPrototype && originalPrototype !== Function.prototype) {
+                    Object.setPrototypeOf(Wrapped, originalPrototype);
+                }
+                if (originalInstancePrototype) {
+                    Object.setPrototypeOf(Wrapped.prototype, originalInstancePrototype);
+                }
+                for (const key of Reflect.ownKeys(target.prototype)) {
+                    if (key !== 'constructor' && !Wrapped.prototype.hasOwnProperty(key)) {
+                        const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);
+                        if (descriptor) {
+                            Object.defineProperty(Wrapped.prototype, key, descriptor);
+                        }
+                    }
+                }
+                for (const key of Reflect.ownKeys(target)) {
+                    if (key !== 'prototype' && key !== 'name' && key !== 'length') {
+                        const descriptor = Object.getOwnPropertyDescriptor(target, key);
+                        if (descriptor) {
+                            Object.defineProperty(Wrapped, key, descriptor);
+                        }
+                    }
+                }
+                const metadataKeys = Reflect.getMetadataKeys(target);
+                for (const key of metadataKeys) {
+                    const value = Reflect.getMetadata(key, target);
+                    Reflect.defineMetadata(key, value, Wrapped);
+                }
+                const prototypeMetadataKeys = Reflect.getMetadataKeys(target.prototype);
+                for (const key of prototypeMetadataKeys) {
+                    const value = Reflect.getMetadata(key, target.prototype);
+                    Reflect.defineMetadata(key, value, Wrapped.prototype);
+                }
+                Object.defineProperty(Wrapped, 'name', { value: target.name });
+            }
+            Reflect.defineMetadata(REFLECTED_TYPE_PROPS_KEY, reflectedType, Wrapped);
+            Reflect.defineMetadata(TYPE_KEY, true, Wrapped);
+            tsruntime.defineReflectMetadata(Wrapped, reflectedType);
+            return Wrapped;
         };
     }
     const reflect = tsruntime.createReflective(reflectiveFn);
     return reflect;
 }
-define.beforeDefine = function (target, ...args) {
+Type.beforeDefine = function (target, ...args) {
     return target && args ? undefined : undefined;
 };
-define.afterDefine = function (target, ...args) {
+Type.afterDefine = function (target, ...args) {
     return target && args ? undefined : undefined;
 };
 
@@ -203,7 +262,7 @@ class PatternValidatorNotFoundError extends ExtendableError {
 }
 class UndefinableClassError extends ExtendableError {
     constructor(typeName) {
-        super(`${typeName}: provided argument must be a class that implements '@define()' decorator`);
+        super(`${typeName}: provided argument must be a class that implements '@Type()' decorator`);
     }
 }
 
@@ -224,17 +283,8 @@ class Optional extends Array {
     getKind() {
         return this.constructor.kind;
     }
-    setInitializer(initializer) {
-        Reflect.defineMetadata(INITIALIZER_KEY, initializer, this);
-    }
-    hasInitializer() {
-        return Reflect.hasOwnMetadata(INITIALIZER_KEY, this);
-    }
-    getInitializer() {
-        return Reflect.getOwnMetadata(INITIALIZER_KEY, this);
-    }
 }
-Optional.kind = KINDS.OPTIONAL;
+Optional.kind = KINDS$1.OPTIONAL;
 
 class Pattern extends Object {
     get isOptional() {
@@ -258,69 +308,12 @@ class Pattern extends Object {
     describe(value) {
         return this.constructor.getDescriber().describe(value);
     }
-    setInitializer(initializer) {
-        Reflect.defineMetadata(INITIALIZER_KEY, initializer, this);
-    }
-    hasInitializer() {
-        return Reflect.hasOwnMetadata(INITIALIZER_KEY, this);
-    }
-    getInitializer() {
-        return Reflect.getOwnMetadata(INITIALIZER_KEY, this);
-    }
 }
 Pattern.kind = '';
 
 class Any extends Pattern {
 }
-Any.kind = KINDS.ANY;
-
-class Collection extends Pattern {
-    constructor(properties = {}) {
-        super();
-        if (!lodash.isPlainObject(properties)) {
-            throw new InvalidTypeError(`Collection properties are invalid. Expected properties to be a plain object, got ${this.describe(properties)}`);
-        }
-        Object.assign(this, properties);
-    }
-}
-Collection.kind = KINDS.OBJECT;
-
-class Class extends Pattern {
-    constructor(type, properties) {
-        super();
-        if (!helpers.isClass(type)) {
-            throw new InvalidTypeError(`Class type is invalid. Expected type to be a class constructor, got ${this.describe(properties)}`);
-        }
-        if (!lodash.isPlainObject(properties) && !(properties instanceof Collection)) {
-            throw new InvalidDefinitionError(`Class properties are invalid. Expected properties to be a plain object or Collection instance describing class properties, got ${this.describe(properties)}`);
-        }
-        this.type = type;
-        this.properties = properties;
-    }
-}
-Class.kind = KINDS.CLASS;
-
-class CollectionIncluding extends Pattern {
-    constructor(properties) {
-        super();
-        if (!lodash.isPlainObject(properties)) {
-            throw new InvalidTypeError(`CollectionIncluding properties are invalid. Expected properties to be a plain object, got ${this.describe(properties)}`);
-        }
-        Object.assign(this, properties);
-    }
-}
-CollectionIncluding.kind = KINDS.OBJECT_INCLUDING;
-
-class CollectionWithin extends Pattern {
-    constructor(properties) {
-        super();
-        if (!lodash.isPlainObject(properties)) {
-            throw new InvalidDefinitionError(`CollectionWithin properties is invalid. Expected properties to be a plain object, got ${this.describe(properties)}`);
-        }
-        Object.assign(this, properties);
-    }
-}
-CollectionWithin.kind = KINDS.OBJECT_WITHIN;
+Any.kind = KINDS$1.ANY;
 
 class WrapperPattern extends Array {
     constructor(...expectations) {
@@ -352,26 +345,7 @@ class WrapperPattern extends Array {
     onValidation(...expectations) {
         return true;
     }
-    setInitializer(initializer) {
-        Reflect.defineMetadata(INITIALIZER_KEY, initializer, this);
-    }
-    hasInitializer() {
-        return Reflect.hasOwnMetadata(INITIALIZER_KEY, this);
-    }
-    getInitializer() {
-        return Reflect.getOwnMetadata(INITIALIZER_KEY, this);
-    }
 }
-
-class Equals extends WrapperPattern {
-    onValidation(expectation) {
-        if (lodash.isArray(expectation) || lodash.isPlainObject(expectation)) {
-            throw new InvalidTypeError(`Equality pattern expectation is invalid. Expected expectation to not be an plain object nor an array, got ${Pattern.describer.describe(expectation)}`);
-        }
-        return true;
-    }
-}
-Equals.kind = KINDS.EQUALS;
 
 class InstanceOf extends WrapperPattern {
     onValidation(type) {
@@ -391,16 +365,12 @@ class InstanceOf extends WrapperPattern {
             [Symbol].includes(type));
     }
 }
-InstanceOf.kind = KINDS.INSTANCE_OF;
-
-class Integer extends Pattern {
-}
-Integer.kind = KINDS.INTEGER;
+InstanceOf.kind = KINDS$1.INSTANCE_OF;
 
 class Interface extends Pattern {
     constructor(properties) {
         super();
-        if (!lodash.isPlainObject(properties) && !(properties instanceof Collection)) {
+        if (!isPlainObjectFast(properties) && !(properties instanceof Collection)) {
             throw new InvalidTypeError(`Interface properties are invalid. Expected properties to be a plain object or Collection instance describing interface properties, got ${this.describe(properties)}`);
         }
         Object.assign(this, properties);
@@ -412,103 +382,7 @@ class Interface extends Pattern {
         return Reflect.getOwnMetadata(INTERFACE_NAME_KEY, this);
     }
 }
-Interface.kind = KINDS.INTERFACE;
-
-class Internal extends WrapperPattern {
-}
-Internal.kind = KINDS.INTERNAL;
-
-class List extends WrapperPattern {
-    onValidation(...expectations) {
-        if (expectations.length > 1 && expectations[0] !== Array) {
-            throw new InvalidDefinitionError(`List expectation is invalid. Expected expectation to have maximum of one argument, got ${Pattern.describer.describe(expectations)}`);
-        }
-        return true;
-    }
-}
-List.kind = KINDS.ARRAY;
-
-class LocaleString extends Pattern {
-}
-LocaleString.kind = KINDS.LOCALE_STRING;
-
-class Maybe extends WrapperPattern {
-}
-Maybe.kind = KINDS.MAYBE;
-
-class Never extends Pattern {
-}
-Never.kind = KINDS.NEVER;
-
-class OneOf extends WrapperPattern {
-    onValidation(...expectations) {
-        if (Array.isArray(expectations) && expectations.length < 1) {
-            throw new InvalidDefinitionError(`OneOf expectation is invalid. Expectation must include at least one element defined like: <oneOf(String, Number, 'value')>, got ${Pattern.describer.describe(expectations)}`);
-        }
-        return true;
-    }
-}
-OneOf.kind = KINDS.ONE_OF;
-
-class Tuple extends WrapperPattern {
-    onValidation(...expectations) {
-        if (Array.isArray(expectations) && expectations.length === 0) {
-            throw new InvalidDefinitionError(`Tuple expectation is invalid. Expectation must include at least one argument defined like: <tuple(String, Number, 'value')>, got ${Pattern.describer.describe(expectations)}`);
-        }
-        return true;
-    }
-}
-Tuple.kind = KINDS.TUPLE;
-
-class Unknown extends Pattern {
-}
-Unknown.kind = KINDS.UNKNOWN;
-
-class Void extends Pattern {
-}
-Void.kind = KINDS.VOID;
-
-class Where extends WrapperPattern {
-    onValidation(expectation) {
-        if (!lodash.isFunction(expectation) ||
-            helpers.isNativeType(expectation) ||
-            [Symbol].includes(expectation)) {
-            throw new InvalidTypeError(`Where expectation is invalid. Expected expectation to be a Function, got ${Pattern.describer.describe(expectation)}`);
-        }
-        return true;
-    }
-}
-Where.kind = KINDS.WHERE;
-
-class Unrecognized extends WrapperPattern {
-}
-Unrecognized.kind = KINDS.UNRECOGNIZED;
-
-class Utility {
-    static setDescriber(describer) {
-        this.describer = describer;
-    }
-    static getDescriber() {
-        return this.describer;
-    }
-    describe(value) {
-        return this.constructor.getDescriber().describe(value);
-    }
-}
-
-class PropsOf extends WrapperPattern {
-    onValidation(type) {
-        if (!helpers.isClass(type)) {
-            throw new InvalidTypeError(`PropsOf type is invalid. Expected type to be class, got ${Utility.describer.describe(type)}`);
-        }
-        return true;
-    }
-    generate(library) {
-        const type = this[0];
-        const classType = library.converter.convert(type);
-        return new Collection({ ...classType.properties });
-    }
-}
+Interface.kind = KINDS$1.INTERFACE;
 
 function getResolvablePath(path, properties) {
     const pathParts = path.split('.');
@@ -554,11 +428,11 @@ function isInstanceOfExpectation(arg) {
 function isUtility(arg) {
     return (arg === null || arg === void 0 ? void 0 : arg.generate) !== undefined;
 }
-function isDefined(ctor) {
+function isType(ctor) {
     if (ctor === undefined) {
         return false;
     }
-    return Reflect.getOwnMetadata(DEFINABLE_KEY, ctor) || false;
+    return Reflect.getOwnMetadata(TYPE_KEY, ctor) || false;
 }
 function isValidable(ctor) {
     if (Reflect.hasOwnMetadata(VALIDATION_KEY, ctor)) {
@@ -576,6 +450,170 @@ function isSpecial(reflectedType) {
 function isPlainRecord(arg) {
     return lodash.isPlainObject(arg) || arg instanceof Collection;
 }
+function isPlainObjectFast(obj) {
+    if (obj === null || typeof obj !== 'object')
+        return false;
+    const proto = Object.getPrototypeOf(obj);
+    return proto === Object.prototype || proto === null;
+}
+
+class Collection extends Pattern {
+    constructor(properties = {}) {
+        super();
+        if (!isPlainObjectFast(properties)) {
+            throw new InvalidTypeError(`Collection properties are invalid. Expected properties to be a plain object, got ${this.describe(properties)}`);
+        }
+        Object.assign(this, properties);
+    }
+}
+Collection.kind = KINDS$1.OBJECT;
+
+class Class extends Pattern {
+    constructor(type, properties) {
+        super();
+        if (!helpers.isClass(type)) {
+            throw new InvalidTypeError(`Class type is invalid. Expected type to be a class constructor, got ${this.describe(properties)}`);
+        }
+        if (!isPlainObjectFast(properties) && !(properties instanceof Collection)) {
+            throw new InvalidDefinitionError(`Class properties are invalid. Expected properties to be a plain object or Collection instance describing class properties, got ${this.describe(properties)}`);
+        }
+        this.type = type;
+        this.properties = properties;
+    }
+}
+Class.kind = KINDS$1.CLASS;
+
+class CollectionIncluding extends Pattern {
+    constructor(properties) {
+        super();
+        if (!isPlainObjectFast(properties)) {
+            throw new InvalidTypeError(`CollectionIncluding properties are invalid. Expected properties to be a plain object, got ${this.describe(properties)}`);
+        }
+        Object.assign(this, properties);
+    }
+}
+CollectionIncluding.kind = KINDS$1.OBJECT_INCLUDING;
+
+class CollectionWithin extends Pattern {
+    constructor(properties) {
+        super();
+        if (!isPlainObjectFast(properties)) {
+            throw new InvalidDefinitionError(`CollectionWithin properties is invalid. Expected properties to be a plain object, got ${this.describe(properties)}`);
+        }
+        Object.assign(this, properties);
+    }
+}
+CollectionWithin.kind = KINDS$1.OBJECT_WITHIN;
+
+class Equals extends WrapperPattern {
+    onValidation(expectation) {
+        if (lodash.isArray(expectation) || isPlainObjectFast(expectation)) {
+            throw new InvalidTypeError(`Equality pattern expectation is invalid. Expected expectation to not be an plain object nor an array, got ${Pattern.describer.describe(expectation)}`);
+        }
+        return true;
+    }
+}
+Equals.kind = KINDS$1.EQUALS;
+
+class Integer extends Pattern {
+}
+Integer.kind = KINDS$1.INTEGER;
+
+class Internal extends WrapperPattern {
+}
+Internal.kind = KINDS$1.INTERNAL;
+
+class List extends WrapperPattern {
+    onValidation(...expectations) {
+        if (expectations.length > 1 && expectations[0] !== Array) {
+            throw new InvalidDefinitionError(`List expectation is invalid. Expected expectation to have maximum of one argument, got ${Pattern.describer.describe(expectations)}`);
+        }
+        return true;
+    }
+}
+List.kind = KINDS$1.ARRAY;
+
+class LocaleString extends Pattern {
+}
+LocaleString.kind = KINDS$1.LOCALE_STRING;
+
+class Maybe extends WrapperPattern {
+}
+Maybe.kind = KINDS$1.MAYBE;
+
+class Never extends Pattern {
+}
+Never.kind = KINDS$1.NEVER;
+
+class OneOf extends WrapperPattern {
+    onValidation(...expectations) {
+        if (Array.isArray(expectations) && expectations.length < 1) {
+            throw new InvalidDefinitionError(`OneOf expectation is invalid. Expectation must include at least one element defined like: <oneOf(String, Number, 'value')>, got ${Pattern.describer.describe(expectations)}`);
+        }
+        return true;
+    }
+}
+OneOf.kind = KINDS$1.ONE_OF;
+
+class Tuple extends WrapperPattern {
+    onValidation(...expectations) {
+        if (Array.isArray(expectations) && expectations.length === 0) {
+            throw new InvalidDefinitionError(`Tuple expectation is invalid. Expectation must include at least one argument defined like: <tuple(String, Number, 'value')>, got ${Pattern.describer.describe(expectations)}`);
+        }
+        return true;
+    }
+}
+Tuple.kind = KINDS$1.TUPLE;
+
+class Unknown extends Pattern {
+}
+Unknown.kind = KINDS$1.UNKNOWN;
+
+class Void extends Pattern {
+}
+Void.kind = KINDS$1.VOID;
+
+class Where extends WrapperPattern {
+    onValidation(expectation) {
+        if (!lodash.isFunction(expectation) ||
+            helpers.isNativeType(expectation) ||
+            [Symbol].includes(expectation)) {
+            throw new InvalidTypeError(`Where expectation is invalid. Expected expectation to be a Function, got ${Pattern.describer.describe(expectation)}`);
+        }
+        return true;
+    }
+}
+Where.kind = KINDS$1.WHERE;
+
+class Unrecognized extends WrapperPattern {
+}
+Unrecognized.kind = KINDS$1.UNRECOGNIZED;
+
+class Utility {
+    static setDescriber(describer) {
+        this.describer = describer;
+    }
+    static getDescriber() {
+        return this.describer;
+    }
+    describe(value) {
+        return this.constructor.getDescriber().describe(value);
+    }
+}
+
+class PropsOf extends WrapperPattern {
+    onValidation(type) {
+        if (!helpers.isClass(type)) {
+            throw new InvalidTypeError(`PropsOf type is invalid. Expected type to be class, got ${Utility.describer.describe(type)}`);
+        }
+        return true;
+    }
+    generate(library) {
+        const type = this[0];
+        const classType = library.converter.convert(type);
+        return new Collection({ ...classType.properties });
+    }
+}
 
 class TypeOf extends WrapperPattern {
     onValidation(type) {
@@ -586,7 +624,7 @@ class TypeOf extends WrapperPattern {
     }
     generate(library) {
         const type = this[0];
-        if (!isDefined(type)) {
+        if (!isType(type)) {
             throw new UndefinableClassError(helpers.getTypeName(type));
         }
         if (!isValidable(type)) {
@@ -665,10 +703,10 @@ class ClassValidator extends PatternValidator {
 class CollectionIncludingValidator extends PatternValidator {
     canValidate(expectation, isStrict) {
         return (expectation instanceof CollectionIncluding ||
-            (!isStrict && lodash.isPlainObject(expectation)));
+            (!isStrict && isPlainObjectFast(expectation)));
     }
     validate(value, collIncOrExpect, validator) {
-        if (!lodash.isPlainObject(value)) {
+        if (!isPlainObjectFast(value)) {
             throw new InvalidTypeError('Expected %s to be an Object', this.describe(value));
         }
         const differences = deepDiff.diff(collIncOrExpect, value);
@@ -689,12 +727,12 @@ class CollectionIncludingValidator extends PatternValidator {
                 validator.validate(valueFromPath, expectationFromPath);
             }
             catch (err) {
-                const stringifiedValue = this.describe(value);
                 if (err.message.includes('Unexpected key') ||
                     err.message.includes('to be a undefined')) {
                     continue;
                 }
                 else {
+                    const stringifiedValue = this.describe(value);
                     throw new err.constructor(`(Key '${key}': ${err.message} in ${stringifiedValue})`);
                 }
             }
@@ -708,7 +746,7 @@ class CollectionWithinValidator extends PatternValidator {
         return expectation instanceof CollectionWithin;
     }
     validate(value, collectionWithin, validator) {
-        if (!lodash.isPlainObject(value)) {
+        if (!isPlainObjectFast(value)) {
             throw new InvalidTypeError('Expected %s to be an Object', this.describe(value));
         }
         const differences = deepDiff.diff(collectionWithin, value);
@@ -727,13 +765,13 @@ class CollectionWithinValidator extends PatternValidator {
                 validator.validate(valueFromPath, expectationFromPath);
             }
             catch (err) {
-                const stringifiedValue = this.describe(value);
                 if (err.message.includes('Unexpected key') ||
                     err.message.includes('to be a undefined') ||
                     err.message.includes('Expected undefined to be an Object')) {
                     continue;
                 }
                 else {
+                    const stringifiedValue = this.describe(value);
                     throw new err.constructor(`(Key '${key}': ${err.message} in ${stringifiedValue})`);
                 }
             }
@@ -745,47 +783,54 @@ class CollectionWithinValidator extends PatternValidator {
 class CollectionValidator extends PatternValidator {
     canValidate(expectation, isStrict) {
         return (expectation instanceof Collection ||
-            (isStrict === true && lodash.isPlainObject(expectation)));
+            (isStrict === true && isPlainObjectFast(expectation)));
     }
-    validate(value, collOrExpect, validator) {
-        if (!helpers.isClassInstance(value) && !lodash.isPlainObject(value)) {
+    validate(value, collOrExpected, validator) {
+        if (!helpers.isClassInstance(value) && !isPlainObjectFast(value)) {
             throw new InvalidTypeError('Expected %s to be an Object', this.describe(value));
         }
-        if (lodash.isEmpty(collOrExpect)) {
+        if (lodash.isEmpty(collOrExpected)) {
             return true;
         }
-        const differences = deepDiff.diff(collOrExpect, value);
+        const differences = deepDiff.diff(collOrExpected, value);
         if (differences === undefined || lodash.isEmpty(differences)) {
             return true;
         }
+        let stringifiedValue;
+        const getStringifiedValue = () => {
+            if (stringifiedValue === undefined) {
+                stringifiedValue = this.describe(value);
+            }
+            return stringifiedValue;
+        };
         for (const difference of differences) {
             if (difference === undefined || difference.path === undefined) {
                 continue;
             }
             let diffPath;
-            if (lodash.get(collOrExpect, difference.path.join('.').replace('.0', '')) instanceof Optional) {
-                diffPath = difference.path.join('.').replace('.0', '');
+            const joinedPath = difference.path.join('.');
+            const optionalPath = joinedPath.replace('.0', '');
+            if (lodash.get(collOrExpected, optionalPath) instanceof Optional) {
+                diffPath = optionalPath;
             }
             else {
-                diffPath = difference.path.join('.');
+                diffPath = joinedPath;
             }
-            const key = getResolvablePath(diffPath, collOrExpect);
-            if (!isResolvablePath(key, collOrExpect)) {
-                const stringifiedValue = this.describe(value);
-                throw new UnexpectedKeyError(`Unexpected key '%s' in %s`, diffPath, stringifiedValue);
+            const key = getResolvablePath(diffPath, collOrExpected);
+            if (!isResolvablePath(key, collOrExpected)) {
+                throw new UnexpectedKeyError(`Unexpected key '%s' in %s`, diffPath, getStringifiedValue());
             }
             const valueFromPath = lodash.get(value, key);
-            const expectationFromPath = lodash.get(collOrExpect, key);
+            const expectationFromPath = lodash.get(collOrExpected, key);
             try {
                 validator.validate(valueFromPath, expectationFromPath);
             }
             catch (err) {
-                const stringifiedValue = this.describe(value);
                 if (err.message.includes('to be a undefined')) {
-                    throw new UnexpectedKeyError(`Unexpected key '%s' in %s`, key, stringifiedValue);
+                    throw new UnexpectedKeyError(`Unexpected key '%s' in %s`, key, getStringifiedValue());
                 }
                 else {
-                    throw new err.constructor(`(Key '${key}': ${err.message} in ${stringifiedValue})`);
+                    throw new err.constructor(`(Key '${key}': ${err.message} in ${getStringifiedValue()})`);
                 }
             }
         }
@@ -798,7 +843,7 @@ class EqualsValidator extends PatternValidator {
         if (expectation instanceof Equals) {
             return true;
         }
-        if (lodash.isArray(expectation) || lodash.isPlainObject(expectation)) {
+        if (lodash.isArray(expectation) || isPlainObjectFast(expectation)) {
             return false;
         }
         return true;
@@ -807,44 +852,42 @@ class EqualsValidator extends PatternValidator {
         if (lodash.isArray(value)) {
             throw new InvalidTypeError(`Expected %s to not be an Array`, this.describe(value));
         }
-        if (lodash.isPlainObject(value)) {
+        if (isPlainObjectFast(value)) {
             throw new InvalidTypeError(`Expected %s to not be a plain Object`, this.describe(value));
         }
         const expectation = equalsOrExpect instanceof Equals ? equalsOrExpect[0] : equalsOrExpect;
-        let isValid = false;
-        let errorMessage = 'Expected %s to be equal to %s';
         if (expectation === value) {
             return true;
         }
-        switch (true) {
-            case value == null:
-                isValid = expectation === value;
-                break;
-            case expectation instanceof RegExp:
-                isValid = expectation.test(value);
-                errorMessage = 'Expected %s to match %s';
-                break;
-            case helpers.isErrorInstance(expectation):
-                isValid =
-                    expectation.message === value.message &&
-                        expectation.constructor === value.constructor;
-                break;
-            case lodash.isFunction(expectation.isSame):
-                isValid = expectation.isSame(value);
-                errorMessage = `Expected %s to pass %s is same evaluation`;
-                break;
-            case lodash.isFunction(expectation.equals):
-                isValid = expectation.equals(value);
-                errorMessage = `Expected %s to pass %s equality evaluation`;
-                break;
-            case !['string', 'number', 'boolean', 'symbol'].includes(typeof value) &&
-                !(value instanceof Map) &&
-                !helpers.isNativeType(value) &&
-                !helpers.isNativeType(expectation) &&
-                !helpers.isErrorInstance(value):
-                isValid = expectation.valueOf() === value.valueOf();
-                errorMessage = `Expected %s value to be equal to %s`;
-                break;
+        let isValid = false;
+        let errorMessage = 'Expected %s to be equal to %s';
+        if (value == null) {
+            isValid = expectation === value;
+        }
+        else if (expectation instanceof RegExp) {
+            isValid = expectation.test(value);
+            errorMessage = 'Expected %s to match %s';
+        }
+        else if (helpers.isErrorInstance(expectation)) {
+            isValid =
+                expectation.message === value.message &&
+                    expectation.constructor === value.constructor;
+        }
+        else if (lodash.isFunction(expectation === null || expectation === void 0 ? void 0 : expectation.isSame)) {
+            isValid = expectation.isSame(value);
+            errorMessage = `Expected %s to pass %s is same evaluation`;
+        }
+        else if (lodash.isFunction(expectation === null || expectation === void 0 ? void 0 : expectation.equals)) {
+            isValid = expectation.equals(value);
+            errorMessage = `Expected %s to pass %s equality evaluation`;
+        }
+        else if (!['string', 'number', 'boolean', 'symbol'].includes(typeof value) &&
+            !(value instanceof Map) &&
+            !helpers.isNativeType(value) &&
+            !helpers.isNativeType(expectation) &&
+            !helpers.isErrorInstance(value)) {
+            isValid = expectation.valueOf() === value.valueOf();
+            errorMessage = `Expected %s value to be equal to %s`;
         }
         if (!isValid) {
             throw new UnequalValueError(errorMessage, this.describe(value), this.describe(expectation));
@@ -885,11 +928,11 @@ class InstanceOfValidator extends PatternValidator {
             isValid = true;
         }
         else if (helpers.isScalarType(expectation)) {
-            isValid = typeof value === helpers.getScalarType(expectation);
+            const valueType = typeof value;
+            isValid = valueType === helpers.getScalarType(expectation);
         }
-        else if (Object.values(InstanceOfValidator.MAPPINGS).includes(expectation)) {
-            const typeofValue = typeof value;
-            isValid = InstanceOfValidator.MAPPINGS[typeofValue] === expectation;
+        else if (expectation === Symbol) {
+            isValid = typeof value === 'symbol';
         }
         if (!isValid) {
             throw new UnmatchedTypeError(`Expected %s to be a %s`, this.describe(value), this.describe(expectation));
@@ -921,7 +964,7 @@ class InterfaceValidator extends PatternValidator {
         return expectation instanceof Interface;
     }
     validate(value, pattern, validator) {
-        if (!helpers.isClassInstance(value) && !lodash.isPlainObject(value)) {
+        if (!helpers.isClassInstance(value) && !isPlainObjectFast(value)) {
             throw new InvalidTypeError('Expected %s to be an Object or class instance', this.describe(value));
         }
         if (lodash.isEmpty(pattern)) {
@@ -945,12 +988,12 @@ class InterfaceValidator extends PatternValidator {
                 validator.validate(valueFromPath, expectationFromPath);
             }
             catch (err) {
-                const stringifiedValue = this.describe(value);
                 if (err.message.includes('Unexpected key') ||
                     err.message.includes('to be a undefined')) {
                     continue;
                 }
                 else {
+                    const stringifiedValue = this.describe(value);
                     throw new err.constructor(`(Key '${key}': ${err.message} in ${stringifiedValue})`);
                 }
             }
@@ -980,13 +1023,13 @@ class ListValidator extends PatternValidator {
         if (!lodash.isArray(values)) {
             throw new InvalidTypeError('Expected %s to be an Array', this.describe(values));
         }
-        if (lodash.isArray(values) &&
-            (listOrExpect === Array || listOrExpect.length === 0)) {
+        if (listOrExpect === Array ||
+            listOrExpect.length === 0) {
             return true;
         }
+        const firstExpectation = listOrExpect[0];
         for (let i = 0; i < values.length; i++) {
             const valueItem = values[i];
-            const firstExpectation = listOrExpect[0];
             try {
                 validator.validate(valueItem, firstExpectation);
             }
@@ -1413,35 +1456,486 @@ class DebugDescriber {
     }
 }
 
-class ArrayConverter {
-    isConvertible(reflectedType) {
-        return (reflectedType.kind === 18 &&
-            reflectedType.type === Array);
+var TypeKind$1;
+(function (TypeKind) {
+    TypeKind[TypeKind["Any"] = 1] = "Any";
+    TypeKind[TypeKind["String"] = 2] = "String";
+    TypeKind[TypeKind["Number"] = 3] = "Number";
+    TypeKind[TypeKind["Boolean"] = 4] = "Boolean";
+    TypeKind[TypeKind["StringLiteral"] = 5] = "StringLiteral";
+    TypeKind[TypeKind["NumberLiteral"] = 6] = "NumberLiteral";
+    TypeKind[TypeKind["FalseLiteral"] = 7] = "FalseLiteral";
+    TypeKind[TypeKind["TrueLiteral"] = 8] = "TrueLiteral";
+    TypeKind[TypeKind["EnumLiteral"] = 9] = "EnumLiteral";
+    TypeKind[TypeKind["ESSymbol"] = 10] = "ESSymbol";
+    TypeKind[TypeKind["Void"] = 11] = "Void";
+    TypeKind[TypeKind["Undefined"] = 12] = "Undefined";
+    TypeKind[TypeKind["Null"] = 13] = "Null";
+    TypeKind[TypeKind["Never"] = 14] = "Never";
+    TypeKind[TypeKind["Object"] = 15] = "Object";
+    TypeKind[TypeKind["Tuple"] = 16] = "Tuple";
+    TypeKind[TypeKind["Union"] = 17] = "Union";
+    TypeKind[TypeKind["Reference"] = 18] = "Reference";
+    TypeKind[TypeKind["Class"] = 19] = "Class";
+    TypeKind[TypeKind["Unknown"] = 20] = "Unknown";
+    TypeKind[TypeKind["Function"] = 21] = "Function";
+    TypeKind[TypeKind["Unknown2"] = 999] = "Unknown2";
+    TypeKind[TypeKind["Array"] = 1000] = "Array";
+})(TypeKind$1 || (TypeKind$1 = {}));
+
+class PropsOfConverter {
+    isConvertible(reflectedType, converter) {
+        if (reflectedType.kind !== 15) {
+            return false;
+        }
+        const validationType = lodash.get(reflectedType, `properties.${VALIDATION_TYPE_KEY.toString()}`);
+        if ((validationType === null || validationType === void 0 ? void 0 : validationType.value) !== KINDS$1.PROPERTIES_OF) {
+            return false;
+        }
+        const validationPayload = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
+        const classConverter = converter.getConverter(TypeKind$1.Class);
+        return classConverter.isConvertible(validationPayload, converter);
     }
     convert(reflectedType, converter) {
-        const expectations = [];
-        for (const argument of reflectedType
-            .arguments) {
-            const classConverter = converter.getConverter(KINDS.CLASS);
-            if (classConverter === null || classConverter === void 0 ? void 0 : classConverter.isConvertible(argument)) {
-                expectations.push(new InstanceOf(argument.type));
-            }
-            else {
-                expectations.push(converter.convert(argument));
-            }
+        const nestedReflectedType = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
+        const classConverter = converter.getConverter(TypeKind$1.Class);
+        const classType = classConverter.convert(nestedReflectedType, converter);
+        const properties = classType !== undefined ? classType.properties : {};
+        return new Collection({ ...properties });
+    }
+    reflect(reflectedType, converter) {
+        const nestedReflectedType = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
+        const classConverter = converter.getConverter(TypeKind$1.Class);
+        return classConverter.reflect(nestedReflectedType, converter);
+    }
+}
+
+var publicTypes = {};
+
+Object.defineProperty(publicTypes, "__esModule", { value: true });
+var TypeKind_1 = publicTypes.TypeKind = publicTypes.ModifierFlags = void 0;
+var ModifierFlags;
+(function (ModifierFlags) {
+    ModifierFlags[ModifierFlags["None"] = 0] = "None";
+    ModifierFlags[ModifierFlags["Public"] = 1] = "Public";
+    ModifierFlags[ModifierFlags["Private"] = 2] = "Private";
+    ModifierFlags[ModifierFlags["Protected"] = 4] = "Protected";
+    ModifierFlags[ModifierFlags["Readonly"] = 8] = "Readonly";
+    ModifierFlags[ModifierFlags["Override"] = 16] = "Override";
+    ModifierFlags[ModifierFlags["Export"] = 32] = "Export";
+    ModifierFlags[ModifierFlags["Abstract"] = 64] = "Abstract";
+    ModifierFlags[ModifierFlags["Ambient"] = 128] = "Ambient";
+    ModifierFlags[ModifierFlags["Static"] = 256] = "Static";
+    ModifierFlags[ModifierFlags["Accessor"] = 512] = "Accessor";
+    ModifierFlags[ModifierFlags["Async"] = 1024] = "Async";
+    ModifierFlags[ModifierFlags["Default"] = 2048] = "Default";
+    ModifierFlags[ModifierFlags["Const"] = 4096] = "Const";
+    ModifierFlags[ModifierFlags["In"] = 8192] = "In";
+    ModifierFlags[ModifierFlags["Out"] = 16384] = "Out";
+    ModifierFlags[ModifierFlags["Decorator"] = 32768] = "Decorator";
+    ModifierFlags[ModifierFlags["Deprecated"] = 65536] = "Deprecated";
+    ModifierFlags[ModifierFlags["HasComputedJSDocModifiers"] = 268435456] = "HasComputedJSDocModifiers";
+    ModifierFlags[ModifierFlags["HasComputedFlags"] = 536870912] = "HasComputedFlags";
+    ModifierFlags[ModifierFlags["AccessibilityModifier"] = 7] = "AccessibilityModifier";
+    ModifierFlags[ModifierFlags["ParameterPropertyModifier"] = 31] = "ParameterPropertyModifier";
+    ModifierFlags[ModifierFlags["NonPublicAccessibilityModifier"] = 6] = "NonPublicAccessibilityModifier";
+    ModifierFlags[ModifierFlags["TypeScriptModifier"] = 28895] = "TypeScriptModifier";
+    ModifierFlags[ModifierFlags["ExportDefault"] = 2080] = "ExportDefault";
+    ModifierFlags[ModifierFlags["All"] = 131071] = "All";
+    ModifierFlags[ModifierFlags["Modifier"] = 98303] = "Modifier";
+})(ModifierFlags || (publicTypes.ModifierFlags = ModifierFlags = {}));
+var TypeKind;
+(function (TypeKind) {
+    TypeKind[TypeKind["Any"] = 1] = "Any";
+    TypeKind[TypeKind["String"] = 2] = "String";
+    TypeKind[TypeKind["Number"] = 3] = "Number";
+    TypeKind[TypeKind["Boolean"] = 4] = "Boolean";
+    TypeKind[TypeKind["StringLiteral"] = 5] = "StringLiteral";
+    TypeKind[TypeKind["NumberLiteral"] = 6] = "NumberLiteral";
+    TypeKind[TypeKind["FalseLiteral"] = 7] = "FalseLiteral";
+    TypeKind[TypeKind["TrueLiteral"] = 8] = "TrueLiteral";
+    TypeKind[TypeKind["EnumLiteral"] = 9] = "EnumLiteral";
+    TypeKind[TypeKind["ESSymbol"] = 10] = "ESSymbol";
+    TypeKind[TypeKind["Void"] = 11] = "Void";
+    TypeKind[TypeKind["Undefined"] = 12] = "Undefined";
+    TypeKind[TypeKind["Null"] = 13] = "Null";
+    TypeKind[TypeKind["Never"] = 14] = "Never";
+    TypeKind[TypeKind["Object"] = 15] = "Object";
+    TypeKind[TypeKind["Tuple"] = 16] = "Tuple";
+    TypeKind[TypeKind["Union"] = 17] = "Union";
+    TypeKind[TypeKind["Reference"] = 18] = "Reference";
+    TypeKind[TypeKind["Class"] = 19] = "Class";
+    TypeKind[TypeKind["Unknown"] = 20] = "Unknown";
+    TypeKind[TypeKind["Function"] = 21] = "Function";
+    TypeKind[TypeKind["Unknown2"] = 999] = "Unknown2";
+})(TypeKind || (TypeKind_1 = publicTypes.TypeKind = TypeKind = {}));
+
+class TypeOfConverter {
+    isConvertible(reflectedType, converter) {
+        if (reflectedType.kind !== 15) {
+            return false;
         }
-        const pattern = new List(...expectations);
-        if (reflectedType.initializer) {
-            pattern.setInitializer(reflectedType.initializer());
+        const validationType = lodash.get(reflectedType, `properties.${VALIDATION_TYPE_KEY.toString()}`);
+        const validationPayload = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
+        const classConverter = converter.getConverter(TypeKind_1.Class);
+        return ((validationType === null || validationType === void 0 ? void 0 : validationType.value) === KINDS$1.TYPE_OF &&
+            classConverter.isConvertible(validationPayload, converter));
+    }
+    convert(reflectedType, converter) {
+        const nestedReflectedType = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
+        const classConverter = converter.getConverter(TypeKind_1.Class);
+        const classType = classConverter.convert(nestedReflectedType, converter);
+        return classType;
+    }
+    reflect(reflectedType, converter) {
+        const nestedReflectedType = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
+        const classConverter = converter.getConverter(TypeKind_1.Class);
+        return classConverter.reflect(nestedReflectedType, converter);
+    }
+}
+
+class CompositeTypeConverter {
+    constructor(converters = []) {
+        this.converters = [];
+        this.converters = [...converters];
+        this.sortByPriority();
+    }
+    isConvertible(reflectedType) {
+        return reflectedType.kind === 15;
+    }
+    add(converter, atIndex) {
+        if (atIndex !== undefined) {
+            this.converters.splice(atIndex, 0, converter);
+        }
+        else {
+            this.converters.push(converter);
+        }
+        this.sortByPriority();
+    }
+    remove(converter) {
+        const index = this.converters.indexOf(converter);
+        if (index > -1) {
+            this.converters.splice(index, 1);
+            return true;
+        }
+        return false;
+    }
+    removeAt(index) {
+        if (index >= 0 && index < this.converters.length) {
+            return this.converters.splice(index, 1)[0];
+        }
+        return undefined;
+    }
+    sortByPriority() {
+        this.converters.sort((a, b) => {
+            var _a, _b;
+            const priorityA = (_a = a.priority) !== null && _a !== void 0 ? _a : Number.MAX_SAFE_INTEGER;
+            const priorityB = (_b = b.priority) !== null && _b !== void 0 ? _b : Number.MAX_SAFE_INTEGER;
+            return priorityA - priorityB;
+        });
+    }
+    convert(reflectedType, converter) {
+        const applicableConverter = this.findApplicableConverter(reflectedType, converter);
+        if (!applicableConverter) {
+            throw new Error(`No applicable converter found for type: ${JSON.stringify(reflectedType)}`);
+        }
+        return applicableConverter.convert(reflectedType, converter);
+    }
+    reflect(reflectedType, converter) {
+        const applicableConverter = this.findApplicableConverter(reflectedType, converter);
+        if (!applicableConverter) {
+            throw new Error(`No applicable converter found for type: ${JSON.stringify(reflectedType)}`);
+        }
+        return applicableConverter.reflect(reflectedType, converter);
+    }
+    findApplicableConverter(reflectedType, tsRuntimeConverter) {
+        const result = this.converters.find((converter) => {
+            if (converter.isConvertible) {
+                return converter.isConvertible(reflectedType, tsRuntimeConverter);
+            }
+            return true;
+        });
+        if (result === undefined) {
+            return lodash.last(this.converters);
+        }
+        return result;
+    }
+    getConverters() {
+        return [...this.converters];
+    }
+    size() {
+        return this.converters.length;
+    }
+}
+
+class ObjectConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind$1.Object;
+    }
+    convert(reflectedType, converter) {
+        const properties = this.resolveProperties(reflectedType, converter, true);
+        let pattern;
+        if (this.isInterface(reflectedType)) {
+            const intf = new Interface(properties);
+            intf.setName(reflectedType.name);
+            pattern = intf;
+        }
+        else {
+            pattern = new Collection(properties);
         }
         return pattern;
     }
     reflect(reflectedType, converter) {
+        return this.resolveProperties(reflectedType, converter, false);
+    }
+    resolveProperties(reflectedType, converter, isConverting) {
+        const props = {};
+        for (const key of Reflect.ownKeys(reflectedType.properties)) {
+            const reflectedProp = reflectedType.properties[key];
+            if (!isPlainObjectFast(reflectedProp))
+                continue;
+            if (reflectedProp.kind === TypeKind$1.Reference) {
+                const reflectedRefType = reflectedProp;
+                let expectation;
+                if (isConverting) {
+                    if (reflectedRefType.type === Array && reflectedRefType.arguments) {
+                        expectation = converter
+                            .getConverter(TypeKind$1.Array)
+                            .convert(reflectedProp, converter);
+                    }
+                    else if (isPatternClass(reflectedProp.type)) {
+                        expectation = reflectedProp.type;
+                    }
+                    else if (helpers.isClass(reflectedRefType.type) === false &&
+                        isPlainObjectFast(reflectedRefType.type) === true) {
+                        expectation = new Collection(reflectedRefType.type);
+                    }
+                    else {
+                        expectation = new InstanceOf(reflectedRefType.type);
+                    }
+                }
+                else if (reflectedRefType.type === Array &&
+                    reflectedRefType.arguments) {
+                    const expectations = [];
+                    for (const argument of reflectedRefType.arguments) {
+                        if (argument.kind === TypeKind$1.Reference) {
+                            expectations.push(argument.type);
+                        }
+                        else {
+                            expectations.push(converter.reflect(argument));
+                        }
+                    }
+                    expectation = expectations;
+                }
+                else {
+                    expectation = reflectedRefType.type;
+                }
+                props[key] = expectation;
+                continue;
+            }
+            props[key] = isConverting
+                ? converter.convert(reflectedProp)
+                : converter.reflect(reflectedProp);
+        }
+        return props;
+    }
+    isInterface(reflectedType) {
+        return (reflectedType.kind === TypeKind$1.Object &&
+            reflectedType.name !== undefined &&
+            reflectedType.name !== '__type');
+    }
+}
+
+class AnyConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.Any;
+    }
+    convert(reflectedType) {
+        return new Any();
+    }
+    reflect(reflectedType) {
+        return new Any();
+    }
+}
+
+class StringConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.String;
+    }
+    convert(reflectedType) {
+        return new InstanceOf(String);
+    }
+    reflect(reflectedType) {
+        return String;
+    }
+}
+
+class NumberConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.Number;
+    }
+    convert(reflectedType) {
+        return new InstanceOf(Number);
+    }
+    reflect(reflectedType) {
+        return Number;
+    }
+}
+
+class BooleanConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.Boolean;
+    }
+    convert(reflectedType) {
+        return new InstanceOf(Boolean);
+    }
+    reflect(reflectedType) {
+        return Boolean;
+    }
+}
+
+class StringLiteralConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.StringLiteral;
+    }
+    convert(reflectedType) {
+        return new Equals(reflectedType.value);
+    }
+    reflect(reflectedType) {
+        return reflectedType.value;
+    }
+}
+
+class NumberLiteralConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.NumberLiteral;
+    }
+    convert(reflectedType) {
+        return new Equals(reflectedType.value);
+    }
+    reflect(reflectedType) {
+        return reflectedType.value;
+    }
+}
+
+class FalseLiteralConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.FalseLiteral;
+    }
+    convert(reflectedType) {
+        return new Equals(false);
+    }
+    reflect(reflectedType) {
+        return false;
+    }
+}
+
+class TrueLiteralConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.TrueLiteral;
+    }
+    convert(reflectedType) {
+        return new Equals(true);
+    }
+    reflect(reflectedType) {
+        return true;
+    }
+}
+
+class EnumLiteralConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.EnumLiteral;
+    }
+    convert(reflectedType) {
+        return new Equals(reflectedType.value);
+    }
+    reflect(reflectedType) {
+        return reflectedType.value;
+    }
+}
+
+class ESSymbolConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.ESSymbol;
+    }
+    convert(reflectedType) {
+        return new InstanceOf(Symbol);
+    }
+    reflect(reflectedType) {
+        return Symbol;
+    }
+}
+
+class VoidConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.Void;
+    }
+    convert(reflectedType) {
+        return new Void();
+    }
+    reflect(reflectedType) {
+        return new Void();
+    }
+}
+
+class NullConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.Null;
+    }
+    convert(reflectedType) {
+        return null;
+    }
+    reflect(reflectedType) {
+        return null;
+    }
+}
+
+class UndefinedConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.Undefined;
+    }
+    convert(reflectedType) {
+        return undefined;
+    }
+    reflect(reflectedType) {
+        return undefined;
+    }
+}
+
+class NeverConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.Never;
+    }
+    convert(reflectedType) {
+        return new Never();
+    }
+    reflect(reflectedType) {
+        return new Never();
+    }
+}
+
+class TupleConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.Tuple;
+    }
+    convert(reflectedType, converter) {
         const expectations = [];
         for (const arg of reflectedType
-            .arguments) {
-            const classConverter = converter.getConverter(KINDS.CLASS);
-            if (classConverter === null || classConverter === void 0 ? void 0 : classConverter.isConvertible(arg)) {
+            .elementTypes) {
+            if (arg.kind === TypeKind_1.Reference) {
+                expectations.push(new InstanceOf(arg.type));
+            }
+            else {
+                expectations.push(converter.convert(arg));
+            }
+        }
+        return new Tuple(...expectations);
+    }
+    reflect(reflectedType, converter) {
+        const expectations = [];
+        for (const arg of reflectedType
+            .elementTypes) {
+            if (arg.kind === TypeKind_1.Reference) {
                 expectations.push(arg.type);
             }
             else {
@@ -1449,6 +1943,113 @@ class ArrayConverter {
             }
         }
         return expectations;
+    }
+}
+
+class UnionConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind_1.Union;
+    }
+    convert(reflectedType, converter) {
+        const expectations = [];
+        for (const arg of reflectedType.types) {
+            if (arg.kind === TypeKind_1.Reference) {
+                if (arg.type !== Array) {
+                    expectations.push(new InstanceOf(arg.type));
+                }
+                else {
+                    for (const argument of arg.arguments) {
+                        expectations.push(new List(converter.convert(argument)));
+                    }
+                }
+            }
+            else {
+                expectations.push(converter.convert(arg));
+            }
+        }
+        let pattern;
+        if (expectations.length === 2 && expectations.includes(undefined)) {
+            const expectation = expectations[0] !== undefined ? expectations[0] : expectations[1];
+            pattern = new Optional(expectation);
+        }
+        else {
+            pattern = new OneOf(...expectations);
+        }
+        return pattern;
+    }
+    reflect(reflectedType, converter) {
+        const expectations = [];
+        for (const arg of reflectedType.types) {
+            if (arg.kind === TypeKind_1.Reference) {
+                expectations.push(arg.type);
+            }
+            else {
+                expectations.push(converter.reflect(arg));
+            }
+        }
+        return expectations.sort();
+    }
+}
+
+class ReferenceConverter {
+    isConvertible(reflectedType) {
+        return reflectedType.kind === TypeKind$1.Reference;
+    }
+    convert(reflectedType, converter) {
+        if (converter.getConverter(TypeKind$1.Array).isConvertible(reflectedType)) {
+            return converter
+                .getConverter(TypeKind$1.Array)
+                .convert(reflectedType, converter);
+        }
+        if (converter.getConverter(TypeKind$1.Class).isConvertible(reflectedType)) {
+            return converter
+                .getConverter(TypeKind$1.Class)
+                .convert(reflectedType, converter);
+        }
+        if (reflectedType.type === Array && reflectedType.arguments) {
+            const expectations = [];
+            for (const argument of reflectedType.arguments) {
+                if (argument.kind === TypeKind$1.Reference) {
+                    expectations.push(new InstanceOf(argument.type));
+                }
+                else {
+                    expectations.push(converter.convert(argument));
+                }
+            }
+            return new List(...expectations);
+        }
+        if (isPlainObjectFast(reflectedType.type)) {
+            return new Collection(reflectedType.type);
+        }
+        return new InstanceOf(reflectedType.type);
+    }
+    reflect(reflectedType, converter) {
+        if (converter.getConverter(TypeKind$1.Array).isConvertible(reflectedType)) {
+            return converter
+                .getConverter(TypeKind$1.Array)
+                .reflect(reflectedType, converter);
+        }
+        if (converter.getConverter(TypeKind$1.Class).isConvertible(reflectedType)) {
+            return converter
+                .getConverter(TypeKind$1.Class)
+                .reflect(reflectedType, converter);
+        }
+        if (reflectedType.type === Array && reflectedType.arguments) {
+            const expectations = [];
+            for (const arg of reflectedType.arguments) {
+                if (arg.kind === TypeKind$1.Reference) {
+                    expectations.push(arg.type);
+                }
+                else {
+                    expectations.push(converter.reflect(arg));
+                }
+            }
+            return expectations;
+        }
+        if (isPlainObjectFast(reflectedType.type)) {
+            return reflectedType.type;
+        }
+        return reflectedType.type;
     }
 }
 
@@ -1466,7 +2067,16 @@ class ClassConverter {
         if (isPatternClass(type)) {
             return type;
         }
-        const properties = this.resolveProperties(type, converter, true);
+        let properties;
+        const cacheKey = this.getClassSpecificCacheKey(type, true);
+        const cachedProperties = Reflect.getOwnMetadata(cacheKey, type);
+        if (cachedProperties !== undefined) {
+            properties = cachedProperties;
+        }
+        else {
+            properties = this.resolveProperties(type, converter, true);
+            Reflect.defineMetadata(cacheKey, properties, type);
+        }
         const classType = new Class(type, properties);
         const transformedClassType = this.transformType(classType);
         const transformedProps = transformedClassType.properties;
@@ -1475,30 +2085,47 @@ class ClassConverter {
     }
     reflect(reflectedType, converter) {
         const type = this.resolveType(reflectedType);
-        const properties = this.resolveProperties(type, converter, false);
+        let properties;
+        const cacheKey = this.getClassSpecificCacheKey(type, false);
+        const cachedProperties = Reflect.getOwnMetadata(cacheKey, type);
+        if (cachedProperties !== undefined) {
+            properties = cachedProperties;
+        }
+        else {
+            properties = this.resolveProperties(type, converter, false);
+            Reflect.defineMetadata(cacheKey, properties, type);
+        }
         const transformedClassType = this.transformType(new Class(type, properties));
         const transformedProps = transformedClassType.properties;
         this.cacheProperties(type, transformedProps, false);
         return transformedProps;
     }
     resolveProperties(type, converter, isConverted) {
-        let properties;
-        if (this.isCached(type, isConverted)) {
-            properties = this.resolveCached(type, isConverted);
+        const storedReflectedType = Reflect.getMetadata(REFLECTED_TYPE_PROPS_KEY, type);
+        let reflectedClass;
+        if (storedReflectedType !== undefined) {
+            reflectedClass = storedReflectedType;
         }
         else {
-            const reflectedClass = this.reflectClassType(type);
-            const parentProperties = this.resolveParentProperties(type, converter, isConverted);
-            const objConverter = converter.getConverter(KINDS.OBJECT);
-            const classProperties = isConverted
-                ? objConverter.convert(reflectedClass, converter)
-                : objConverter.reflect(reflectedClass, converter);
-            properties = merge(parentProperties, classProperties, {
-                isMergeableObject: isPlainRecord,
-            });
-            properties = isConverted ? new Collection(properties) : properties;
+            reflectedClass = this.reflectClassType(type);
         }
-        return properties;
+        const parentProperties = this.resolveParentProperties(type, converter, isConverted);
+        const objConverter = converter.getConverter(TypeKind$1.Object);
+        const classProperties = isConverted
+            ? objConverter.convert(reflectedClass, converter)
+            : objConverter.reflect(reflectedClass, converter);
+        const properties = merge(parentProperties, classProperties, {
+            isMergeableObject: isPlainRecord,
+        });
+        const finalProperties = isConverted
+            ? new Collection(properties)
+            : properties;
+        return finalProperties;
+    }
+    getClassSpecificCacheKey(type, isConverted) {
+        const baseKey = isConverted ? 'converted' : 'reflected';
+        const className = type.name || 'Anonymous';
+        return `${baseKey}_${className}_${type.toString().slice(0, 50)}`;
     }
     resolveType(reflectedType) {
         return helpers.isClass(reflectedType)
@@ -1529,12 +2156,11 @@ class ClassConverter {
         return (reflectedType === null || reflectedType === void 0 ? void 0 : reflectedType.kind) === 19;
     }
     resolveParentProperties(type, converter, isConverted) {
-        const matcher = (evaluatedProto) => {
-            return isDefined(evaluatedProto.constructor);
-        };
+        const matcher = (evaluatedProto) => isType(evaluatedProto.constructor);
         const parentProto = getMatchingParentProto(type.prototype, matcher);
-        if (parentProto === undefined)
+        if (parentProto === undefined) {
             return {};
+        }
         const parentCtor = parentProto.constructor;
         const parentProperties = isConverted
             ? this.convert(parentCtor, converter)
@@ -1561,204 +2187,60 @@ class ClassConverter {
     }
 }
 
+class UnknownConverter {
+    isConvertible(reflectedType) {
+        return (reflectedType.kind === TypeKind_1.Unknown ||
+            reflectedType.kind === TypeKind_1.Unknown2);
+    }
+    convert(reflectedType) {
+        return new Unknown();
+    }
+    reflect(reflectedType) {
+        return new Unknown();
+    }
+}
+
 class FunctionConverter {
     isConvertible(reflectedType) {
-        if (reflectedType.kind === 18) {
-            const referenceType = reflectedType;
-            return referenceType.type === Function && !helpers.isClass(referenceType.type);
+        if (reflectedType.kind === TypeKind_1.Function) {
+            return true;
         }
-        return reflectedType.kind === 21;
+        const referenceType = reflectedType;
+        return referenceType.type === Function && !helpers.isClass(referenceType.type);
     }
     convert(reflectedType) {
-        return reflectedType ? new InstanceOf(Function) : new InstanceOf(Function);
+        return new InstanceOf(Function);
     }
     reflect(reflectedType) {
-        return reflectedType ? Function : Function;
+        return Function;
     }
 }
 
-class NativeConverter {
+class ArrayConverter {
     isConvertible(reflectedType) {
-        return [1, 11, 14].includes(reflectedType.kind);
-    }
-    convert(reflectedType) {
-        return this.reflect(reflectedType);
-    }
-    reflect(reflectedType) {
-        return NativeConverter.MAPPINGS[reflectedType.kind];
-    }
-}
-NativeConverter.MAPPINGS = {
-    1: new Any(),
-    11: new Void(),
-    14: new Never(),
-};
-
-class NilConverter {
-    isConvertible(reflectedType) {
-        return [12, 13].includes(reflectedType.kind);
-    }
-    convert(reflectedType) {
-        return this.reflect(reflectedType);
-    }
-    reflect(reflectedType) {
-        return NilConverter.MAPPINGS[reflectedType.kind];
-    }
-}
-NilConverter.MAPPINGS = {
-    12: undefined,
-    13: null,
-};
-
-class ObjectConverter {
-    isConvertible(reflectedType) {
-        return reflectedType.kind === 15 && !isSpecial(reflectedType);
-    }
-    convert(reflectedType, converter) {
-        const properties = this.resolveProperties(reflectedType, converter, true);
-        let pattern;
-        if (this.isInterface(reflectedType)) {
-            const intf = new Interface(properties);
-            intf.setName(reflectedType.name);
-            pattern = intf;
-        }
-        else {
-            pattern = new Collection(properties);
-        }
-        if (reflectedType.initializer) {
-            pattern.setInitializer(reflectedType.initializer());
-        }
-        return pattern;
-    }
-    reflect(reflectedType, converter) {
-        return this.resolveProperties(reflectedType, converter, false);
-    }
-    resolveProperties(reflectedType, converter, isConverting) {
-        const { properties } = reflectedType;
-        const props = {};
-        for (const key of Reflect.ownKeys(properties)) {
-            const reflectedProp = properties[key];
-            if (!lodash.isPlainObject(reflectedProp))
-                continue;
-            const classConverter = converter.getConverter(KINDS.CLASS);
-            if (classConverter === null || classConverter === void 0 ? void 0 : classConverter.isConvertible(reflectedProp)) {
-                const reflectedRefType = reflectedProp;
-                let expectation;
-                if (isConverting) {
-                    if (isPatternClass(reflectedRefType.type)) {
-                        expectation = reflectedRefType.type;
-                    }
-                    else {
-                        expectation = new InstanceOf(reflectedRefType.type);
-                    }
-                    if (reflectedProp.initializer) {
-                        expectation.setInitializer(reflectedProp.initializer());
-                    }
-                }
-                else {
-                    expectation = reflectedRefType.type;
-                }
-                props[key] = expectation;
-                continue;
-            }
-            props[key] = isConverting
-                ? converter.convert(reflectedProp)
-                : converter.reflect(reflectedProp);
-        }
-        return props;
-    }
-    isInterface(reflectedType) {
-        return (reflectedType.kind === 15 &&
-            reflectedType.name !== undefined &&
-            reflectedType.name !== '__type');
-    }
-}
-
-class PrimitiveConverter {
-    isConvertible(reflectedType) {
-        return [2, 3, 4, 10].includes(reflectedType.kind);
-    }
-    convert(reflectedType) {
-        const pattern = new InstanceOf(this.reflect(reflectedType));
-        if (reflectedType.initializer) {
-            pattern.setInitializer(reflectedType.initializer());
-        }
-        return pattern;
-    }
-    reflect(reflectedType) {
-        return PrimitiveConverter.MAPPINGS[reflectedType.kind];
-    }
-}
-PrimitiveConverter.MAPPINGS = {
-    2: String,
-    3: Number,
-    4: Boolean,
-    10: Symbol,
-};
-
-class ReferenceConverter {
-    isConvertible(reflectedType) {
-        return reflectedType.kind === 18;
-    }
-    convert(reflectedType, converter) {
-        if (lodash.isPlainObject(reflectedType.type)) {
-            return new Collection(reflectedType.type);
-        }
-        if (reflectedType.type === Array && reflectedType.arguments) {
-            const arrayConverter = converter.getConverter(KINDS.ARRAY);
-            return arrayConverter.convert(reflectedType);
-        }
-        let pattern;
-        if (isPatternClass(reflectedType.type)) {
-            pattern = reflectedType.type;
-        }
-        else {
-            pattern = new InstanceOf(reflectedType.type);
-        }
-        if (reflectedType.initializer) {
-            pattern.setInitializer(reflectedType.initializer());
-        }
-        return pattern;
-    }
-    reflect(reflectedType, converter) {
-        if (lodash.isPlainObject(reflectedType.type)) {
-            return reflectedType.type;
-        }
-        if (reflectedType.type === Array && reflectedType.arguments) {
-            const arrayConverter = converter.getConverter(KINDS.ARRAY);
-            return arrayConverter.reflect(reflectedType);
-        }
-        return reflectedType.type;
-    }
-}
-
-class TupleConverter {
-    isConvertible(reflectedType) {
-        return reflectedType.kind === 16;
+        return (reflectedType.kind === 18 &&
+            reflectedType.type === Array);
     }
     convert(reflectedType, converter) {
         const expectations = [];
-        for (const arg of reflectedType
-            .elementTypes) {
-            const classConverter = converter.getConverter(KINDS.CLASS);
-            if (classConverter === null || classConverter === void 0 ? void 0 : classConverter.isConvertible(arg)) {
-                expectations.push(new InstanceOf(arg.type));
+        for (const argument of reflectedType
+            .arguments) {
+            const classConverter = converter.getConverter(TypeKind$1.Class);
+            if (classConverter === null || classConverter === void 0 ? void 0 : classConverter.isConvertible(argument)) {
+                expectations.push(new InstanceOf(argument.type));
             }
             else {
-                expectations.push(converter.convert(arg));
+                expectations.push(converter.convert(argument));
             }
         }
-        const pattern = new Tuple(...expectations);
-        if (reflectedType.initializer) {
-            pattern.setInitializer(reflectedType.initializer());
-        }
+        const pattern = new List(...expectations);
         return pattern;
     }
     reflect(reflectedType, converter) {
         const expectations = [];
         for (const arg of reflectedType
-            .elementTypes) {
-            const classConverter = converter.getConverter(KINDS.CLASS);
+            .arguments) {
+            const classConverter = converter.getConverter(TypeKind$1.Class);
             if (classConverter === null || classConverter === void 0 ? void 0 : classConverter.isConvertible(arg)) {
                 expectations.push(arg.type);
             }
@@ -1770,185 +2252,82 @@ class TupleConverter {
     }
 }
 
-class UnionConverter {
-    isConvertible(reflectedType) {
-        return reflectedType.kind === 17;
+class TSRuntimeConverter {
+    constructor(typeConverters) {
+        this.typeConverters = [];
+        this.definitionCache = new Map();
+        this.patternCache = new Map();
+        this.typeConverters = typeConverters || [];
     }
-    convert(reflectedType, converter) {
-        const expectations = [];
-        for (const arg of reflectedType.types) {
-            const classConverter = converter.getConverter(KINDS.CLASS);
-            if (classConverter === null || classConverter === void 0 ? void 0 : classConverter.isConvertible(arg)) {
-                expectations.push(new InstanceOf(arg.type));
-            }
-            else {
-                expectations.push(converter.convert(arg));
-            }
+    findConverter(reflectedType) {
+        return this.typeConverters[reflectedType.kind];
+    }
+    convert(reflectedType) {
+        const cacheKey = this.createCacheKey(reflectedType);
+        const converter = this.findConverter(reflectedType);
+        if (converter) {
+            const pattern = converter.convert(reflectedType, this);
+            this.patternCache.set(cacheKey, pattern);
+            return pattern;
         }
-        let pattern;
-        if (expectations.length === 2 && expectations.includes(undefined)) {
-            const expectation = expectations[0] !== undefined ? expectations[0] : expectations[1];
-            pattern = new Optional(expectation);
+        if (helpers.isClass(reflectedType)) {
+            const classConverter = this.getConverter(TypeKind$1.Class);
+            const pattern = classConverter.convert(reflectedType, this);
+            this.patternCache.set(cacheKey, pattern);
+            return pattern;
         }
-        else {
-            pattern = new OneOf(...expectations);
-        }
-        if (reflectedType.initializer) {
-            pattern.setInitializer(reflectedType.initializer());
+        const unknownConverter = this.typeConverters[TypeKind$1.Unknown];
+        const pattern = unknownConverter === null || unknownConverter === void 0 ? void 0 : unknownConverter.convert(reflectedType, this);
+        if (pattern) {
+            this.patternCache.set(cacheKey, pattern);
         }
         return pattern;
     }
-    reflect(reflectedType, converter) {
-        const expectations = [];
-        for (const arg of reflectedType.types) {
-            const classConverter = converter.getConverter(KINDS.CLASS);
-            if (classConverter === null || classConverter === void 0 ? void 0 : classConverter.isConvertible(arg)) {
-                expectations.push(arg.type);
+    createCacheKey(reflectedType) {
+        var _a, _b;
+        if (reflectedType.kind === TypeKind$1.Reference) {
+            const parts = [
+                `kind:${reflectedType.kind}`,
+                `type:${((_a = reflectedType.type) === null || _a === void 0 ? void 0 : _a.name) || 'unknown'}`,
+                `args:${((_b = reflectedType.arguments) === null || _b === void 0 ? void 0 : _b.length) || 0}`,
+            ];
+            if (reflectedType.arguments) {
+                reflectedType.arguments.forEach((arg, index) => {
+                    parts.push(`arg${index}:${this.createCacheKey(arg)}`);
+                });
             }
-            else {
-                expectations.push(converter.reflect(arg));
-            }
+            return parts.join('|');
         }
-        return expectations.sort();
-    }
-}
-
-class UnknownConverter {
-    isConvertible(reflectedType) {
-        return reflectedType.kind === 20;
-    }
-    convert(reflectedType) {
-        return this.reflect(reflectedType);
+        return JSON.stringify(reflectedType);
     }
     reflect(reflectedType) {
-        return reflectedType ? new Unknown() : new Unknown();
-    }
-}
-
-class UnrecognizedConverter {
-    isConvertible(reflectedType) {
-        return [999].includes(reflectedType.kind);
-    }
-    convert(reflectedType) {
-        return this.reflect(reflectedType);
-    }
-    reflect(reflectedType) {
-        return reflectedType ? new Unrecognized() : new Unrecognized();
-    }
-}
-
-class LiteralConverter {
-    isConvertible(reflectedType) {
-        return [5, 6, 7, 8].includes(reflectedType.kind);
-    }
-    convert(reflectedType) {
-        return new Equals(this.reflect(reflectedType));
-    }
-    reflect(reflectedType) {
-        let value;
-        if (reflectedType.kind === 7) {
-            value = false;
+        const converter = this.findConverter(reflectedType);
+        if (converter) {
+            return converter.reflect(reflectedType, this);
         }
-        else if (reflectedType.kind === 8) {
-            value = true;
-        }
-        else {
-            value = reflectedType.value;
-        }
-        return value;
-    }
-}
-
-class PropsOfConverter {
-    isConvertible(reflectedType, converter) {
-        if (reflectedType.kind !== 15) {
-            return false;
-        }
-        const validationType = lodash.get(reflectedType, `properties.${VALIDATION_TYPE_KEY.toString()}`);
-        if ((validationType === null || validationType === void 0 ? void 0 : validationType.value) !== KINDS.PROPERTIES_OF) {
-            return false;
-        }
-        const validationPayload = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
-        const classConverter = converter.getConverter(KINDS.CLASS);
-        return classConverter.isConvertible(validationPayload, converter);
-    }
-    convert(reflectedType, converter) {
-        const nestedReflectedType = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
-        const classConverter = converter.getConverter(KINDS.CLASS);
-        const classType = classConverter.convert(nestedReflectedType, converter);
-        const properties = classType !== undefined ? classType.properties : {};
-        return new Collection({ ...properties });
-    }
-    reflect(reflectedType, converter) {
-        const nestedReflectedType = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
-        const classConverter = converter.getConverter(KINDS.CLASS);
-        return classConverter.reflect(nestedReflectedType, converter);
-    }
-}
-
-class TypeOfConverter {
-    isConvertible(reflectedType, converter) {
-        if (reflectedType.kind !== 15) {
-            return false;
-        }
-        const validationType = lodash.get(reflectedType, `properties.${VALIDATION_TYPE_KEY.toString()}`);
-        const validationPayload = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
-        const classConverter = converter.getConverter(KINDS.CLASS);
-        return ((validationType === null || validationType === void 0 ? void 0 : validationType.value) === KINDS.TYPE_OF &&
-            classConverter.isConvertible(validationPayload, converter));
-    }
-    convert(reflectedType, converter) {
-        const nestedReflectedType = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
-        const classConverter = converter.getConverter(KINDS.CLASS);
-        const classType = classConverter.convert(nestedReflectedType, converter);
-        return classType;
-    }
-    reflect(reflectedType, converter) {
-        const nestedReflectedType = lodash.get(reflectedType, `properties.${VALIDATION_PAYLOAD_KEY.toString()}`);
-        const classConverter = converter.getConverter(KINDS.CLASS);
-        return classConverter.reflect(nestedReflectedType, converter);
-    }
-}
-
-class TSRuntimeConverter {
-    constructor(typeConverters) {
-        this.typeConverters = typeConverters || new Map();
-    }
-    convert(reflectedType) {
-        for (const typeConverter of this.typeConverters.values()) {
-            if (typeConverter.isConvertible(reflectedType, this) === true) {
-                return typeConverter.convert(reflectedType, this);
-            }
-        }
-        const unknownConverter = this.getConverter(KINDS.UNKNOWN);
-        return unknownConverter === null || unknownConverter === void 0 ? void 0 : unknownConverter.convert(reflectedType);
-    }
-    reflect(reflectedType) {
-        for (const typeConverter of this.typeConverters.values()) {
-            if (typeConverter.isConvertible(reflectedType, this) === true) {
-                return typeConverter.reflect(reflectedType, this);
-            }
-        }
-        const unknownConverter = this.getConverter(KINDS.UNKNOWN);
-        return unknownConverter === null || unknownConverter === void 0 ? void 0 : unknownConverter.reflect(reflectedType);
+        const unknownConverter = this.typeConverters[TypeKind$1.Unknown];
+        return unknownConverter === null || unknownConverter === void 0 ? void 0 : unknownConverter.reflect(reflectedType, this);
     }
     registerConverter(kind, typeConverter, shouldOverride = false) {
         if (this.hasConverter(kind) && !shouldOverride) {
             throw new TypeConverterExists(kind);
         }
-        this.typeConverters.set(kind, typeConverter);
+        this.typeConverters[kind] = typeConverter;
     }
     overrideConverter(kind, converter) {
         this.registerConverter(kind, converter, true);
     }
     getConverter(type) {
-        return this.typeConverters.get(type);
+        if (this.typeConverters[type] === undefined) {
+            throw new Error(`Type converter for kind '${type}' is not registered.`);
+        }
+        return this.typeConverters[type];
     }
     hasConverter(type) {
-        return this.typeConverters.has(type);
+        return this.typeConverters[type] !== undefined;
     }
     removeConverter(type) {
-        this.typeConverters.delete(type);
+        this.typeConverters[type] = undefined;
     }
 }
 
@@ -1960,7 +2339,7 @@ class InjectingPropsTransformer {
     transform(classType) {
         const injectableProps = Reflect.getOwnMetadata(INJECTABLE_PROPERTIES_KEY, classType.type) || {};
         classType.properties = merge(classType.properties, injectableProps, {
-            isMergeableObject: lodash.isPlainObject,
+            isMergeableObject: isPlainObjectFast,
         });
         return classType;
     }
@@ -2051,10 +2430,7 @@ class Validator {
         }
         let result;
         if (isPattern(processedExpectation)) {
-            let validatedValue = value;
-            if (processedExpectation.hasInitializer()) {
-                validatedValue = processedExpectation.getInitializer();
-            }
+            const validatedValue = value;
             result = this.handleExplicitPattern(validatedValue, processedExpectation);
         }
         if (result === undefined) {
@@ -2154,7 +2530,7 @@ class Describer {
     describe(value) {
         const description = this.createDescription(value);
         if (description instanceof DescriptionList) {
-            const describer = this.getDescriber(KINDS.DESCRIPTION_LIST);
+            const describer = this.getDescriber(KINDS$1.DESCRIPTION_LIST);
             if (describer === undefined) {
                 return `[${description.toString()}]`;
             }
@@ -2169,22 +2545,22 @@ class Describer {
         return this.createIndividualDescription(value);
     }
     createIndividualDescription(arg) {
-        let type = KINDS.UNKNOWN;
+        let type = KINDS$1.UNKNOWN;
         if (lodash.isArray(arg)) {
-            type = KINDS.ARRAY;
+            type = KINDS$1.ARRAY;
         }
-        else if (lodash.isPlainObject(arg)) {
-            type = KINDS.OBJECT;
+        else if (isPlainObjectFast(arg)) {
+            type = KINDS$1.OBJECT;
         }
         else if ((helpers.isNativeType(arg) || helpers.isNativeTypeInstance(arg)) &&
             !helpers.hasTypeName(arg)) {
-            type = KINDS.NATIVE;
+            type = KINDS$1.NATIVE;
         }
         else if (helpers.isErrorClass(arg) || helpers.isErrorInstance(arg)) {
-            type = KINDS.ERROR;
+            type = KINDS$1.ERROR;
         }
         else if (helpers.isClass(arg) || helpers.isClassInstance(arg)) {
-            type = KINDS.CLASS;
+            type = KINDS$1.CLASS;
         }
         const describer = this.getDescriber(type);
         if (describer === undefined) {
@@ -2241,101 +2617,98 @@ class Describer {
     }
 }
 Describer.describers = {
-    [KINDS.NATIVE]: NativeTypeDescriber,
-    [KINDS.ERROR]: ErrorDescriber,
-    [KINDS.ARRAY]: ArrayDescriber,
-    [KINDS.OBJECT]: ObjectDescriber,
-    [KINDS.CLASS]: ClassDescriber,
-    [KINDS.UNKNOWN]: FallbackDescriber,
-    [KINDS.DESCRIPTION_LIST]: DescriptionListDescriber,
+    [KINDS$1.NATIVE]: NativeTypeDescriber,
+    [KINDS$1.ERROR]: ErrorDescriber,
+    [KINDS$1.ARRAY]: ArrayDescriber,
+    [KINDS$1.OBJECT]: ObjectDescriber,
+    [KINDS$1.CLASS]: ClassDescriber,
+    [KINDS$1.UNKNOWN]: FallbackDescriber,
+    [KINDS$1.DESCRIPTION_LIST]: DescriptionListDescriber,
 };
 
-const KINDS$1 = KINDS;
+const KINDS = KINDS$1;
 const describer = new Describer();
 describer.setFormatting('default');
 const classTransformers = new Map();
 classTransformers.set('internal', new InternalPropsTransformer());
 classTransformers.set('inject', new InjectingPropsTransformer());
 const converter = new TSRuntimeConverter();
-converter.registerConverter(KINDS$1.PROPERTIES_OF, new PropsOfConverter());
-converter.registerConverter(KINDS$1.TYPE_OF, new TypeOfConverter());
-converter.registerConverter(KINDS$1.CLASS, new ClassConverter(classTransformers));
-converter.registerConverter(KINDS$1.TUPLE, new TupleConverter());
-converter.registerConverter(KINDS$1.UNION, new UnionConverter());
-converter.registerConverter(KINDS$1.NATIVE, new NativeConverter());
-converter.registerConverter(KINDS$1.NIL, new NilConverter());
-converter.registerConverter(KINDS$1.ARRAY, new ArrayConverter());
-converter.registerConverter(KINDS$1.FUNCTION, new FunctionConverter());
-converter.registerConverter(KINDS$1.OBJECT, new ObjectConverter());
-converter.registerConverter(KINDS$1.PRIMITIVE, new PrimitiveConverter());
-converter.registerConverter(KINDS$1.REFERENCE, new ReferenceConverter());
-converter.registerConverter(KINDS$1.UNKNOWN, new UnknownConverter());
-converter.registerConverter(KINDS$1.UNRECOGNIZED, new UnrecognizedConverter());
-converter.registerConverter(KINDS$1.LITERAL, new LiteralConverter());
+const compositeObjectConverter = new CompositeTypeConverter();
+converter.registerConverter(TypeKind$1.Object, compositeObjectConverter);
+compositeObjectConverter.add(new PropsOfConverter(), 0);
+compositeObjectConverter.add(new TypeOfConverter(), 1);
+compositeObjectConverter.add(new ObjectConverter(), 2);
+converter.registerConverter(TypeKind$1.Any, new AnyConverter());
+converter.registerConverter(TypeKind$1.String, new StringConverter());
+converter.registerConverter(TypeKind$1.Number, new NumberConverter());
+converter.registerConverter(TypeKind$1.Boolean, new BooleanConverter());
+converter.registerConverter(TypeKind$1.StringLiteral, new StringLiteralConverter());
+converter.registerConverter(TypeKind$1.NumberLiteral, new NumberLiteralConverter());
+converter.registerConverter(TypeKind$1.FalseLiteral, new FalseLiteralConverter());
+converter.registerConverter(TypeKind$1.TrueLiteral, new TrueLiteralConverter());
+converter.registerConverter(TypeKind$1.EnumLiteral, new EnumLiteralConverter());
+converter.registerConverter(TypeKind$1.ESSymbol, new ESSymbolConverter());
+converter.registerConverter(TypeKind$1.Void, new VoidConverter());
+converter.registerConverter(TypeKind$1.Undefined, new UndefinedConverter());
+converter.registerConverter(TypeKind$1.Null, new NullConverter());
+converter.registerConverter(TypeKind$1.Never, new NeverConverter());
+converter.registerConverter(TypeKind$1.Tuple, new TupleConverter());
+converter.registerConverter(TypeKind$1.Union, new UnionConverter());
+converter.registerConverter(TypeKind$1.Reference, new ReferenceConverter());
+converter.registerConverter(TypeKind$1.Class, new ClassConverter());
+converter.registerConverter(TypeKind$1.Unknown, new UnknownConverter());
+converter.registerConverter(TypeKind$1.Function, new FunctionConverter());
+converter.registerConverter(TypeKind$1.Array, new ArrayConverter());
 const validator = new Validator();
-validator.registerValidator(KINDS$1.ANY, new AnyValidator());
-validator.registerValidator(KINDS$1.ARRAY, new ListValidator());
-validator.registerValidator(KINDS$1.CLASS, new ClassValidator());
-validator.registerValidator(KINDS$1.EQUALS, new EqualsValidator());
-validator.registerValidator(KINDS$1.LOCALE_STRING, new LocaleStringValidator());
-validator.registerValidator(KINDS$1.INSTANCE_OF, new InstanceOfValidator());
-validator.registerValidator(KINDS$1.INTEGER, new IntegerValidator());
-validator.registerValidator(KINDS$1.INTERNAL, new InternalValidator());
-validator.registerValidator(KINDS$1.INTERFACE, new InterfaceValidator());
-validator.registerValidator(KINDS$1.MAYBE, new MaybeValidator());
-validator.registerValidator(KINDS$1.NEVER, new NeverValidator());
-validator.registerValidator(KINDS$1.OBJECT, new CollectionValidator());
-validator.registerValidator(KINDS$1.OBJECT_INCLUDING, new CollectionIncludingValidator());
-validator.registerValidator(KINDS$1.OBJECT_WITHIN, new CollectionWithinValidator());
-validator.registerValidator(KINDS$1.ONE_OF, new OneOfValidator());
-validator.registerValidator(KINDS$1.OPTIONAL, new OptionalValidator());
-validator.registerValidator(KINDS$1.TUPLE, new TupleValidator());
-validator.registerValidator(KINDS$1.UNKNOWN, new UnknownValidator());
-validator.registerValidator(KINDS$1.UNRECOGNIZED, new UnrecognizedValidator());
-validator.registerValidator(KINDS$1.VOID, new VoidValidator());
-validator.registerValidator(KINDS$1.WHERE, new WhereValidator());
+validator.registerValidator(KINDS.ANY, new AnyValidator());
+validator.registerValidator(KINDS.ARRAY, new ListValidator());
+validator.registerValidator(KINDS.CLASS, new ClassValidator());
+validator.registerValidator(KINDS.EQUALS, new EqualsValidator());
+validator.registerValidator(KINDS.LOCALE_STRING, new LocaleStringValidator());
+validator.registerValidator(KINDS.INSTANCE_OF, new InstanceOfValidator());
+validator.registerValidator(KINDS.INTEGER, new IntegerValidator());
+validator.registerValidator(KINDS.INTERNAL, new InternalValidator());
+validator.registerValidator(KINDS.INTERFACE, new InterfaceValidator());
+validator.registerValidator(KINDS.MAYBE, new MaybeValidator());
+validator.registerValidator(KINDS.NEVER, new NeverValidator());
+validator.registerValidator(KINDS.OBJECT, new CollectionValidator());
+validator.registerValidator(KINDS.OBJECT_INCLUDING, new CollectionIncludingValidator());
+validator.registerValidator(KINDS.OBJECT_WITHIN, new CollectionWithinValidator());
+validator.registerValidator(KINDS.ONE_OF, new OneOfValidator());
+validator.registerValidator(KINDS.OPTIONAL, new OptionalValidator());
+validator.registerValidator(KINDS.TUPLE, new TupleValidator());
+validator.registerValidator(KINDS.UNKNOWN, new UnknownValidator());
+validator.registerValidator(KINDS.UNRECOGNIZED, new UnrecognizedValidator());
+validator.registerValidator(KINDS.VOID, new VoidValidator());
+validator.registerValidator(KINDS.WHERE, new WhereValidator());
 validator.setOrder([
-    KINDS$1.OBJECT_INCLUDING,
-    KINDS$1.OBJECT,
-    KINDS$1.ARRAY,
-    KINDS$1.TUPLE,
-    KINDS$1.LOCALE_STRING,
-    KINDS$1.INSTANCE_OF,
-    KINDS$1.CLASS,
-    KINDS$1.EQUALS,
+    KINDS.OBJECT_INCLUDING,
+    KINDS.OBJECT,
+    KINDS.ARRAY,
+    KINDS.TUPLE,
+    KINDS.LOCALE_STRING,
+    KINDS.INSTANCE_OF,
+    KINDS.CLASS,
+    KINDS.EQUALS,
 ]);
 const typend = new Typend(converter, describer, validator);
 const validate = typend.validate.bind(typend);
 const isValid = typend.isValid.bind(typend);
 const isInstanceOf = typend.isInstanceOf.bind(typend);
-const check = tsruntime.createReflective((reflectedType) => {
-    return (value, isStrict) => {
-        const expectation = typend.converter.convert(reflectedType);
-        return typend.validate(value, expectation, isStrict);
-    };
+const check = tsruntime.createReflective((reflectedType) => (value, isStrict) => {
+    const expectation = typend.converter.convert(reflectedType);
+    return typend.validate(value, expectation, isStrict);
 });
-const is = tsruntime.createReflective((reflectedType) => {
-    return (value, isStrict) => {
-        const expectation = typend.converter.convert(reflectedType);
-        return typend.isValid(value, expectation, isStrict);
-    };
+const is = tsruntime.createReflective((reflectedType) => (value, isStrict) => {
+    const expectation = typend.converter.convert(reflectedType);
+    return typend.isValid(value, expectation, isStrict);
 });
-const instanceOf = tsruntime.createReflective((reflectedType) => {
-    return (value) => {
-        const expectation = typend.converter.convert(reflectedType);
-        return typend.isInstanceOf(value, expectation);
-    };
+const instanceOf = tsruntime.createReflective((reflectedType) => (value) => {
+    const expectation = typend.converter.convert(reflectedType);
+    return typend.isInstanceOf(value, expectation);
 });
-const convert = tsruntime.createReflective((reflectedType) => {
-    return () => {
-        return typend.converter.convert(reflectedType);
-    };
-});
-const reflect = tsruntime.createReflective((reflectedType) => {
-    return () => {
-        return typend.converter.reflect(reflectedType);
-    };
-});
+const convert = tsruntime.createReflective((reflectedType) => () => typend.converter.convert(reflectedType));
+const reflect = tsruntime.createReflective((reflectedType) => () => typend.converter.reflect(reflectedType));
 const any = new Any();
 const never = new Never();
 const voided = new Void();
@@ -2404,15 +2777,9 @@ const PropTypes = {
     never,
     number: Number,
     object: new Collection({}),
-    objectOf: (_props) => {
-        return new Collection();
-    },
-    oneOf: (expectations) => {
-        return new OneOf(...expectations);
-    },
-    oneOfType: (expectations) => {
-        return new OneOf(...expectations);
-    },
+    objectOf: (_props) => new Collection(),
+    oneOf: (expectations) => new OneOf(...expectations),
+    oneOfType: (expectations) => new OneOf(...expectations),
     shape(properties) {
         return new Collection(properties);
     },
@@ -2424,9 +2791,11 @@ const PropTypes = {
 };
 
 exports.Any = Any;
+exports.AnyConverter = AnyConverter;
 exports.AnyValidator = AnyValidator;
 exports.ArrayConverter = ArrayConverter;
 exports.ArrayDescriber = ArrayDescriber;
+exports.BooleanConverter = BooleanConverter;
 exports.Class = Class;
 exports.ClassConverter = ClassConverter;
 exports.ClassDescriber = ClassDescriber;
@@ -2443,10 +2812,13 @@ exports.Describer = Describer;
 exports.Description = Description;
 exports.DescriptionList = DescriptionList;
 exports.DescriptionListDescriber = DescriptionListDescriber;
+exports.ESSymbolConverter = ESSymbolConverter;
+exports.EnumLiteralConverter = EnumLiteralConverter;
 exports.Equals = Equals;
 exports.EqualsValidator = EqualsValidator;
 exports.ErrorDescriber = ErrorDescriber;
 exports.FallbackDescriber = FallbackDescriber;
+exports.FalseLiteralConverter = FalseLiteralConverter;
 exports.FunctionConverter = FunctionConverter;
 exports.InjectingPropsTransformer = InjectingPropsTransformer;
 exports.InstanceOf = InstanceOf;
@@ -2464,19 +2836,19 @@ exports.InvalidValueError = InvalidValueError;
 exports.LITERAL_KEYS = literalKeys;
 exports.List = List;
 exports.ListValidator = ListValidator;
-exports.LiteralConverter = LiteralConverter;
 exports.LocaleString = LocaleString;
 exports.LocaleStringValidator = LocaleStringValidator;
 exports.METADATA_KEYS = metadataKeys;
 exports.Maybe = Maybe;
 exports.MaybeValidator = MaybeValidator;
-exports.NativeConverter = NativeConverter;
 exports.NativeTypeDescriber = NativeTypeDescriber;
 exports.Never = Never;
+exports.NeverConverter = NeverConverter;
 exports.NeverValidator = NeverValidator;
-exports.NilConverter = NilConverter;
 exports.NotAMemberError = NotAMemberError;
-exports.ObjectConverter = ObjectConverter;
+exports.NullConverter = NullConverter;
+exports.NumberConverter = NumberConverter;
+exports.NumberLiteralConverter = NumberLiteralConverter;
 exports.ObjectDescriber = ObjectDescriber;
 exports.OneOf = OneOf;
 exports.OneOfValidator = OneOfValidator;
@@ -2486,15 +2858,18 @@ exports.Pattern = Pattern;
 exports.PatternValidator = PatternValidator;
 exports.PatternValidatorExistError = PatternValidatorExistError;
 exports.PatternValidatorNotFoundError = PatternValidatorNotFoundError;
-exports.PrimitiveConverter = PrimitiveConverter;
 exports.PropTypes = PropTypes;
 exports.PropsOf = PropsOf;
 exports.PropsOfConverter = PropsOfConverter;
 exports.ReferenceConverter = ReferenceConverter;
+exports.StringConverter = StringConverter;
+exports.StringLiteralConverter = StringLiteralConverter;
 exports.TSRuntimeConverter = TSRuntimeConverter;
+exports.TrueLiteralConverter = TrueLiteralConverter;
 exports.Tuple = Tuple;
 exports.TupleConverter = TupleConverter;
 exports.TupleValidator = TupleValidator;
+exports.Type = Type;
 exports.TypeConverterExists = TypeConverterExists;
 exports.TypeDescriberExistsError = TypeDescriberExistsError;
 exports.TypeDescriberNotFoundError = TypeDescriberNotFoundError;
@@ -2502,6 +2877,7 @@ exports.TypeOf = TypeOf;
 exports.TypeOfConverter = TypeOfConverter;
 exports.Typend = Typend;
 exports.UndefinableClassError = UndefinableClassError;
+exports.UndefinedConverter = UndefinedConverter;
 exports.UnequalValueError = UnequalValueError;
 exports.UnexpectedKeyError = UnexpectedKeyError;
 exports.UnionConverter = UnionConverter;
@@ -2511,11 +2887,12 @@ exports.UnknownError = UnknownError;
 exports.UnknownValidator = UnknownValidator;
 exports.UnmatchedTypeError = UnmatchedTypeError;
 exports.Unrecognized = Unrecognized;
-exports.UnrecognizedConverter = UnrecognizedConverter;
 exports.UnrecognizedValidator = UnrecognizedValidator;
+exports.Validable = Validable;
 exports.ValidationError = ValidationError;
 exports.Validator = Validator;
 exports.Void = Void;
+exports.VoidConverter = VoidConverter;
 exports.VoidValidator = VoidValidator;
 exports.Where = Where;
 exports.WhereValidator = WhereValidator;
@@ -2528,7 +2905,6 @@ exports.collectionIncluding = collectionIncluding;
 exports.collectionWithin = collectionWithin;
 exports.convert = convert;
 exports.converter = converter;
-exports.define = define;
 exports.describer = describer;
 exports.eq = eq;
 exports.getMatchingParentProto = getMatchingParentProto;
@@ -2538,13 +2914,13 @@ exports.integer = Integer;
 exports.internal = internal;
 exports.iof = iof;
 exports.is = is;
-exports.isDefined = isDefined;
 exports.isInstanceOf = isInstanceOf;
 exports.isInstanceOfExpectation = isInstanceOfExpectation;
 exports.isPattern = isPattern;
 exports.isPatternClass = isPatternClass;
 exports.isResolvablePath = isResolvablePath;
 exports.isSpecial = isSpecial;
+exports.isType = isType;
 exports.isUtility = isUtility;
 exports.isValid = isValid;
 exports.isValidable = isValidable;
@@ -2563,7 +2939,6 @@ exports.typeOf = typeOf;
 exports.typend = typend;
 exports.unknown = unknown;
 exports.unrecognized = unrecognized;
-exports.validable = validable;
 exports.validate = validate;
 exports.validator = validator;
 exports.voided = voided;
