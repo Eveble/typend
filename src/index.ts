@@ -89,8 +89,9 @@ import { DescriptionListDescriber } from './describers/description-list-describe
 import { DebugDescriber } from './describers/debug-describer';
 // Type Converters
 import { PropsOfConverter } from './converters/tsruntime/validation-converters/props-of-converter';
-import { ObjectConverter } from './converters/tsruntime/type-converters/object.converter';
 import { TypeOfConverter } from './converters/tsruntime/validation-converters/type-of-converter';
+import { CompositeTypeConverter } from './converters/tsruntime/type-converters/composite.converter';
+import { ObjectConverter } from './converters/tsruntime/type-converters/object.converter';
 import { AnyConverter } from './converters/tsruntime/type-converters/any.converter';
 import { StringConverter } from './converters/tsruntime/type-converters/string.converter';
 import { NumberConverter } from './converters/tsruntime/type-converters/number.converter';
@@ -137,7 +138,7 @@ import {
   getMatchingParentProto,
   isSpecial,
 } from './helpers';
-import { CompositeTypeConverter } from './converters/tsruntime/type-converters/composite.converter';
+
 import { TypeKind } from './enums/type-kind.enum';
 
 const KINDS = LITERAL_KEYS.KINDS;
@@ -506,7 +507,29 @@ export {
   DescriptionListDescriber,
   DebugDescriber,
   // Converters
-
+  AnyConverter,
+  StringConverter,
+  NumberConverter,
+  BooleanConverter,
+  StringLiteralConverter,
+  NumberLiteralConverter,
+  FalseLiteralConverter,
+  TrueLiteralConverter,
+  EnumLiteralConverter,
+  ESSymbolConverter,
+  VoidConverter,
+  NullConverter,
+  UndefinedConverter,
+  NeverConverter,
+  TupleConverter,
+  UnionConverter,
+  ReferenceConverter,
+  ClassConverter,
+  UnknownConverter,
+  FunctionConverter,
+  ArrayConverter,
+  PropsOfConverter,
+  TypeOfConverter,
   TSRuntimeConverter,
   // Type transformers
   InjectingPropsTransformer,

@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { internal } from '../../src/annotations/internal';
 import { validable } from '../../src/annotations/validable';
 // Decorators
-import { define } from '../../src/decorators/define';
+import { Type } from '../../src/decorators/type.decorator';
 // Errors
 import {
   ValidationError,
@@ -81,19 +81,27 @@ import { FallbackDescriber } from '../../src/describers/fallback-describer';
 import { DescriptionListDescriber } from '../../src/describers/description-list-describer';
 import { DebugDescriber } from '../../src/describers/debug-describer';
 // Type Converters
-import { ArrayConverter } from '../../src/converters/tsruntime/type-converters/array-converter';
-import { ClassConverter } from '../../src/converters/tsruntime/type-converters/class-converter';
-import { FunctionConverter } from '../../src/converters/tsruntime/type-converters/function-converter';
-import { NativeConverter } from '../../src/converters/tsruntime/type-converters/native-converter';
-import { NilConverter } from '../../src/converters/tsruntime/type-converters/nil-converter';
-import { ObjectConverter } from '../../src/converters/tsruntime/type-converters/object-converter';
-import { PrimitiveConverter } from '../../src/converters/tsruntime/type-converters/primitive-converter';
-import { ReferenceConverter } from '../../src/converters/tsruntime/type-converters/reference-converter';
-import { TupleConverter } from '../../src/converters/tsruntime/type-converters/tuple-converter';
-import { UnionConverter } from '../../src/converters/tsruntime/type-converters/union-converter';
-import { UnknownConverter } from '../../src/converters/tsruntime/type-converters/unknown-converter';
-import { UnrecognizedConverter } from '../../src/converters/tsruntime/type-converters/unrecognized-converter';
-import { LiteralConverter } from '../../src/converters/tsruntime/type-converters/literal-converter';
+import { AnyConverter } from '../../src/converters/tsruntime/type-converters/any.converter';
+import { StringConverter } from '../../src/converters/tsruntime/type-converters/string.converter';
+import { NumberConverter } from '../../src/converters/tsruntime/type-converters/number.converter';
+import { BooleanConverter } from '../../src/converters/tsruntime/type-converters/boolean.converter';
+import { StringLiteralConverter } from '../../src/converters/tsruntime/type-converters/string-literal.converter';
+import { NumberLiteralConverter } from '../../src/converters/tsruntime/type-converters/number-literal.converter';
+import { FalseLiteralConverter } from '../../src/converters/tsruntime/type-converters/false-literal.converter';
+import { TrueLiteralConverter } from '../../src/converters/tsruntime/type-converters/true-literal.converter';
+import { EnumLiteralConverter } from '../../src/converters/tsruntime/type-converters/enum-literal.converter';
+import { ESSymbolConverter } from '../../src/converters/tsruntime/type-converters/essymbol.converter';
+import { VoidConverter } from '../../src/converters/tsruntime/type-converters/void.converter';
+import { NullConverter } from '../../src/converters/tsruntime/type-converters/null.converter';
+import { UndefinedConverter } from '../../src/converters/tsruntime/type-converters/undefined.converter';
+import { NeverConverter } from '../../src/converters/tsruntime/type-converters/never.converter';
+import { TupleConverter } from '../../src/converters/tsruntime/type-converters/tuple.converter';
+import { UnionConverter } from '../../src/converters/tsruntime/type-converters/union.converter';
+import { ReferenceConverter } from '../../src/converters/tsruntime/type-converters/reference.converter';
+import { ClassConverter } from '../../src/converters/tsruntime/type-converters/class.converter';
+import { UnknownConverter } from '../../src/converters/tsruntime/type-converters/unknown.converter';
+import { FunctionConverter } from '../../src/converters/tsruntime/type-converters/function.converter';
+import { ArrayConverter } from '../../src/converters/tsruntime/type-converters/array.converter';
 import { PropsOfConverter } from '../../src/converters/tsruntime/validation-converters/props-of-converter';
 import { TypeOfConverter } from '../../src/converters/tsruntime/validation-converters/type-of-converter';
 import { TSRuntimeConverter } from '../../src/converters/tsruntime/tsruntime-converter';
@@ -114,7 +122,7 @@ import {
   isPatternClass,
   isPattern,
   isUtility,
-  isDefined,
+  isType,
   isValidable,
   getMatchingParentProto,
   isSpecial,
@@ -196,22 +204,31 @@ import {
   DescriptionListDescriber as DescriptionListDescriberExported,
   DebugDescriber as DebugDescriberExported,
   // Type Converters
-  ArrayConverter as ArrayConverterExported,
-  ClassConverter as ClassConverterExported,
-  FunctionConverter as FunctionConverterExported,
-  NativeConverter as NativeConverterExported,
-  NilConverter as NilConverterExported,
-  ObjectConverter as ObjectConverterExported,
-  PrimitiveConverter as PrimitiveConverterExported,
-  ReferenceConverter as ReferenceConverterExported,
+  AnyConverter as AnyConverterExported,
+  StringConverter as StringConverterExported,
+  NumberConverter as NumberConverterExported,
+  BooleanConverter as BooleanConverterExported,
+  StringLiteralConverter as StringLiteralConverterExported,
+  NumberLiteralConverter as NumberLiteralConverterExported,
+  FalseLiteralConverter as FalseLiteralConverterExported,
+  TrueLiteralConverter as TrueLiteralConverterExported,
+  EnumLiteralConverter as EnumLiteralConverterExported,
+  ESSymbolConverter as ESSymbolConverterExported,
+  VoidConverter as VoidConverterExported,
+  NullConverter as NullConverterExported,
+  UndefinedConverter as UndefinedConverterExported,
+  NeverConverter as NeverConverterExported,
   TupleConverter as TupleConverterExported,
   UnionConverter as UnionConverterExported,
+  ReferenceConverter as ReferenceConverterExported,
+  ClassConverter as ClassConverterExported,
   UnknownConverter as UnknownConverterExported,
-  UnrecognizedConverter as UnrecognizedConverterExported,
-  LiteralConverter as LiteralConverterExported,
-  TSRuntimeConverter as TSRuntimeConverterExported,
+  FunctionConverter as FunctionConverterExported,
+  ArrayConverter as ArrayConverterExported,
   PropsOfConverter as PropsOfConverterExported,
   TypeOfConverter as TypeOfConverterExported,
+  TSRuntimeConverter as TSRuntimeConverterExported,
+
   // Type transformers
   InjectingPropsTransformer as InjectingPropsTransformerExported,
   InternalPropsTransformer as InternalPropsTransformerExported,
@@ -230,7 +247,7 @@ import {
   isPatternClass as isPatternClassExported,
   isPattern as isPatternExported,
   isUtility as isUtilityExported,
-  isDefined as isDefinedExported,
+  isType as isTypeExported,
   isValidable as isValidableExported,
   getMatchingParentProto as getMatchingParentProtoExported,
   isSpecial as isSpecialExported,
@@ -251,7 +268,7 @@ import {
   internal as internalExported,
   validable as validableExported,
   // Decorators
-  define as defineExported,
+  Type as TypeExported,
   // Patterns
   any,
   iof,
@@ -293,8 +310,8 @@ describe('exports', () => {
   });
 
   describe('decorators', () => {
-    it('define', () => {
-      expect(define).to.be.equal(defineExported);
+    it('Type', () => {
+      expect(Type).to.be.equal(TypeExported);
     });
   });
 
@@ -537,29 +554,47 @@ describe('exports', () => {
   });
 
   describe('converters', () => {
-    it('ArrayConverter', () => {
-      expect(ArrayConverter).to.be.equal(ArrayConverterExported);
+    it('AnyConverter', () => {
+      expect(AnyConverter).to.be.equal(AnyConverterExported);
     });
-    it('ClassConverter', () => {
-      expect(ClassConverter).to.be.equal(ClassConverterExported);
+    it('StringConverter', () => {
+      expect(StringConverter).to.be.equal(StringConverterExported);
     });
-    it('FunctionConverter', () => {
-      expect(FunctionConverter).to.be.equal(FunctionConverterExported);
+    it('NumberConverter', () => {
+      expect(NumberConverter).to.be.equal(NumberConverterExported);
     });
-    it('NativeConverter', () => {
-      expect(NativeConverter).to.be.equal(NativeConverterExported);
+    it('BooleanConverter', () => {
+      expect(BooleanConverter).to.be.equal(BooleanConverterExported);
     });
-    it('NilConverter', () => {
-      expect(NilConverter).to.be.equal(NilConverterExported);
+    it('StringLiteralConverter', () => {
+      expect(StringLiteralConverter).to.be.equal(StringLiteralConverterExported);
     });
-    it('ObjectConverter', () => {
-      expect(ObjectConverter).to.be.equal(ObjectConverterExported);
+    it('NumberLiteralConverter', () => {
+      expect(NumberLiteralConverter).to.be.equal(NumberLiteralConverterExported);
     });
-    it('PrimitiveConverter', () => {
-      expect(PrimitiveConverter).to.be.equal(PrimitiveConverterExported);
+    it('FalseLiteralConverter', () => {
+      expect(FalseLiteralConverter).to.be.equal(FalseLiteralConverterExported);
     });
-    it('ReferenceConverter', () => {
-      expect(ReferenceConverter).to.be.equal(ReferenceConverterExported);
+    it('TrueLiteralConverter', () => {
+      expect(TrueLiteralConverter).to.be.equal(TrueLiteralConverterExported);
+    });
+    it('EnumLiteralConverter', () => {
+      expect(EnumLiteralConverter).to.be.equal(EnumLiteralConverterExported);
+    });
+    it('ESSymbolConverter', () => {
+      expect(ESSymbolConverter).to.be.equal(ESSymbolConverterExported);
+    });
+    it('VoidConverter', () => {
+      expect(VoidConverter).to.be.equal(VoidConverterExported);
+    });
+    it('NullConverter', () => {
+      expect(NullConverter).to.be.equal(NullConverterExported);
+    });
+    it('UndefinedConverter', () => {
+      expect(UndefinedConverter).to.be.equal(UndefinedConverterExported);
+    });
+    it('NeverConverter', () => {
+      expect(NeverConverter).to.be.equal(NeverConverterExported);
     });
     it('TupleConverter', () => {
       expect(TupleConverter).to.be.equal(TupleConverterExported);
@@ -567,14 +602,20 @@ describe('exports', () => {
     it('UnionConverter', () => {
       expect(UnionConverter).to.be.equal(UnionConverterExported);
     });
+    it('ReferenceConverter', () => {
+      expect(ReferenceConverter).to.be.equal(ReferenceConverterExported);
+    });
+    it('ClassConverter', () => {
+      expect(ClassConverter).to.be.equal(ClassConverterExported);
+    });
     it('UnknownConverter', () => {
       expect(UnknownConverter).to.be.equal(UnknownConverterExported);
     });
-    it('UnrecognizedConverter', () => {
-      expect(UnrecognizedConverter).to.be.equal(UnrecognizedConverterExported);
+    it('FunctionConverter', () => {
+      expect(FunctionConverter).to.be.equal(FunctionConverterExported);
     });
-    it('LiteralConverter', () => {
-      expect(LiteralConverter).to.be.equal(LiteralConverterExported);
+    it('ArrayConverter', () => {
+      expect(ArrayConverter).to.be.equal(ArrayConverterExported);
     });
     it('PropsOfConverter', () => {
       expect(PropsOfConverter).to.be.equal(PropsOfConverterExported);
@@ -644,8 +685,8 @@ describe('exports', () => {
       it('isUtility', () => {
         expect(isUtility).to.be.equal(isUtilityExported);
       });
-      it('isDefined', () => {
-        expect(isDefined).to.be.equal(isDefinedExported);
+      it('isType', () => {
+        expect(isType).to.be.equal(isTypeExported);
       });
       it('isValidable', () => {
         expect(isValidable).to.be.equal(isValidableExported);
