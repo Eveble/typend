@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import {
   check,
-  define,
+  Type,
   Class,
   Optional,
   ValidationError,
@@ -11,7 +11,7 @@ import {
 } from '../../../src/index';
 
 describe('optional', () => {
-  @define()
+  @Type()
   class Sandwich {
     pickles?: boolean;
   }

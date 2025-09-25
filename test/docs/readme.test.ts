@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import {
   check,
-  define,
+  Type,
   UnequalValueError,
   $PropsOf,
   $TypeOf,
@@ -51,7 +51,7 @@ describe('README.md', () => {
   });
 
   it('on-construction-validation', () => {
-    @define()
+    @Type()
     class Unicorn {
       sentence: 'sparkle';
 
@@ -67,7 +67,7 @@ describe('README.md', () => {
   });
 
   it('class-validation', () => {
-    @define()
+    @Type()
     class MyClass {
       key: string;
 

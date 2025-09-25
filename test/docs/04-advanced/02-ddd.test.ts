@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { define, validate, PropsOf, ValidationError } from '../../../src/index';
+import { Type, validate, PropsOf, ValidationError } from '../../../src/index';
 
 describe('ddd', () => {
-  @define()
+  @Type()
   class Struct {
     constructor(props: Record<keyof any, any>) {
       this.onValidation(props);
@@ -14,12 +14,12 @@ describe('ddd', () => {
     }
   }
 
-  @define()
+  @Type()
   class Parent extends Struct {
     parent: string;
   }
 
-  @define()
+  @Type()
   class Child extends Parent {
     child: 'bar';
   }
@@ -47,18 +47,18 @@ describe('ddd', () => {
 
   class ValueObject extends Struct {}
 
-  @define()
+  @Type()
   class PhoneNumber extends ValueObject {
     number: string;
   }
 
-  @define()
+  @Type()
   class EmailAddress extends ValueObject {
     address: string;
   }
 
   // Example implementation
-  @define()
+  @Type()
   class Customer extends Aggregate {
     firstName: string;
 
@@ -94,6 +94,7 @@ describe('ddd', () => {
       phoneNumber,
       emailAddress,
     });
+
     expect(
       () =>
         new Customer({
@@ -104,4 +105,6 @@ describe('ddd', () => {
         })
     ).to.throw(ValidationError);
   });
+
+
 });

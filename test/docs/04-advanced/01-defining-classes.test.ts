@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import {
-  define,
+  Type,
   check,
   $PropsOf,
   ValidationError,
@@ -10,7 +10,7 @@ import {
 } from '../../../src/index';
 
 describe('01-defining-classes', () => {
-  @define()
+  @Type()
   class Person {
     firstName: string;
 

@@ -17,7 +17,7 @@ import { types } from '../types';
  *   PropTypes,
  * } from 'typend';
  *
- * @define()
+ * @Type()
  * class Sandwich {
  *   pickles?: boolean;
  * }

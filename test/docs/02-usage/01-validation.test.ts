@@ -3,7 +3,7 @@ import {
   check,
   UnmatchedTypeError,
   validate,
-  define,
+  Type,
   UnequalValueError,
   propsOf,
 } from '../../../src';
@@ -37,7 +37,7 @@ describe('01-validation', () => {
       );
     });
     it('validate #4', () => {
-      @define()
+      @Type()
       class Unicorn {
         sentence: 'sparkle';
 

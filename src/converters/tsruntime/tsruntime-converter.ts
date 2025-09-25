@@ -33,7 +33,7 @@ export class TSRuntimeConverter implements types.Converter {
    * Converts reflected by `tsruntime` Typescript's type declaration to native
    * type or `Pattern` instance for easy runtime-validation.
    * [!] Prior to conversion:
-   * Classes  must have `@define` decorator applied.
+   * Classes  must have `@Type` decorator applied.
    * @link https://github.com/goloveychuk/tsruntime|tsruntime
    * @param reflectedType - Reflected type that will be converted.
    * @returns Converted type as native type or `Pattern` instance.
@@ -43,8 +43,8 @@ export class TSRuntimeConverter implements types.Converter {
     // if (this.patternCache.has(cacheKey)) {
     //   return this.patternCache.get(cacheKey)!;
     // }
-
     const converter = this.findConverter(reflectedType);
+
     if (converter) {
       const pattern = converter.convert(reflectedType, this);
       this.patternCache.set(cacheKey, pattern);

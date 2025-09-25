@@ -217,14 +217,14 @@ describe(`helpers`, function () {
   });
 
   describe('isType', () => {
-    it('returns true for class constructors implementing @define decorator', () => {
+    it('returns true for class constructors implementing @Type decorator', () => {
       @Type()
       class DefinableClass {}
 
       expect(isType(DefinableClass)).to.be.true;
     });
 
-    it('returns false for class constructors not implementing @define decorator', () => {
+    it('returns false for class constructors not implementing @Type decorator', () => {
       class DefaultClass {}
 
       expect(isType(undefined)).to.be.false;
