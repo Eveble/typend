@@ -30,11 +30,8 @@ export class ReferenceConverter implements types.TypeConverter {
           expectations.push(converter.convert(argument));
         }
       }
-      const pattern = new List(...expectations);
-      if (reflectedType.initializer) {
-        pattern.setInitializer(reflectedType.initializer());
-      }
-      return pattern;
+
+      return new List(...expectations);
     }
 
     // Handle plain objects
@@ -43,11 +40,7 @@ export class ReferenceConverter implements types.TypeConverter {
     }
 
     // Handle regular references
-    let pattern = new InstanceOf(reflectedType.type);
-    if (reflectedType.initializer) {
-      pattern.setInitializer(reflectedType.initializer());
-    }
-    return pattern;
+    return new InstanceOf(reflectedType.type);
   }
 
   public reflect(reflectedType: tsruntimeTypes.ReferenceType, converter: types.Converter): any {

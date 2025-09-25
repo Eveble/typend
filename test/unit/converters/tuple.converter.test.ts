@@ -210,23 +210,6 @@ describe(`TupleConverter`, function () {
       expect(result).to.be.eql([String, Number, Boolean]);
     });
 
-    it('converts tuple assigned as property with initializer', () => {
-      const reflectedType = {
-        kind: 16,
-        initializer: (): any => ['my-value', 1337, true],
-        elementTypes: [{ kind: 2 }, { kind: 3 }, { kind: 4 }],
-      };
-
-      converter.convert.withArgs({ kind: 2 }).returns(String);
-      converter.convert.withArgs({ kind: 3 }).returns(Number);
-      converter.convert.withArgs({ kind: 4 }).returns(Boolean);
-      const result = typeConverter.convert(reflectedType, converter);
-      expect(result).to.be.instanceof(Tuple);
-      expect(result).to.be.eql([String, Number, Boolean]);
-      expect(result.hasInitializer()).to.be.true;
-      expect(result.getInitializer()).to.be.eql(['my-value', 1337, true]);
-    });
-
     it('converts tuple with reference types as InstanceOf patterns', () => {
       const tupleType: any = {
         kind: TypeKind.Tuple,
@@ -259,25 +242,5 @@ describe(`TupleConverter`, function () {
       expect(result).to.be.eql([String, new InstanceOf(MyClass), Number]);
     });
 
-    it('converts tuple with initializer containing reference types', () => {
-      const tupleType: any = {
-        kind: TypeKind.Tuple,
-        initializer: (): any => [new MyClass(), 42],
-        elementTypes: [
-          { kind: TypeKind.Reference, type: MyClass },
-          { kind: TypeKind.Number }
-        ]
-      };
-
-      converter.convert.withArgs({ kind: TypeKind.Number }).returns(Number);
-
-      const result = typeConverter.convert(tupleType, converter);
-      expect(result).to.be.instanceof(Tuple);
-      expect(result).to.be.eql([new InstanceOf(MyClass), Number]);
-      expect(result.hasInitializer()).to.be.true;
-      expect(result.getInitializer()).to.be.instanceOf(Array);
-      expect(result.getInitializer()[0]).to.be.instanceOf(MyClass);
-      expect(result.getInitializer()[1]).to.equal(42);
-    });
   });
 });

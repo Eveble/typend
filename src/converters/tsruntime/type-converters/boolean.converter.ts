@@ -10,11 +10,7 @@ export class BooleanConverter implements types.TypeConverter {
   }
 
   public convert(reflectedType: tsruntimeTypes.ReflectedType): InstanceOf {
-    const pattern = new InstanceOf(Boolean);
-    if (reflectedType.initializer) {
-      pattern.setInitializer(reflectedType.initializer());
-    }
-    return pattern;
+    return new InstanceOf(Boolean);
   }
 
   public reflect(reflectedType: tsruntimeTypes.ReflectedType): typeof Boolean {

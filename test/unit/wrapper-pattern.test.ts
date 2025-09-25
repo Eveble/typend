@@ -60,26 +60,4 @@ describe(`WrapperPattern`, function () {
     expect(describer.describe).to.be.calledOnce;
     expect(describer.describe).to.be.calledWithExactly(val);
   });
-
-  describe('property initializers', () => {
-    class MyPattern extends WrapperPattern {}
-
-    describe('evaluation', () => {
-      it('returns true if property initializer is set on pattern', () => {
-        const pattern = new MyPattern();
-        pattern.setInitializer('my-initializer-value');
-        expect(pattern.hasInitializer()).to.be.true;
-      });
-      it('returns false if property initializer is missing from pattern', () => {
-        const pattern = new MyPattern();
-        expect(pattern.hasInitializer()).to.be.false;
-      });
-    });
-    it('sets the property initializer on pattern', () => {
-      const pattern = new MyPattern();
-      const initializer = 'my-initializer-value';
-      pattern.setInitializer(initializer);
-      expect(pattern.getInitializer()).to.be.equal(initializer);
-    });
-  });
 });

@@ -92,39 +92,6 @@ describe(`ReferenceConverter`, function () {
         expect(classConverter.convert).to.have.been.calledWith(reflectedType, converter);
       });
 
-      it('converts references type as instance of InstanceOf pattern with property initializer', () => {
-        const initializer = new MyClass();
-        const reflectedType: tsruntimeTypes.ReferenceType = {
-          kind: 18,
-          initializer: (): any => initializer,
-          type: MyClass,
-          arguments: [],
-        };
-
-        // Ensure array converter check returns false
-        converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
-        arrayConverter.isConvertible.withArgs(reflectedType).returns(false);
-
-        // Ensure class converter check returns true
-        converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
-        classConverter.isConvertible.withArgs(reflectedType).returns(true);
-        const convertedInstance = new InstanceOf(MyClass);
-        convertedInstance.setInitializer(initializer);
-        classConverter.convert.withArgs(reflectedType, converter).returns(convertedInstance);
-
-        const result = typeConverter.convert(reflectedType, converter);
-        expect(result).to.be.instanceof(InstanceOf);
-        expect(result.hasInitializer()).to.be.true;
-        expect(result.getInitializer()).to.be.equal(initializer);
-
-        // Verify converter interactions
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(reflectedType);
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(reflectedType);
-        expect(classConverter.convert).to.have.been.calledWith(reflectedType, converter);
-      });
-
       it('returns direct InstanceOf when no specific converter matches', () => {
         const reflectedType: tsruntimeTypes.ReferenceType = {
           kind: 18,
@@ -156,7 +123,6 @@ describe(`ReferenceConverter`, function () {
       it('converts referenced array with array converter', () => {
         const reflectedType: tsruntimeTypes.ReferenceType = {
           kind: 18,
-          initializer: (): any => ['my-value'],
           arguments: [{ kind: 2 }],
           type: Array,
         };
@@ -239,7 +205,6 @@ describe(`ReferenceConverter`, function () {
       it('reflects referenced array with array converter', () => {
         const reflectedType: tsruntimeTypes.ReferenceType = {
           kind: 18,
-          initializer: (): any => ['my-value'],
           arguments: [{ kind: 2 }],
           type: Array,
         };

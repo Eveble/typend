@@ -25,9 +25,6 @@ export class ObjectConverter implements types.TypeConverter {
       pattern = new Collection(properties);
     }
 
-    if (reflectedType.initializer) {
-      pattern.setInitializer(reflectedType.initializer());
-    }
     return pattern;
   }
 
@@ -61,9 +58,6 @@ export class ObjectConverter implements types.TypeConverter {
             expectation = new Collection(reflectedRefType.type);
           } else {
             expectation = new InstanceOf(reflectedRefType.type);
-            if (reflectedProp.initializer) {
-              expectation.setInitializer(reflectedProp.initializer());
-            }
           }
         } else {
           if (reflectedRefType.type === Array && reflectedRefType.arguments) {

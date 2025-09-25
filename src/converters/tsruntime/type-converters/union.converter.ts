@@ -37,9 +37,6 @@ export class UnionConverter implements types.TypeConverter {
       pattern = new OneOf(...expectations);
     }
 
-    if (reflectedType.initializer) {
-      pattern.setInitializer(reflectedType.initializer());
-    }
     return pattern;
   }
 

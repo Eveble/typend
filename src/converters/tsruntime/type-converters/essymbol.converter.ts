@@ -10,11 +10,7 @@ export class ESSymbolConverter implements types.TypeConverter {
   }
 
   public convert(reflectedType: tsruntimeTypes.ReflectedType): InstanceOf {
-    const pattern = new InstanceOf(Symbol);
-    if (reflectedType.initializer) {
-      pattern.setInitializer(reflectedType.initializer());
-    }
-    return pattern;
+    return new InstanceOf(Symbol);
   }
 
   public reflect(reflectedType: tsruntimeTypes.ReflectedType): typeof Symbol {

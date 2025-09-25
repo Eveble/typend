@@ -27,16 +27,6 @@ describe(`StringConverter`, function () {
       expect(typeConverter.reflect(reflect<string>())).to.be.equal(String);
     });
 
-    it('reflects string as a type with initializer', () => {
-      const reflectedType = {
-        kind: 2,
-        initializer: (): string => {
-          return 'my-string';
-        },
-      };
-      const result = typeConverter.reflect(reflectedType);
-      expect(result).to.be.equal(String);
-    });
   });
 
   describe('conversion', () => {
@@ -46,18 +36,5 @@ describe(`StringConverter`, function () {
       expect(result).to.be.eql(new InstanceOf(String));
     });
 
-    it('converts string as type with initializer', () => {
-      const reflectedType = {
-        kind: 2,
-        initializer: (): string => {
-          return 'my-string';
-        },
-      };
-      const result = typeConverter.convert(reflectedType);
-      expect(result).to.be.instanceof(InstanceOf);
-      expect(result).to.be.eql(new InstanceOf(String));
-      expect(result.hasInitializer()).to.be.true;
-      expect(result.getInitializer()).to.be.equal('my-string');
-    });
   });
 });

@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import 'reflect-metadata';
 import { types } from './types';
-import { INITIALIZER_KEY } from './constants/metadata-keys';
 import { Optional } from './patterns/optional';
 
 export abstract class WrapperPattern extends Array {
@@ -81,29 +80,5 @@ export abstract class WrapperPattern extends Array {
    */
   onValidation(...expectations: any[]): boolean {
     return true;
-  }
-
-  /**
-   * Sets as non-enumerable the initializing value for type if present on conversion.
-   * @param initializer - Initializer value provided on conversion.
-   */
-  setInitializer(initializer: any): void {
-    Reflect.defineMetadata(INITIALIZER_KEY, initializer, this);
-  }
-
-  /**
-   * Evaluates if initializing value was assigned to type.
-   * @returns Returns `true` if initializing value is set for type, else false.
-   */
-  hasInitializer(): boolean {
-    return Reflect.hasOwnMetadata(INITIALIZER_KEY, this);
-  }
-
-  /**
-   * Returns the initializing value.
-   * @returns Initializing value, else undefined.
-   */
-  getInitializer(): any | undefined {
-    return Reflect.getOwnMetadata(INITIALIZER_KEY, this);
   }
 }

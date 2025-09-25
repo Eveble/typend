@@ -201,29 +201,6 @@ describe(`ObjectConverter`, function () {
       );
     });
 
-    it('returns converted object literal with key and value as Collection instance with property initializer', () => {
-      const reflectedType = {
-        kind: 15,
-        initializer: (): any => {
-          return { key: 'my-string' };
-        },
-        properties: { key: { kind: 2, modifiers: 0 } },
-      };
-
-      converter.convert
-        .withArgs({ kind: 2, modifiers: 0 })
-        .returns(new InstanceOf(String));
-      const objType = typeConverter.convert(reflectedType, converter);
-      expect(objType).to.be.instanceof(Collection);
-      expect(objType).to.be.eql(
-        new Collection({ key: new InstanceOf(String) })
-      );
-      expect(objType.hasInitializer()).to.be.true;
-      expect(objType.getInitializer()).to.be.eql({
-        key: 'my-string',
-      });
-    });
-
     it('returns converted interface with properties as Interface instance', () => {
       converter.convert
         .withArgs({ kind: 2, modifiers: 0 })

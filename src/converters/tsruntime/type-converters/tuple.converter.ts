@@ -19,11 +19,8 @@ export class TupleConverter implements types.TypeConverter {
         expectations.push(converter.convert(arg));
       }
     }
-    const pattern = new Tuple(...expectations);
-    if (reflectedType.initializer) {
-      pattern.setInitializer(reflectedType.initializer());
-    }
-    return pattern;
+
+    return new Tuple(...expectations);
   }
 
   public reflect(reflectedType: tsruntimeTypes.ReflectedType, converter: types.Converter): any[] {

@@ -10,11 +10,7 @@ export class NumberConverter implements types.TypeConverter {
   }
 
   public convert(reflectedType: tsruntimeTypes.ReflectedType): InstanceOf {
-    const pattern = new InstanceOf(Number);
-    if (reflectedType.initializer) {
-      pattern.setInitializer(reflectedType.initializer());
-    }
-    return pattern;
+    return new InstanceOf(Number);
   }
 
   public reflect(reflectedType: tsruntimeTypes.ReflectedType): typeof Number {
