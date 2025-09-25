@@ -8,7 +8,7 @@ import { Any } from '../../../src/patterns/any';
 import { Collection } from '../../../src/patterns/collection';
 import { Type } from '../../../src/decorators/type.decorator';
 
-describe(`Array conversion`, function () {
+describe(`Array conversion`, () => {
   @Type()
   class MyClass {
     key: string;
@@ -39,12 +39,7 @@ describe(`Array conversion`, function () {
         ['Function[]', reflect<Function[]>(), [Function]],
         ['Record<any, any>[]', reflect<Record<any, any>[]>(), [{}]],
         ['Map<any, any>[]', reflect<Map<any, any>[]>(), [Map]],
-        [
-          'symbol[]',
-          reflect<symbol[]>(),
-          // eslint-disable-next-line no-new-symbol
-          [Symbol],
-        ],
+        ['symbol[]', reflect<symbol[]>(), [Symbol]],
       ];
       for (const [desc, type, result] of types) {
         expect(
@@ -135,12 +130,7 @@ describe(`Array conversion`, function () {
           reflect<Map<any, any>[]>(),
           new List(new InstanceOf(Map)),
         ],
-        [
-          'symbol[]',
-          reflect<symbol[]>(),
-          // eslint-disable-next-line no-new-symbol
-          new List(new InstanceOf(Symbol)),
-        ],
+        ['symbol[]', reflect<symbol[]>(), new List(new InstanceOf(Symbol))],
       ];
       for (const [desc, type, result] of types) {
         expect(

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { ESSymbolConverter } from '../../../src/converters/tsruntime/type-converters/essymbol.converter';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 
-describe(`ESSymbolConverter`, function () {
+describe(`ESSymbolConverter`, () => {
   let typeConverter: ESSymbolConverter;
 
   beforeEach(() => {

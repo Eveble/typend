@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { reflect } from 'tsruntime';
 import { converter } from './setup';
 import { Any } from '../../../src/patterns/any';
 import { Void } from '../../../src/patterns/void';
@@ -15,10 +16,9 @@ import { $PropsOf } from '../../../src/utility-types';
 import { Interface } from '../../../src/patterns/interface';
 import { Integer } from '../../../src/patterns/integer';
 import { Type } from '../../../src/decorators/type.decorator';
-import { reflect } from 'tsruntime';
 import { Class } from '../../../src/patterns/class';
 
-describe(`Mixed conversion`, function () {
+describe(`Mixed conversion`, () => {
   type optional<T> = T | undefined;
 
   @Type()
@@ -292,7 +292,7 @@ describe(`Mixed conversion`, function () {
       any: new Any(),
       string: new InstanceOf(String),
       number: new InstanceOf(Number),
-      // eslint-disable-next-line no-new-symbol
+
       symbol: new InstanceOf(Symbol),
       void: new Void(),
       undefined,
@@ -304,7 +304,7 @@ describe(`Mixed conversion`, function () {
       false: new Equals(false),
       stringLiteral: new InstanceOf(String),
       numberLiteral: new InstanceOf(Number),
-      // eslint-disable-next-line no-new-symbol
+
       symbolLiteral: new InstanceOf(Symbol),
       function: new InstanceOf(Function),
       functionDef: new InstanceOf(Function),

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { NeverConverter } from '../../../src/converters/tsruntime/type-converters/never.converter';
 import { Never } from '../../../src/patterns/never';
 
-describe(`NeverConverter`, function () {
+describe(`NeverConverter`, () => {
   let typeConverter: NeverConverter;
 
   beforeEach(() => {

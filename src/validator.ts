@@ -51,7 +51,7 @@ export class Validator implements types.Validator {
     }
     let result: boolean | undefined;
     if (isPattern(processedExpectation)) {
-      let validatedValue = value;
+      const validatedValue = value;
       result = this.handleExplicitPattern(validatedValue, processedExpectation);
     }
 

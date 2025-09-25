@@ -1,8 +1,8 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from '../../../types';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
-import { InstanceOf } from '../../../patterns/instance-of';
 import { isClass } from '@eveble/helpers';
+import { types } from '../../../types';
+import { InstanceOf } from '../../../patterns/instance-of';
 
 export class FunctionConverter implements types.TypeConverter {
   public isConvertible(reflectedType: tsruntimeTypes.ReflectedType): boolean {

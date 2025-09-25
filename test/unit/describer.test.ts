@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { stubInterface } from 'ts-sinon';
 import { setTypeName } from '@eveble/helpers';
@@ -20,9 +20,9 @@ import {
 } from '../../src/errors';
 import { KINDS } from '../../src/constants/literal-keys';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`Identifier`, function () {
+describe(`Identifier`, () => {
   let describer: any;
 
   before(() => {
@@ -384,9 +384,7 @@ describe(`Identifier`, function () {
     });
 
     it('returns description for Function', () => {
-      const value = (): boolean => {
-        return true;
-      };
+      const value = (): boolean => true;
       const description = describer.createDescription(value);
       expect(description).to.be.instanceof(Description);
       const message = 'Function';

@@ -12,7 +12,7 @@ import { Any } from '../../../src/patterns/any';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 import { Type } from '../../../src/decorators/type.decorator';
 
-describe(`TypeOf`, function () {
+describe(`TypeOf`, () => {
   let converter: any;
   let library: any;
   let describer: any;
@@ -59,9 +59,7 @@ describe(`TypeOf`, function () {
     TypeError,
     URIError,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // String literal
     'abcd',
     // Boolean literal
@@ -117,11 +115,7 @@ describe(`TypeOf`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],

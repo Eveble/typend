@@ -1,12 +1,12 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import { stubInterface } from 'ts-sinon';
 import sinonChai from 'sinon-chai';
 import { types } from '../../src/types';
 import { PatternValidator } from '../../src/pattern-validator';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`PatternValidator`, function () {
+describe(`PatternValidator`, () => {
   let describer: any;
 
   beforeEach(() => {

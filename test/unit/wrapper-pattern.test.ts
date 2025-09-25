@@ -1,13 +1,13 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import { stubInterface } from 'ts-sinon';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { types } from '../../src/types';
 import { WrapperPattern } from '../../src/wrapper-pattern';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`WrapperPattern`, function () {
+describe(`WrapperPattern`, () => {
   let describer: any;
 
   beforeEach(() => {

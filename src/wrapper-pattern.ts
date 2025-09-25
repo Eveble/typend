@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import 'reflect-metadata';
 import { types } from './types';
 import { Optional } from './patterns/optional';

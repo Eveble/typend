@@ -1,6 +1,5 @@
 import { KINDS } from './constants/literal-keys';
 
-/* eslint-disable camelcase */
 /*
 UTILITY TYPES
 */

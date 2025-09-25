@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import { stubInterface } from 'ts-sinon';
 import { inspect } from 'util';
 import sinonChai from 'sinon-chai';
@@ -7,9 +7,9 @@ import { Pattern } from '../../../src/pattern';
 import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`Optional`, function () {
+describe(`Optional`, () => {
   let describer: any;
 
   beforeEach(() => {
@@ -66,9 +66,7 @@ describe(`Optional`, function () {
     new RegExp(/fail/),
     /fail/,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // Symbol
     Symbol('key'),
     // Map
@@ -111,11 +109,7 @@ describe(`Optional`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],

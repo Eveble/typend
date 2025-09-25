@@ -3,7 +3,7 @@ import { stubInterface } from 'ts-sinon';
 import { CompositeTypeConverter } from '../../../src/converters/tsruntime/type-converters/composite.converter';
 import { types } from '../../../src';
 
-describe(`CompositeTypeConverter`, function () {
+describe(`CompositeTypeConverter`, () => {
   let typeConverter: CompositeTypeConverter;
   let mockConverter1: any;
   let mockConverter2: any;

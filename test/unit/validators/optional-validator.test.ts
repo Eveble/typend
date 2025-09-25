@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { stubInterface } from 'ts-sinon';
 import { Optional } from '../../../src/patterns/optional';
@@ -7,9 +7,9 @@ import { PatternValidator } from '../../../src/pattern-validator';
 import { OptionalValidator } from '../../../src/validators/optional-validator';
 import { ValidationError } from '../../../src/errors';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`Optional`, function () {
+describe(`Optional`, () => {
   let validator: any;
 
   beforeEach(() => {

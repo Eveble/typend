@@ -8,7 +8,7 @@ import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`Where`, function () {
+describe(`Where`, () => {
   let describer: any;
 
   beforeEach(() => {
@@ -93,11 +93,7 @@ describe(`Where`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],
@@ -115,9 +111,7 @@ describe(`Where`, function () {
 
   describe('construction', () => {
     it('takes valid expectation as a function for construction', () => {
-      const expectation = (): boolean => {
-        return true;
-      };
+      const expectation = (): boolean => true;
       const expectationStr = inspect(expectation);
       describer.describe.returns(expectationStr);
       expect(
@@ -168,9 +162,7 @@ describe(`Where`, function () {
     });
 
     it(`has assigned 'WHERE' as type kind`, () => {
-      const pattern = new Where((): boolean => {
-        return true;
-      });
+      const pattern = new Where((): boolean => true);
       expect(pattern.getKind()).to.be.equal(KINDS.WHERE);
     });
   });

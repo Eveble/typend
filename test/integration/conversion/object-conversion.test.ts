@@ -14,7 +14,7 @@ import { Tuple } from '../../../src/patterns/tuple';
 import { Interface } from '../../../src/patterns/interface';
 import { Type } from '../../../src/decorators/type.decorator';
 
-describe(`Object conversion`, function () {
+describe(`Object conversion`, () => {
   @Type()
   class MyClass {
     key: string;
@@ -122,7 +122,6 @@ describe(`Object conversion`, function () {
 
           number: new InstanceOf(Number),
 
-          // eslint-disable-next-line no-new-symbol
           symbol: new InstanceOf(Symbol),
 
           boolean: new InstanceOf(Boolean),

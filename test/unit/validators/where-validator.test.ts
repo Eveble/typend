@@ -5,7 +5,7 @@ import { WhereValidator } from '../../../src/validators/where-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
 import { ValidationError } from '../../../src/errors';
 
-describe(`Where`, function () {
+describe(`Where`, () => {
   class ParentClass {
     public value: any;
 
@@ -25,9 +25,7 @@ describe(`Where`, function () {
     context('explicit expectation', () => {
       it('returns true for pattern instance of Where', () => {
         const whereValidator = new WhereValidator();
-        const fn = (): boolean => {
-          return true;
-        };
+        const fn = (): boolean => true;
         expect(whereValidator.canValidate(new Where(fn))).to.be.true;
       });
     });
@@ -35,9 +33,7 @@ describe(`Where`, function () {
     context('implicit expectation', () => {
       it('returns true for implicit expectation as a anonymous function', () => {
         const whereValidator = new WhereValidator();
-        const fn = (): boolean => {
-          return true;
-        };
+        const fn = (): boolean => true;
         expect(whereValidator.canValidate(fn)).to.be.true;
       });
 
@@ -145,11 +141,7 @@ describe(`Where`, function () {
           [0],
           [new RegExp(/fail/)],
           [/fail/],
-          [
-            (): boolean => {
-              return true;
-            },
-          ],
+          [(): boolean => true],
           [[Symbol('test')], "[Symbol('test')]"],
           [new Map([['key', 'value']])],
           [ParentClass],
@@ -179,9 +171,7 @@ describe(`Where`, function () {
     it('ensures that expectation is pulled from Where instance correctly', () => {
       const whereValidator = new WhereValidator();
 
-      const fn = (value: string): boolean => {
-        return value === 'my-string';
-      };
+      const fn = (value: string): boolean => value === 'my-string';
       const value = 'my-string';
       const where = new Where(fn);
 
@@ -192,9 +182,8 @@ describe(`Where`, function () {
       it('returns true for value that is valid by executing expectation as evaluating function', () => {
         const whereValidator = new WhereValidator();
 
-        const expectation = (value: string): boolean => {
-          return value === 'my-valid-value';
-        };
+        const expectation = (value: string): boolean =>
+          value === 'my-valid-value';
         const value = 'my-valid-value';
 
         expect(whereValidator.validate(value, expectation)).to.be.true;
@@ -221,9 +210,8 @@ describe(`Where`, function () {
       it('throws ValidationError as a fallback if expectation function returns false for invalid value', () => {
         const whereValidator = new WhereValidator();
 
-        const expectation = (value: string): boolean => {
-          return value === 'my-valid-value';
-        };
+        const expectation = (value: string): boolean =>
+          value === 'my-valid-value';
         const value = 'my-invalid-value';
 
         expect(() => whereValidator.validate(value, expectation)).to.throw(

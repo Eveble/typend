@@ -105,6 +105,4 @@ describe('ddd', () => {
         })
     ).to.throw(ValidationError);
   });
-
-
 });

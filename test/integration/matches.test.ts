@@ -83,9 +83,7 @@ describe(`matching`, () => {
     ],
     [/fail/, any, `Expected anything, got regular expression(/fail/)`],
     [
-      (): boolean => {
-        return true;
-      },
+      (): boolean => true,
       any,
       `Expected anything, got Function`,
     ],
@@ -129,9 +127,7 @@ describe(`matching`, () => {
     [[/fail/], any, `Expected anything, got [regular expression(/fail/)]`],
     [
       [
-        (): boolean => {
-          return true;
-        },
+        (): boolean => true,
       ],
       any,
       `Expected anything, got [Function]`,
@@ -301,9 +297,7 @@ describe(`matching`, () => {
     // Where
     [
       'yes',
-      where((value) => {
-        return value === 'yes';
-      }),
+      where((value) => value === 'yes'),
       'Failed Where validation',
     ],
     // Array
@@ -526,7 +520,7 @@ describe(`not matching`, () => {
     [null, Integer, `Expected Number, got null`],
     [new RegExp(/fail/), Integer, `Expected Number, got RegExp(/fail/)`],
     [/fail/, Integer, `Expected Number, got RegExp(/fail/)`],
-    [(): boolean => { return true }, Integer, `Expected Number, got Function`],
+    [(): boolean => true, Integer, `Expected Number, got Function`],
     [[1], Integer, `Expected Number, got [Number(1)]`],
     [[-1], Integer, `Expected Number, got [Number(-1)]`],
     [
@@ -565,7 +559,7 @@ describe(`not matching`, () => {
     [[null], Integer, `Expected Number, got [null]`],
     [[new RegExp(/fail/)], Integer, `Expected Number, got [RegExp(/fail/)]`],
     [[/fail/], Integer, `Expected Number, got [RegExp(/fail/)]`],
-    [[(): boolean => { return true },], Integer, `Expected Number, got [Function]`],
+    [[(): boolean => true,], Integer, `Expected Number, got [Function]`],
     [
       new MyOtherError('my-other-error'),
       MyError,
@@ -631,9 +625,7 @@ describe(`not matching`, () => {
     // Where
     [
       'no',
-      where(value => {
-        return value === 'yes';
-      }),
+      where(value => value === 'yes'),
       'Failed Where validation',
     ],
     [

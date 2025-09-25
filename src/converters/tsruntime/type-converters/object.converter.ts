@@ -1,10 +1,10 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
+import { isClass } from '@eveble/helpers';
 import { types } from '../../../types';
 import { Collection } from '../../../patterns/collection';
 import { Interface } from '../../../patterns/interface';
 import { isPatternClass, isPlainObjectFast } from '../../../helpers';
 import { InstanceOf } from '../../../patterns/instance-of';
-import { isClass } from '@eveble/helpers';
 import { TypeKind } from '../../../enums/type-kind.enum';
 
 // TypeKind.Object = 15
@@ -69,22 +69,23 @@ export class ObjectConverter implements types.TypeConverter {
           } else {
             expectation = new InstanceOf(reflectedRefType.type);
           }
-        } else {
-          if (reflectedRefType.type === Array && reflectedRefType.arguments) {
-            const expectations: any[] = [];
-            for (const argument of reflectedRefType.arguments) {
-              if (argument.kind === TypeKind.Reference) {
-                expectations.push(
-                  (argument as tsruntimeTypes.ReferenceType).type
-                );
-              } else {
-                expectations.push(converter.reflect(argument));
-              }
+        } else if (
+          reflectedRefType.type === Array &&
+          reflectedRefType.arguments
+        ) {
+          const expectations: any[] = [];
+          for (const argument of reflectedRefType.arguments) {
+            if (argument.kind === TypeKind.Reference) {
+              expectations.push(
+                (argument as tsruntimeTypes.ReferenceType).type
+              );
+            } else {
+              expectations.push(converter.reflect(argument));
             }
-            expectation = expectations;
-          } else {
-            expectation = reflectedRefType.type;
           }
+          expectation = expectations;
+        } else {
+          expectation = reflectedRefType.type;
         }
 
         props[key as any] = expectation;

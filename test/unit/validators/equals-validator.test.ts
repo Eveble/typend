@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import { stubInterface } from 'ts-sinon';
 import sinonChai from 'sinon-chai';
 import { inspect } from 'util';
@@ -8,9 +8,9 @@ import { PatternValidator } from '../../../src/pattern-validator';
 import { Equals } from '../../../src/patterns/equals';
 import { InvalidTypeError, UnequalValueError } from '../../../src/errors';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`EqualsValidator`, function () {
+describe(`EqualsValidator`, () => {
   let describer: any;
 
   beforeEach(() => {

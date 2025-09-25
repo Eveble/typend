@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { stubInterface } from 'ts-sinon';
 import { inspect } from 'util';
@@ -12,7 +12,7 @@ import { InvalidTypeError } from '../../src/errors';
 import { InstanceOf } from '../../src/patterns/instance-of';
 import { Interface } from '../../src/patterns/interface';
 
-chai.use(sinonChai);
+use(sinonChai);
 
 describe(`Typend`, () => {
   let converter: any;

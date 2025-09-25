@@ -3,7 +3,7 @@ import { reflect } from 'tsruntime';
 import { AnyConverter } from '../../../src/converters/tsruntime/type-converters/any.converter';
 import { Any } from '../../../src/patterns/any';
 
-describe(`AnyConverter`, function () {
+describe(`AnyConverter`, () => {
   let typeConverter: AnyConverter;
 
   beforeEach(() => {

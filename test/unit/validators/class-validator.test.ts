@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { stubInterface } from 'ts-sinon';
 import { inspect } from 'util';
@@ -14,9 +14,9 @@ import {
   UnmatchedTypeError,
 } from '../../../src/errors';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`ClassValidator`, function () {
+describe(`ClassValidator`, () => {
   let describer: any;
   let validator: any;
 

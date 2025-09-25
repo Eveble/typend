@@ -1,6 +1,6 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from '../../../types';
 import { last } from 'lodash';
+import { types } from '../../../types';
 
 export class CompositeTypeConverter implements types.TypeConverter {
   private converters: types.TypeConverter[] = [];
@@ -9,6 +9,7 @@ export class CompositeTypeConverter implements types.TypeConverter {
     this.converters = [...converters];
     this.sortByPriority();
   }
+
   /**
    * Evaluates if provided reflected type is an object(or interface - they are
    * reflected as same kind).

@@ -18,8 +18,10 @@ describe('03-create-pattern', () => {
       public static kind = 'positiveNumber';
     }
 
-    class PositiveNumberValidator extends PatternValidator
-      implements types.PatternValidator {
+    class PositiveNumberValidator
+      extends PatternValidator
+      implements types.PatternValidator
+    {
       public canValidate(expectation: types.Expectation): boolean {
         return expectation instanceof PositiveNumber;
       }

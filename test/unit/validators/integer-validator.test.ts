@@ -7,7 +7,7 @@ import { PatternValidator } from '../../../src/pattern-validator';
 import { IntegerValidator } from '../../../src/validators/integer-validator';
 import { InvalidValueError, InvalidTypeError } from '../../../src/errors';
 
-describe(`IntegerValidator`, function () {
+describe(`IntegerValidator`, () => {
   let describer: any;
 
   beforeEach(() => {

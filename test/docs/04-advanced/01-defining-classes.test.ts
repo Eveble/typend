@@ -35,9 +35,8 @@ describe('01-defining-classes', () => {
   });
 
   describe('propsOf', () => {
-    expect(
-      is<$PropsOf<Person>>({ firstName: 'Jane', lastName: 'Doe' })
-    ).to.be.true;
+    expect(is<$PropsOf<Person>>({ firstName: 'Jane', lastName: 'Doe' })).to.be
+      .true;
     expect(isValid({ firstName: 'Jane', lastName: 'Doe' }, new PropsOf(Person)))
       .to.be.true;
   });

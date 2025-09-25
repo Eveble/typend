@@ -3,7 +3,7 @@ import { Integer } from '../../../src/patterns/integer';
 import { Pattern } from '../../../src/pattern';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-describe(`Integer`, function () {
+describe(`Integer`, () => {
   it(`extends Pattern`, () => {
     expect(Integer.prototype).to.instanceof(Pattern);
   });

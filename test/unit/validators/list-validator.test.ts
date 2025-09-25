@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import { stubInterface } from 'ts-sinon';
 import sinonChai from 'sinon-chai';
 import { inspect } from 'util';
@@ -12,9 +12,9 @@ import {
   ValidationError,
 } from '../../../src/errors';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`ListValidator`, function () {
+describe(`ListValidator`, () => {
   let describer: any;
   let validator: any;
 

@@ -1,16 +1,16 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import { reflect, Types as tsruntimeTypes } from 'tsruntime';
 import { stubInterface } from 'ts-sinon';
+import sinonChai from 'sinon-chai';
 import { ReferenceConverter } from '../../../src/converters/tsruntime/type-converters/reference.converter';
 import { types } from '../../../src/types';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 import { TypeKind } from '../../../src/enums/type-kind.enum';
-import sinonChai from 'sinon-chai';
 import { Type } from '../../../src/decorators/type.decorator';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`ReferenceConverter`, function () {
+describe(`ReferenceConverter`, () => {
   let converter: any;
   let arrayConverter: any;
   let classConverter: any;

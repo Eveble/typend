@@ -22,9 +22,7 @@ describe('introduction', () => {
     validate(true, PropTypes.bool);
 
     // PropTypes.func
-    validate((): boolean => {
-      return true;
-    }, PropTypes.func);
+    validate((): boolean => true, PropTypes.func);
 
     // PropTypes.equal
     validate('foo', PropTypes.equal('foo'));
@@ -83,9 +81,7 @@ describe('introduction', () => {
     // PropTypes.where
     validate(
       'foo',
-      PropTypes.where((arg) => {
-        return arg === 'foo';
-      })
+      PropTypes.where((arg) => arg === 'foo')
     );
   });
 });

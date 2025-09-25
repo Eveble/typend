@@ -94,9 +94,7 @@ describe(`LocaleStringValidator`, () => {
         new RegExp(/fail/),
         /fail/,
         // Function
-        (): boolean => {
-          return true;
-        },
+        (): boolean => true,
         // Symbol
         [Symbol('key'), "Symbol('key')"],
         // Map
@@ -139,11 +137,7 @@ describe(`LocaleStringValidator`, () => {
         [0],
         [new RegExp(/fail/)],
         [/fail/],
-        [
-          (): boolean => {
-            return true;
-          },
-        ],
+        [(): boolean => true],
         [[Symbol('test')], "[Symbol('test')]"],
         [new Map([['key', 'value']])],
         [ParentClass],

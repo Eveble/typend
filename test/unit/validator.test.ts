@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinon from 'sinon';
 import { stubInterface } from 'ts-sinon';
 import sinonChai from 'sinon-chai';
@@ -11,9 +11,9 @@ import {
 } from '../../src/errors';
 import { Pattern } from '../../src/pattern';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`Validator`, function () {
+describe(`Validator`, () => {
   class MyPattern extends Pattern implements types.Pattern {
     public static kind = 'MyValidator';
 

@@ -3,7 +3,7 @@ import { reflect } from 'tsruntime';
 import { BooleanConverter } from '../../../src/converters/tsruntime/type-converters/boolean.converter';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 
-describe(`BooleanConverter`, function () {
+describe(`BooleanConverter`, () => {
   let typeConverter: BooleanConverter;
 
   beforeEach(() => {

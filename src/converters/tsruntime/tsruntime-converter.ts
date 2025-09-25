@@ -1,15 +1,16 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
+import { isClass } from '@eveble/helpers';
 import { types } from '../../types';
 import { TypeConverterExists } from '../../errors';
 import { Pattern } from '../../pattern';
 import { TypeKind } from '../../enums/type-kind.enum';
-import { isClass } from '@eveble/helpers';
 
 export class TSRuntimeConverter implements types.Converter {
   // Fast O(1) lookup array indexed by TypeKind
   public typeConverters: Array<types.TypeConverter | undefined> = [];
 
   protected definitionCache = new Map<any, types.TypeDefinition>();
+
   protected patternCache = new Map<string, Pattern>();
 
   /**

@@ -8,7 +8,7 @@ import { types } from '../../../src/types';
 import { Collection } from '../../../src/patterns/collection';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-describe(`Interface`, function () {
+describe(`Interface`, () => {
   let converter: any;
   let library: any;
   let describer: any;
@@ -70,9 +70,7 @@ describe(`Interface`, function () {
     new RegExp(/fail/),
     /fail/,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // Symbol
     Symbol('key'),
     // Map
@@ -111,11 +109,7 @@ describe(`Interface`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],

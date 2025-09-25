@@ -7,7 +7,7 @@ import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`Internal`, function () {
+describe(`Internal`, () => {
   let describer: any;
 
   beforeEach(() => {
@@ -65,9 +65,7 @@ describe(`Internal`, function () {
     new RegExp(/fail/),
     /fail/,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // Symbol
     Symbol('key'),
     // Map
@@ -110,11 +108,7 @@ describe(`Internal`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],

@@ -1,6 +1,6 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from '../../../types';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
+import { types } from '../../../types';
 import { OneOf } from '../../../patterns/one-of';
 import { Optional } from '../../../patterns/optional';
 import { InstanceOf } from '../../../patterns/instance-of';

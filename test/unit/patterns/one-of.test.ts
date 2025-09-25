@@ -8,7 +8,7 @@ import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`OneOf`, function () {
+describe(`OneOf`, () => {
   let describer: any;
 
   beforeEach(() => {
@@ -65,9 +65,7 @@ describe(`OneOf`, function () {
     new RegExp(/fail/),
     /fail/,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // Symbol
     Symbol('key'),
     // Map
@@ -114,12 +112,7 @@ describe(`OneOf`, function () {
     ['first', 'second', 'third', 'fourth', 'fifth'],
     [new RegExp(/fail/), 'fail'],
     [/fail/, /win/],
-    [
-      (): boolean => {
-        return true;
-      },
-      Function,
-    ],
+    [(): boolean => true, Function],
     [Symbol('key'), Symbol('key-other')],
     [new Map([['key', 'value']]), new Map([['other-key', 'other-value']])],
     [ParentClass, ChildClass],
@@ -142,11 +135,7 @@ describe(`OneOf`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],

@@ -3,7 +3,7 @@ import { reflect } from 'tsruntime';
 import { VoidConverter } from '../../../src/converters/tsruntime/type-converters/void.converter';
 import { Void } from '../../../src/patterns/void';
 
-describe(`VoidConverter`, function () {
+describe(`VoidConverter`, () => {
   let typeConverter: VoidConverter;
 
   before(() => {

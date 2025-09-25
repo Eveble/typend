@@ -1,14 +1,14 @@
 import { expect } from 'chai';
 import { reflect } from 'tsruntime';
 import { stubInterface } from 'ts-sinon';
+import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { TupleConverter } from '../../../src/converters/tsruntime/type-converters/tuple.converter';
 import { types } from '../../../src/types';
 import { Tuple } from '../../../src/patterns/tuple';
 import { InstanceOf } from '../../../src/patterns/instance-of';
-import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { Type } from '../../../src/decorators/type.decorator';
 
-describe(`TupleConverter`, function () {
+describe(`TupleConverter`, () => {
   let converter: any;
   let typeConverter: TupleConverter;
 

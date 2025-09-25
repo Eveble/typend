@@ -4,7 +4,7 @@ import { LocaleString } from '../../../src/patterns/locale-string';
 import { ValidationError } from '../../../src/errors';
 import { Type } from '../../../src/decorators/type.decorator';
 
-describe('LocaleString validation on classes', function () {
+describe('LocaleString validation on classes', () => {
   @Type()
   class MyLocaleClass {
     public value: LocaleString;

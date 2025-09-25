@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { stubInterface } from 'ts-sinon';
 import { inspect } from 'util';
@@ -13,9 +13,9 @@ import {
 } from '../../../src/errors';
 import { Optional } from '../../../src/patterns/optional';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`TupleValidator`, function () {
+describe(`TupleValidator`, () => {
   let describer: any;
   let validator: any;
 

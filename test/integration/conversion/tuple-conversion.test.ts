@@ -10,7 +10,7 @@ import { Never } from '../../../src/patterns/never';
 import { Collection } from '../../../src/patterns/collection';
 import { Type } from '../../../src/decorators/type.decorator';
 
-describe(`Tuple conversion`, function () {
+describe(`Tuple conversion`, () => {
   type MyType = {
     first: string;
   };
@@ -165,7 +165,7 @@ describe(`Tuple conversion`, function () {
         ['[string]', reflect<[string]>(), new Tuple(new InstanceOf(String))],
         ['[number]', reflect<[number]>(), new Tuple(new InstanceOf(Number))],
         ['[boolean]', reflect<[boolean]>(), new Tuple(new InstanceOf(Boolean))],
-        // eslint-disable-next-line no-new-symbol
+
         ['[symbol]', reflect<[symbol]>(), new Tuple(new InstanceOf(Symbol))],
         [
           '[null, undefined, string, number, boolean, symbol,]',
@@ -176,7 +176,7 @@ describe(`Tuple conversion`, function () {
             new InstanceOf(String),
             new InstanceOf(Number),
             new InstanceOf(Boolean),
-            // eslint-disable-next-line no-new-symbol
+
             new InstanceOf(Symbol)
           ),
         ],

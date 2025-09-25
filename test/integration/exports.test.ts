@@ -793,11 +793,7 @@ describe('exports', () => {
         expect(voided).to.be.instanceof(Void);
       });
       it('where', () => {
-        expect(
-          where((): boolean => {
-            return true;
-          })
-        ).to.be.instanceof(Where);
+        expect(where((): boolean => true)).to.be.instanceof(Where);
       });
       it('tuple', () => {
         expect(tuple([String, Number, 'my-value'])).to.be.instanceof(Tuple);
@@ -910,11 +906,7 @@ describe('exports', () => {
       });
 
       it('PropTypes.where', () => {
-        expect(
-          PropTypes.where((): boolean => {
-            return true;
-          })
-        ).to.be.instanceof(Where);
+        expect(PropTypes.where((): boolean => true)).to.be.instanceof(Where);
       });
     });
     it('propsOf', () => {

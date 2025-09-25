@@ -1,6 +1,6 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from '../../../types';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
+import { types } from '../../../types';
 
 // TypeKind.Null = 13
 export class NullConverter implements types.TypeConverter {

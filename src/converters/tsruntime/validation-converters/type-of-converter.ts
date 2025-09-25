@@ -1,5 +1,6 @@
 import { get } from 'lodash';
 import { Types as tsruntimeTypes } from 'tsruntime';
+import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { types } from '../../../types';
 import { Class } from '../../../patterns/class';
 import {
@@ -7,7 +8,6 @@ import {
   VALIDATION_PAYLOAD_KEY,
   KINDS,
 } from '../../../constants/literal-keys';
-import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 
 export class TypeOfConverter implements types.TypeConverter {
   /**

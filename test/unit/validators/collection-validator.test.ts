@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { stubInterface } from 'ts-sinon';
 import { inspect } from 'util';
@@ -13,9 +13,9 @@ import {
   ValidationError,
 } from '../../../src/errors';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`CollectionValidator`, function () {
+describe(`CollectionValidator`, () => {
   let describer: any;
   let validator: any;
 

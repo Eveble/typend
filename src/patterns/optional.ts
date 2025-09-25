@@ -48,7 +48,7 @@ export class Optional extends Array implements types.Pattern {
    * Creates an instance of a WrapperPattern.
    * @param expectations - Expectations that will be assigned to pattern container.
    */
-  // eslint-disable-next-line no-unused-vars
+
   constructor(...expectations: any[]) {
     // Can't put negative numbers on construction.
     // 👏👏 -Infinity/10, meme review.

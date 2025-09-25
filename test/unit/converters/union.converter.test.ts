@@ -1,16 +1,16 @@
 import { expect } from 'chai';
 import { reflect } from 'tsruntime';
 import { stubInterface } from 'ts-sinon';
+import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { UnionConverter } from '../../../src/converters/tsruntime/type-converters/union.converter';
 import { types } from '../../../src/types';
 import { OneOf } from '../../../src/patterns/one-of';
 import { Optional } from '../../../src/patterns/optional';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 import { List } from '../../../src/patterns/list';
-import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { Type } from '../../../src/decorators/type.decorator';
 
-describe(`UnionConverter`, function () {
+describe(`UnionConverter`, () => {
   let converter: any;
   let typeConverter: UnionConverter;
 

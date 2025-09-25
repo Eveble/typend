@@ -1,6 +1,6 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from '../../../types';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
+import { types } from '../../../types';
 import { Equals } from '../../../patterns/equals';
 
 // TypeKind.FalseLiteral = 7

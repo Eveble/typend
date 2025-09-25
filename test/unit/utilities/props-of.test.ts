@@ -9,7 +9,7 @@ import { Collection } from '../../../src/patterns/collection';
 import { Class } from '../../../src/patterns/class';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`PropsOf`, function () {
+describe(`PropsOf`, () => {
   let converter: any;
   let library: any;
   let describer: any;
@@ -56,9 +56,7 @@ describe(`PropsOf`, function () {
     TypeError,
     URIError,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // String literal
     'abcd',
     // Boolean literal
@@ -114,11 +112,7 @@ describe(`PropsOf`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],

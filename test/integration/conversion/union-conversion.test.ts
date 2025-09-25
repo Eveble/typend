@@ -9,7 +9,7 @@ import { Collection } from '../../../src/patterns/collection';
 import { List } from '../../../src/patterns/list';
 import { Type } from '../../../src/decorators/type.decorator';
 
-describe(`Union conversion`, function () {
+describe(`Union conversion`, () => {
   type MyType = {
     first: string;
   };
@@ -120,7 +120,7 @@ describe(`Union conversion`, function () {
             new OneOf(
               undefined,
               new InstanceOf(String),
-              // eslint-disable-next-line no-new-symbol
+
               new InstanceOf(Symbol),
               new Equals(true)
             ),

@@ -21,7 +21,7 @@ import { Interface } from '../../src/patterns/interface';
 import { VALIDATION_TYPE_KEY } from '../../src/constants/literal-keys';
 import { Type } from '../../src/decorators/type.decorator';
 
-describe(`helpers`, function () {
+describe(`helpers`, () => {
   describe('getResolvablePath', () => {
     it('returns path to nearest pattern node by removing nested Type pattern properties structure from path segments', () => {
       const props: Record<string, any> = {
@@ -102,9 +102,8 @@ describe(`helpers`, function () {
     it('returns prototype by matching matcher', () => {
       class MyLibrary extends classes(FirstMixin, SecondMixin) {}
 
-      const matcher = (evaluatedProto: types.Prototype): boolean => {
-        return evaluatedProto.constructor.name === 'FirstMixin';
-      };
+      const matcher = (evaluatedProto: types.Prototype): boolean =>
+        evaluatedProto.constructor.name === 'FirstMixin';
       expect(getMatchingParentProto(MyLibrary.prototype, matcher)).to.be.equal(
         FirstMixin.prototype
       );
@@ -113,9 +112,8 @@ describe(`helpers`, function () {
     it(`does not return prototype if prototype can't be found on prototype chain`, () => {
       class MyLibrary extends classes(SecondMixin, ThirdMixin) {}
 
-      const matcher = (evaluatedProto: types.Prototype): boolean => {
-        return evaluatedProto.constructor.name === 'FirstMixin';
-      };
+      const matcher = (evaluatedProto: types.Prototype): boolean =>
+        evaluatedProto.constructor.name === 'FirstMixin';
       expect(getMatchingParentProto(MyLibrary.prototype, matcher)).to.be
         .undefined;
     });

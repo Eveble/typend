@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { FalseLiteralConverter } from '../../../src/converters/tsruntime/type-converters/false-literal.converter';
 import { Equals } from '../../../src';
 
-describe(`FalseLiteralConverter`, function () {
+describe(`FalseLiteralConverter`, () => {
   let typeConverter: FalseLiteralConverter;
 
   beforeEach(() => {

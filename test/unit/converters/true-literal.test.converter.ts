@@ -3,7 +3,7 @@ import { reflect } from 'tsruntime';
 import { TrueLiteralConverter } from '../../../src/converters/tsruntime/type-converters/true-literal.converter';
 import { Equals } from '../../../src/patterns/equals';
 
-describe(`TrueLiteralConverter`, function () {
+describe(`TrueLiteralConverter`, () => {
   let typeConverter: TrueLiteralConverter;
 
   before(() => {

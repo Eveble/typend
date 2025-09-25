@@ -254,13 +254,14 @@ const isInstanceOf = typend.isInstanceOf.bind(typend);
  * @remarks
  * Without hidden tag, Docusaurus is unable to render.
  */
-const check = createReflective((reflectedType: any) => {
-  return <T>(value: any, isStrict?: boolean): boolean => {
-    const expectation: types.Expectation =
-      typend.converter.convert(reflectedType);
-    return typend.validate(value, expectation, isStrict);
-  };
-});
+const check = createReflective(
+  (reflectedType: any) =>
+    <T>(value: any, isStrict?: boolean): boolean => {
+      const expectation: types.Expectation =
+        typend.converter.convert(reflectedType);
+      return typend.validate(value, expectation, isStrict);
+    }
+);
 
 /**
  * Validates if a value matches an expectation.
@@ -271,13 +272,14 @@ const check = createReflective((reflectedType: any) => {
  * @remarks
  * Without hidden tag, Docusaurus is unable to render.
  */
-const is = createReflective((reflectedType: any) => {
-  return <T>(value: any, isStrict?: boolean): boolean => {
-    const expectation: types.Expectation =
-      typend.converter.convert(reflectedType);
-    return typend.isValid(value, expectation, isStrict);
-  };
-});
+const is = createReflective(
+  (reflectedType: any) =>
+    <T>(value: any, isStrict?: boolean): boolean => {
+      const expectation: types.Expectation =
+        typend.converter.convert(reflectedType);
+      return typend.isValid(value, expectation, isStrict);
+    }
+);
 
 /**
  * Validates if a value is a instance of expectation.
@@ -287,13 +289,14 @@ const is = createReflective((reflectedType: any) => {
  * @remarks
  * Without hidden tag, Docusaurus is unable to render.
  */
-const instanceOf = createReflective((reflectedType: any) => {
-  return <T>(value: any): boolean => {
-    const expectation: types.Expectation =
-      typend.converter.convert(reflectedType);
-    return typend.isInstanceOf(value, expectation);
-  };
-});
+const instanceOf = createReflective(
+  (reflectedType: any) =>
+    <T>(value: any): boolean => {
+      const expectation: types.Expectation =
+        typend.converter.convert(reflectedType);
+      return typend.isInstanceOf(value, expectation);
+    }
+);
 
 /**
  * Converts TypeScript declaration to validable form.
@@ -302,11 +305,11 @@ const instanceOf = createReflective((reflectedType: any) => {
  * @remarks
  * Without hidden tag, Docusaurus is unable to render.
  */
-const convert = createReflective((reflectedType: any) => {
-  return <T>(): any => {
-    return typend.converter.convert(reflectedType);
-  };
-});
+const convert = createReflective(
+  (reflectedType: any) =>
+    <T>(): any =>
+      typend.converter.convert(reflectedType)
+);
 
 /**
  * Reflects TypeScript declaration to readable form.
@@ -315,11 +318,11 @@ const convert = createReflective((reflectedType: any) => {
  * @remarks
  * Without hidden tag, Docusaurus is unable to render.
  */
-const reflect = createReflective((reflectedType: any) => {
-  return <T>(): any => {
-    return typend.converter.reflect(reflectedType);
-  };
-});
+const reflect = createReflective(
+  (reflectedType: any) =>
+    <T>(): any =>
+      typend.converter.reflect(reflectedType)
+);
 
 // Wrap Pattern constructors with simple functions so they can simplify
 // instantiation
@@ -401,20 +404,14 @@ const PropTypes = {
   never,
   number: Number,
   object: new Collection({}),
-  objectOf: (_props) => {
-    return new Collection();
-  },
+  objectOf: (_props) => new Collection(),
   // Normalize oneOf to be used in React's fashion i.e. require array to
   // be passed:
   // PropTypes.oneOf(['News', 'Photos'])
   // vs typend's:
   // new OneOf('News', 'Photos')
-  oneOf: (expectations: any[]) => {
-    return new OneOf(...expectations);
-  },
-  oneOfType: (expectations: any[]) => {
-    return new OneOf(...expectations);
-  },
+  oneOf: (expectations: any[]) => new OneOf(...expectations),
+  oneOfType: (expectations: any[]) => new OneOf(...expectations),
   shape(properties: Record<keyof any, any>): Collection {
     return new Collection(properties);
   },

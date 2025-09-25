@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { getClassType, reflect, Types as tsrTypes } from 'tsruntime';
 import { stubInterface } from 'ts-sinon';
@@ -11,9 +11,9 @@ import {
   REFLECTION_KEY,
 } from '../../../src/constants/metadata-keys';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`ClassConverter`, function () {
+describe(`ClassConverter`, () => {
   let converter: any;
   let objConverter: any;
   let typeConverter: ClassConverter;

@@ -7,7 +7,7 @@ import { Pattern } from '../../../src/pattern';
 import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-describe(`Collection`, function () {
+describe(`Collection`, () => {
   let describer: any;
 
   beforeEach(() => {
@@ -63,9 +63,7 @@ describe(`Collection`, function () {
     new RegExp(/fail/),
     /fail/,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // Symbol
     Symbol('key'),
     // Map
@@ -104,11 +102,7 @@ describe(`Collection`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],

@@ -4,7 +4,7 @@ import { Type } from '../../../src/decorators/type.decorator';
 import 'reflect-metadata';
 import { isType } from '../../../src/helpers';
 
-describe(`Type`, function () {
+describe(`Type`, () => {
   @Type()
   class Parent {
     key: string;

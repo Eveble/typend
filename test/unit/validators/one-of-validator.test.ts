@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { stubInterface } from 'ts-sinon';
 import { inspect } from 'util';
@@ -8,9 +8,9 @@ import { types } from '../../../src/types';
 import { PatternValidator } from '../../../src/pattern-validator';
 import { ValidationError, NotAMemberError } from '../../../src/errors';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`OneOf`, function () {
+describe(`OneOf`, () => {
   let describer: any;
   let validator: any;
 

@@ -3,7 +3,7 @@ import { reflect } from 'tsruntime';
 import { StringConverter } from '../../../src/converters/tsruntime/type-converters/string.converter';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 
-describe(`StringConverter`, function () {
+describe(`StringConverter`, () => {
   let typeConverter: StringConverter;
 
   before(() => {

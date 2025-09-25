@@ -7,7 +7,7 @@ import { Class } from '../../../src/patterns/class';
 import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 
-describe(`Class`, function () {
+describe(`Class`, () => {
   let describer: any;
 
   beforeEach(() => {
@@ -49,9 +49,7 @@ describe(`Class`, function () {
     TypeError,
     URIError,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // String literal
     'abcd',
     // Boolean literal
@@ -107,11 +105,7 @@ describe(`Class`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],
@@ -146,9 +140,7 @@ describe(`Class`, function () {
     TypeError,
     URIError,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // String literal
     'abcd',
     // Boolean literal
@@ -200,11 +192,7 @@ describe(`Class`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],

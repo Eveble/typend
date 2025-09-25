@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { reflect } from 'tsruntime';
 import { converter } from './setup';
@@ -15,9 +15,9 @@ import { Tuple } from '../../../src/patterns/tuple';
 import { Collection } from '../../../src/patterns/collection';
 import { Type } from '../../../src/decorators/type.decorator';
 
-chai.use(sinonChai);
+use(sinonChai);
 
-describe(`Class conversion`, function () {
+describe(`Class conversion`, () => {
   @Type()
   class MyClass {
     key: string;
@@ -392,7 +392,6 @@ describe(`Class conversion`, function () {
 
           number: new InstanceOf(Number),
 
-          // eslint-disable-next-line no-new-symbol
           symbol: new InstanceOf(Symbol),
 
           boolean: new InstanceOf(Boolean),

@@ -8,7 +8,7 @@ import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`InstanceOf`, function () {
+describe(`InstanceOf`, () => {
   let describer: any;
 
   beforeEach(() => {
@@ -57,9 +57,7 @@ describe(`InstanceOf`, function () {
 
   const INVALID_TYPES: any[] = [
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // String literal
     'abcd',
     // Boolean literal
@@ -114,11 +112,7 @@ describe(`InstanceOf`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],

@@ -20,7 +20,6 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
 
       Type.afterDefine(target, reflectedType, ...args);
 
-
       /**
        * [⚠️][⚠️][⚠️]
        * Wrap constructor to apply properties AFTER initializers
@@ -77,22 +76,23 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
        * or use the wrapper below, that will do it for you.
        */
 
-
       // Detection of custom constructors:
       // 1. Check if the class source contains explicit constructor definition
       // 2. Check if constructor has parameters (length > 0) but parent doesn't
       // 3. Check if constructor body contains more than just super() call
       const classSource = target.toString();
-      const hasExplicitConstructor = /constructor\s*\([^)]*\)\s*\{[\s\S]*?\}/m.test(classSource);
+      const hasExplicitConstructor =
+        /constructor\s*\([^)]*\)\s*\{[\s\S]*?\}/m.test(classSource);
 
       // Check if this is likely a custom constructor by looking for method calls other than super()
-      const hasCustomLogic = hasExplicitConstructor &&
+      const hasCustomLogic =
+        hasExplicitConstructor &&
         (/this\.\w+\([^)]*\)/.test(classSource) || // calls to this.methodName()
-         /console\.log/.test(classSource) ||        // console.log calls
-         /throw\s+/.test(classSource) ||           // throw statements
-         /if\s*\(/.test(classSource) ||            // conditional logic
-         /for\s*\(/.test(classSource) ||           // loops
-         /while\s*\(/.test(classSource));          // while loops
+          /console\.log/.test(classSource) || // console.log calls
+          /throw\s+/.test(classSource) || // throw statements
+          /if\s*\(/.test(classSource) || // conditional logic
+          /for\s*\(/.test(classSource) || // loops
+          /while\s*\(/.test(classSource)); // while loops
 
       let Wrapped: any;
 
@@ -120,7 +120,9 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
         // CRITICAL: Ensure prototype chain is properly maintained
         // The wrapped class must have the same prototype chain as the original
         const originalPrototype = Object.getPrototypeOf(target);
-        const originalInstancePrototype = Object.getPrototypeOf(target.prototype);
+        const originalInstancePrototype = Object.getPrototypeOf(
+          target.prototype
+        );
 
         // Set up the constructor prototype chain
         if (originalPrototype && originalPrototype !== Function.prototype) {
@@ -136,7 +138,10 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
         // This is crucial for preserving method definitions and property descriptors
         for (const key of Reflect.ownKeys(target.prototype)) {
           if (key !== 'constructor' && !Wrapped.prototype.hasOwnProperty(key)) {
-            const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);
+            const descriptor = Object.getOwnPropertyDescriptor(
+              target.prototype,
+              key
+            );
             if (descriptor) {
               Object.defineProperty(Wrapped.prototype, key, descriptor);
             }
@@ -169,7 +174,7 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
         }
 
         // Set the name for debugging
-        Object.defineProperty(Wrapped, "name", { value: target.name });
+        Object.defineProperty(Wrapped, 'name', { value: target.name });
       }
 
       // ALWAYS ensure the reflected type metadata is on the final class

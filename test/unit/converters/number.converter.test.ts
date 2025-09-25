@@ -3,7 +3,7 @@ import { reflect } from 'tsruntime';
 import { NumberConverter } from '../../../src/converters/tsruntime/type-converters/number.converter';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 
-describe(`NumberConverter`, function () {
+describe(`NumberConverter`, () => {
   let typeConverter: NumberConverter;
 
   before(() => {

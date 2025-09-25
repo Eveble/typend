@@ -9,7 +9,7 @@ import { KINDS } from '../../../src/constants/literal-keys';
 import { Interface } from '../../../src/patterns/interface';
 import { Type } from '../../../src/decorators/type.decorator';
 
-describe(`ObjectConverter`, function () {
+describe(`ObjectConverter`, () => {
   let converter: any;
   let classConverter: any;
   let typeConverter: ObjectConverter;

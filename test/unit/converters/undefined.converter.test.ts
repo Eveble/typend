@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { reflect } from 'tsruntime';
 import { UndefinedConverter } from '../../../src/converters/tsruntime/type-converters/undefined.converter';
 
-describe(`UndefinedConverter`, function () {
+describe(`UndefinedConverter`, () => {
   let typeConverter: UndefinedConverter;
 
   before(() => {

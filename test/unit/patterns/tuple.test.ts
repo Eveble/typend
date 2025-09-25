@@ -9,7 +9,7 @@ import { OneOf } from '../../../src/patterns/one-of';
 import { KINDS } from '../../../src/constants/literal-keys';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 
-describe(`Tuple`, function () {
+describe(`Tuple`, () => {
   let describer: any;
 
   beforeEach(() => {
@@ -41,11 +41,7 @@ describe(`Tuple`, function () {
     [0],
     [new RegExp(/fail/)],
     [/fail/],
-    [
-      (): boolean => {
-        return true;
-      },
-    ],
+    [(): boolean => true],
     [Symbol('test')],
     [new Map([['key', 'value']])],
     [ParentClass],
@@ -93,9 +89,7 @@ describe(`Tuple`, function () {
     new RegExp(/fail/),
     /fail/,
     // Function
-    (): boolean => {
-      return true;
-    },
+    (): boolean => true,
     // Symbol
     Symbol('key'),
     // Map

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { reflect } from 'tsruntime';
 import { NullConverter } from '../../../src/converters/tsruntime/type-converters/null.converter';
 
-describe(`NullConverter`, function () {
+describe(`NullConverter`, () => {
   let typeConverter: NullConverter;
 
   before(() => {

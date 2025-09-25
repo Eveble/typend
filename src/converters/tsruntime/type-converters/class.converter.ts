@@ -194,7 +194,9 @@ export class ClassConverter implements types.TypeConverter {
 
     // console.log(`Merged properties for ${type.name}:`, properties);
 
-    const finalProperties = isConverted ? new Collection(properties) : properties;
+    const finalProperties = isConverted
+      ? new Collection(properties)
+      : properties;
 
     // console.log(`Final properties for ${type.name}:`, finalProperties);
 
@@ -204,7 +206,10 @@ export class ClassConverter implements types.TypeConverter {
   /**
    * Creates a class-specific cache key that includes the class identity
    */
-  protected getClassSpecificCacheKey(type: types.Class, isConverted: boolean): string {
+  protected getClassSpecificCacheKey(
+    type: types.Class,
+    isConverted: boolean
+  ): string {
     const baseKey = isConverted ? 'converted' : 'reflected';
     const className = type.name || 'Anonymous';
     // Use the constructor function itself as part of the key to ensure uniqueness
@@ -304,9 +309,8 @@ export class ClassConverter implements types.TypeConverter {
     // console.log(`Resolving parent properties for: ${type.name}`);
 
     // Support 'classes' from 'polytype' for multi inheritance(mixin/traits etc.)
-    const matcher = (evaluatedProto: types.Prototype): boolean => {
-      return isType(evaluatedProto.constructor);
-    };
+    const matcher = (evaluatedProto: types.Prototype): boolean =>
+      isType(evaluatedProto.constructor);
 
     const parentProto: types.Prototype | undefined = getMatchingParentProto(
       type.prototype,
