@@ -3,7 +3,6 @@ import { stubInterface } from 'ts-sinon';
 import { CompositeTypeConverter } from '../../../src/converters/tsruntime/type-converters/composite.converter';
 import { types } from '../../../src';
 
-
 describe(`CompositeTypeConverter`, function () {
   let typeConverter: CompositeTypeConverter;
   let mockConverter1: any;
@@ -88,11 +87,18 @@ describe(`CompositeTypeConverter`, function () {
       const reflectedType = { kind: 15 };
       const expectedResult = { converted: true };
 
-      mockConverter1.isConvertible.withArgs(reflectedType, mockTsRuntimeConverter).returns(true);
-      mockConverter1.convert.withArgs(reflectedType, mockTsRuntimeConverter).returns(expectedResult);
+      mockConverter1.isConvertible
+        .withArgs(reflectedType, mockTsRuntimeConverter)
+        .returns(true);
+      mockConverter1.convert
+        .withArgs(reflectedType, mockTsRuntimeConverter)
+        .returns(expectedResult);
 
       typeConverter.add(mockConverter1);
-      const result = typeConverter.convert(reflectedType, mockTsRuntimeConverter);
+      const result = typeConverter.convert(
+        reflectedType,
+        mockTsRuntimeConverter
+      );
       expect(result).to.equal(expectedResult);
     });
 
@@ -100,11 +106,18 @@ describe(`CompositeTypeConverter`, function () {
       const reflectedType = { kind: 15 };
       const expectedResult = { reflected: true };
 
-      mockConverter1.isConvertible.withArgs(reflectedType, mockTsRuntimeConverter).returns(true);
-      mockConverter1.reflect.withArgs(reflectedType, mockTsRuntimeConverter).returns(expectedResult);
+      mockConverter1.isConvertible
+        .withArgs(reflectedType, mockTsRuntimeConverter)
+        .returns(true);
+      mockConverter1.reflect
+        .withArgs(reflectedType, mockTsRuntimeConverter)
+        .returns(expectedResult);
 
       typeConverter.add(mockConverter1);
-      const result = typeConverter.reflect(reflectedType, mockTsRuntimeConverter);
+      const result = typeConverter.reflect(
+        reflectedType,
+        mockTsRuntimeConverter
+      );
       expect(result).to.equal(expectedResult);
     });
 
@@ -112,20 +125,30 @@ describe(`CompositeTypeConverter`, function () {
       const reflectedType = { kind: 15 };
       const expectedResult = { fallback: true };
 
-      mockConverter1.isConvertible.withArgs(reflectedType, mockTsRuntimeConverter).returns(false);
-      mockConverter2.isConvertible.withArgs(reflectedType, mockTsRuntimeConverter).returns(false);
-      mockConverter2.convert.withArgs(reflectedType, mockTsRuntimeConverter).returns(expectedResult);
+      mockConverter1.isConvertible
+        .withArgs(reflectedType, mockTsRuntimeConverter)
+        .returns(false);
+      mockConverter2.isConvertible
+        .withArgs(reflectedType, mockTsRuntimeConverter)
+        .returns(false);
+      mockConverter2.convert
+        .withArgs(reflectedType, mockTsRuntimeConverter)
+        .returns(expectedResult);
 
       typeConverter.add(mockConverter1);
       typeConverter.add(mockConverter2);
-      const result = typeConverter.convert(reflectedType, mockTsRuntimeConverter);
+      const result = typeConverter.convert(
+        reflectedType,
+        mockTsRuntimeConverter
+      );
       expect(result).to.equal(expectedResult);
     });
 
     it('throws error when no converters available', () => {
       const reflectedType = { kind: 15 };
-      expect(() => typeConverter.convert(reflectedType, mockTsRuntimeConverter))
-        .to.throw('No applicable converter found for type');
+      expect(() =>
+        typeConverter.convert(reflectedType, mockTsRuntimeConverter)
+      ).to.throw('No applicable converter found for type');
     });
   });
 });

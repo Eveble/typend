@@ -1,5 +1,5 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from "../../../types";
+import { types } from '../../../types';
 import { Collection } from '../../../patterns/collection';
 import { Interface } from '../../../patterns/interface';
 import { isPatternClass, isPlainObjectFast } from '../../../helpers';
@@ -13,7 +13,10 @@ export class ObjectConverter implements types.TypeConverter {
     return reflectedType.kind === TypeKind.Object;
   }
 
-  public convert(reflectedType: tsruntimeTypes.ObjectType, converter: types.Converter): Collection | Interface {
+  public convert(
+    reflectedType: tsruntimeTypes.ObjectType,
+    converter: types.Converter
+  ): Collection | Interface {
     const properties = this.resolveProperties(reflectedType, converter, true);
 
     let pattern;
@@ -28,7 +31,10 @@ export class ObjectConverter implements types.TypeConverter {
     return pattern;
   }
 
-  public reflect(reflectedType: tsruntimeTypes.ObjectType, converter: types.Converter): Record<keyof any, any> {
+  public reflect(
+    reflectedType: tsruntimeTypes.ObjectType,
+    converter: types.Converter
+  ): Record<keyof any, any> {
     return this.resolveProperties(reflectedType, converter, false);
   }
 
@@ -39,7 +45,8 @@ export class ObjectConverter implements types.TypeConverter {
   ): Record<keyof any, any> {
     const props: Record<keyof any, any> = {};
     for (const key of Reflect.ownKeys(reflectedType.properties)) {
-      const reflectedProp: tsruntimeTypes.ReflectedType = reflectedType.properties[key as any];
+      const reflectedProp: tsruntimeTypes.ReflectedType =
+        reflectedType.properties[key as any];
 
       if (!isPlainObjectFast(reflectedProp)) continue;
 
@@ -47,14 +54,17 @@ export class ObjectConverter implements types.TypeConverter {
         const reflectedRefType = reflectedProp as tsruntimeTypes.ReferenceType;
         let expectation: any;
 
-
         if (isConverting) {
           if (reflectedRefType.type === Array && reflectedRefType.arguments) {
-            expectation = converter.getConverter(TypeKind.Array).convert(reflectedProp, converter) as any;
-          } else     if (isPatternClass(reflectedProp.type)) {
-                expectation = reflectedProp.type;
-              }
-          else if (isClass(reflectedRefType.type) === false && isPlainObjectFast(reflectedRefType.type) === true) {
+            expectation = converter
+              .getConverter(TypeKind.Array)
+              .convert(reflectedProp, converter) as any;
+          } else if (isPatternClass(reflectedProp.type)) {
+            expectation = reflectedProp.type;
+          } else if (
+            isClass(reflectedRefType.type) === false &&
+            isPlainObjectFast(reflectedRefType.type) === true
+          ) {
             expectation = new Collection(reflectedRefType.type);
           } else {
             expectation = new InstanceOf(reflectedRefType.type);
@@ -64,7 +74,9 @@ export class ObjectConverter implements types.TypeConverter {
             const expectations: any[] = [];
             for (const argument of reflectedRefType.arguments) {
               if (argument.kind === TypeKind.Reference) {
-                expectations.push((argument as tsruntimeTypes.ReferenceType).type);
+                expectations.push(
+                  (argument as tsruntimeTypes.ReferenceType).type
+                );
               } else {
                 expectations.push(converter.reflect(argument));
               }

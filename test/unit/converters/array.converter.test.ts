@@ -6,7 +6,6 @@ import { TypeKind } from '../../../src/enums/type-kind.enum';
 import { ArrayConverter } from '../../../src/converters/tsruntime/type-converters/array.converter';
 import { Type } from '../../../src/decorators/type.decorator';
 
-
 describe(`ArrayConverter`, function () {
   let converter: any;
   let typeConverter: ArrayConverter;

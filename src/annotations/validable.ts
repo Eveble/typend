@@ -7,7 +7,7 @@ import { types } from '../types';
  * @param isValidable - Flag indicating if class supports validation.
  * @returns Class decorator function.
  */
-export function validable(isValidable = true): types.ClassDecorator {
+export function Validable(isValidable = true): types.ClassDecorator {
   return <T>(target: T): T => {
     Reflect.defineMetadata(VALIDATION_KEY, isValidable, target as any);
     return target;

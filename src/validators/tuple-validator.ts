@@ -4,8 +4,10 @@ import { PatternValidator } from '../pattern-validator';
 import { InvalidTypeError, NotAMemberError } from '../errors';
 import { Tuple } from '../patterns/tuple';
 
-export class TupleValidator extends PatternValidator
-  implements types.PatternValidator {
+export class TupleValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided explicit pattern or implicit expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

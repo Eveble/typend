@@ -92,7 +92,6 @@ describe(`Type`, function () {
       @Type(name)
       class MyType {}
 
-
       expect((MyType as any).typeName).to.be.equal(name);
     });
   });

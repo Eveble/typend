@@ -169,13 +169,14 @@ describe(`TupleConverter`, function () {
         kind: TypeKind.Tuple,
         elementTypes: [
           { kind: TypeKind.Reference, type: MyClass },
-          { kind: TypeKind.Reference, type: MyOtherClass }
-        ]
+          { kind: TypeKind.Reference, type: MyOtherClass },
+        ],
       };
 
-      expect(
-        typeConverter.reflect(tupleType, converter)
-      ).to.be.eql([MyClass, MyOtherClass]);
+      expect(typeConverter.reflect(tupleType, converter)).to.be.eql([
+        MyClass,
+        MyOtherClass,
+      ]);
     });
 
     it('reflects mixed tuple with primitives and references', () => {
@@ -184,16 +185,18 @@ describe(`TupleConverter`, function () {
         elementTypes: [
           { kind: TypeKind.String },
           { kind: TypeKind.Reference, type: MyClass },
-          { kind: TypeKind.Number }
-        ]
+          { kind: TypeKind.Number },
+        ],
       };
 
       converter.reflect.withArgs({ kind: TypeKind.String }).returns(String);
       converter.reflect.withArgs({ kind: TypeKind.Number }).returns(Number);
 
-      expect(
-        typeConverter.reflect(tupleType, converter)
-      ).to.be.eql([String, MyClass, Number]);
+      expect(typeConverter.reflect(tupleType, converter)).to.be.eql([
+        String,
+        MyClass,
+        Number,
+      ]);
     });
   });
 
@@ -215,13 +218,16 @@ describe(`TupleConverter`, function () {
         kind: TypeKind.Tuple,
         elementTypes: [
           { kind: TypeKind.Reference, type: MyClass },
-          { kind: TypeKind.Reference, type: MyOtherClass }
-        ]
+          { kind: TypeKind.Reference, type: MyOtherClass },
+        ],
       };
 
       const result = typeConverter.convert(tupleType, converter);
       expect(result).to.be.instanceof(Tuple);
-      expect(result).to.be.eql([new InstanceOf(MyClass), new InstanceOf(MyOtherClass)]);
+      expect(result).to.be.eql([
+        new InstanceOf(MyClass),
+        new InstanceOf(MyOtherClass),
+      ]);
     });
 
     it('converts mixed tuple with primitives and references', () => {
@@ -230,8 +236,8 @@ describe(`TupleConverter`, function () {
         elementTypes: [
           { kind: TypeKind.String },
           { kind: TypeKind.Reference, type: MyClass },
-          { kind: TypeKind.Number }
-        ]
+          { kind: TypeKind.Number },
+        ],
       };
 
       converter.convert.withArgs({ kind: TypeKind.String }).returns(String);
@@ -241,6 +247,5 @@ describe(`TupleConverter`, function () {
       expect(result).to.be.instanceof(Tuple);
       expect(result).to.be.eql([String, new InstanceOf(MyClass), Number]);
     });
-
   });
 });

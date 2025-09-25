@@ -25,9 +25,8 @@ import { types } from '../types';
  */
 export function internal(proto: types.Prototype, propertyKey: string): void {
   const target: any = proto.constructor;
-  const descriptor:
-    | PropertyDescriptor
-    | undefined = Object.getOwnPropertyDescriptor(proto, propertyKey);
+  const descriptor: PropertyDescriptor | undefined =
+    Object.getOwnPropertyDescriptor(proto, propertyKey);
 
   const type: 'property' | 'method' =
     descriptor === undefined ? 'property' : 'method';

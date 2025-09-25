@@ -185,7 +185,6 @@ export function isPlainRecord(arg: any): boolean {
   return isPlainObject(arg) || arg instanceof Collection;
 }
 
-
 /**
  * Determines whether plain object
  * @param obj - Evaluated object.

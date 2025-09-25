@@ -16,10 +16,10 @@ export enum TypeKind {
   Object = 15, // Will be reflected for custom types
   Tuple = 16,
   Union = 17,
-  Reference = 18,  // Generic types, Array<T>, etc.
+  Reference = 18, // Generic types, Array<T>, etc.
   Class = 19,
   Unknown = 20,
   Function = 21,
   Unknown2 = 999,
-  Array = 1000
+  Array = 1000,
 }

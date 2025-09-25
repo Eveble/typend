@@ -1,15 +1,21 @@
-import {  get, isEmpty } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { diff } from 'deep-diff';
 import { isClassInstance } from '@eveble/helpers';
 import { PatternValidator } from '../pattern-validator';
 import { InvalidTypeError, UnexpectedKeyError } from '../errors';
-import { getResolvablePath, isPlainObjectFast, isResolvablePath } from '../helpers';
+import {
+  getResolvablePath,
+  isPlainObjectFast,
+  isResolvablePath,
+} from '../helpers';
 import { types } from '../types';
 import { Collection } from '../patterns/collection';
 import { Optional } from '../patterns/optional';
 
-export class CollectionValidator extends PatternValidator
-  implements types.PatternValidator {
+export class CollectionValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided explicit pattern or implicit expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

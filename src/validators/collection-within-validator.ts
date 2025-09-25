@@ -6,8 +6,10 @@ import { getResolvablePath, isPlainObjectFast } from '../helpers';
 import { CollectionWithin } from '../patterns/collection-within';
 import { types } from '../types';
 
-export class CollectionWithinValidator extends PatternValidator
-  implements types.PatternValidator {
+export class CollectionWithinValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided explicit pattern or implicit expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

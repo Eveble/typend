@@ -1,7 +1,6 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from "../../../types";
-import {last} from 'lodash';
-
+import { types } from '../../../types';
+import { last } from 'lodash';
 
 export class CompositeTypeConverter implements types.TypeConverter {
   private converters: types.TypeConverter[] = [];
@@ -16,7 +15,7 @@ export class CompositeTypeConverter implements types.TypeConverter {
    * @param reflectedType - Reflected type.
    * @returns Returns `true` if reflected type is an `Object` or interface, else `false`.
    */
-  public isConvertible(reflectedType: tsruntimeTypes.ReflectedType, ): boolean {
+  public isConvertible(reflectedType: tsruntimeTypes.ReflectedType): boolean {
     return reflectedType.kind === 15;
   }
 
@@ -53,18 +52,38 @@ export class CompositeTypeConverter implements types.TypeConverter {
     });
   }
 
-  convert(reflectedType: tsruntimeTypes.ReflectedType, converter: types.Converter): types.Type {
-    const applicableConverter = this.findApplicableConverter(reflectedType, converter);
+  convert(
+    reflectedType: tsruntimeTypes.ReflectedType,
+    converter: types.Converter
+  ): types.Type {
+    const applicableConverter = this.findApplicableConverter(
+      reflectedType,
+      converter
+    );
     if (!applicableConverter) {
-      throw new Error(`No applicable converter found for type: ${JSON.stringify(reflectedType)}`);
+      throw new Error(
+        `No applicable converter found for type: ${JSON.stringify(
+          reflectedType
+        )}`
+      );
     }
     return applicableConverter.convert(reflectedType, converter);
   }
 
-  reflect(reflectedType: tsruntimeTypes.ReflectedType, converter: types.Converter): types.Type {
-    const applicableConverter = this.findApplicableConverter(reflectedType, converter);
+  reflect(
+    reflectedType: tsruntimeTypes.ReflectedType,
+    converter: types.Converter
+  ): types.Type {
+    const applicableConverter = this.findApplicableConverter(
+      reflectedType,
+      converter
+    );
     if (!applicableConverter) {
-      throw new Error(`No applicable converter found for type: ${JSON.stringify(reflectedType)}`);
+      throw new Error(
+        `No applicable converter found for type: ${JSON.stringify(
+          reflectedType
+        )}`
+      );
     }
     return applicableConverter.reflect(reflectedType, converter);
   }
@@ -73,7 +92,7 @@ export class CompositeTypeConverter implements types.TypeConverter {
     reflectedType: tsruntimeTypes.ReflectedType,
     tsRuntimeConverter: types.Converter
   ): types.TypeConverter | undefined {
-    const result = this.converters.find(converter => {
+    const result = this.converters.find((converter) => {
       if (converter.isConvertible) {
         return converter.isConvertible(reflectedType, tsRuntimeConverter);
       }

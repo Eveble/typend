@@ -3,8 +3,10 @@ import { PatternValidator } from '../pattern-validator';
 import { types } from '../types';
 import { UnknownError } from '../errors';
 
-export class UnrecognizedValidator extends PatternValidator
-  implements types.PatternValidator {
+export class UnrecognizedValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   private readonly _isValid: boolean;
 
   /**

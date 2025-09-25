@@ -3,8 +3,10 @@ import { types } from '../types';
 import { PatternValidator } from '../pattern-validator';
 import { Integer } from '../patterns/integer';
 
-export class IntegerValidator extends PatternValidator
-  implements types.PatternValidator {
+export class IntegerValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided explicit pattern or implicit expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

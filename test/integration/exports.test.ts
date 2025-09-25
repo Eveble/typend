@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 // Annotations
 import { internal } from '../../src/annotations/internal';
-import { validable } from '../../src/annotations/validable';
+import { Validable } from '../../src/annotations/validable';
 // Decorators
 import { Type } from '../../src/decorators/type.decorator';
 // Errors
@@ -266,7 +266,7 @@ import {
   reflect,
   // Annotations
   internal as internalExported,
-  validable as validableExported,
+  Validable as ValidableExported,
   // Decorators
   Type as TypeExported,
   // Patterns
@@ -304,8 +304,8 @@ describe('exports', () => {
     it('internal', () => {
       expect(internal).to.be.equal(internalExported);
     });
-    it('validable', () => {
-      expect(validable).to.be.equal(validableExported);
+    it('Validable', () => {
+      expect(Validable).to.be.equal(ValidableExported);
     });
   });
 
@@ -567,10 +567,14 @@ describe('exports', () => {
       expect(BooleanConverter).to.be.equal(BooleanConverterExported);
     });
     it('StringLiteralConverter', () => {
-      expect(StringLiteralConverter).to.be.equal(StringLiteralConverterExported);
+      expect(StringLiteralConverter).to.be.equal(
+        StringLiteralConverterExported
+      );
     });
     it('NumberLiteralConverter', () => {
-      expect(NumberLiteralConverter).to.be.equal(NumberLiteralConverterExported);
+      expect(NumberLiteralConverter).to.be.equal(
+        NumberLiteralConverterExported
+      );
     });
     it('FalseLiteralConverter', () => {
       expect(FalseLiteralConverter).to.be.equal(FalseLiteralConverterExported);

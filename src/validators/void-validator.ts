@@ -3,8 +3,10 @@ import { types } from '../types';
 import { Void } from '../patterns/void';
 import { ValidationError } from '../errors';
 
-export class VoidValidator extends PatternValidator
-  implements types.PatternValidator {
+export class VoidValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

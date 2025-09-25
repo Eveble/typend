@@ -1,4 +1,4 @@
-import { TypeKind } from "./enums/type-kind.enum";
+import { TypeKind } from './enums/type-kind.enum';
 
 /*
 https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines

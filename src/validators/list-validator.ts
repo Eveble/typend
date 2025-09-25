@@ -4,8 +4,10 @@ import { PatternValidator } from '../pattern-validator';
 import { InvalidTypeError } from '../errors';
 import { List } from '../patterns/list';
 
-export class ListValidator extends PatternValidator
-  implements types.PatternValidator {
+export class ListValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided explicit pattern or implicit expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.
@@ -48,11 +50,11 @@ export class ListValidator extends PatternValidator
     // Scenario 1: Definition just requires that the type is Array(like: `[]`, `any[]`, `Array`)
     if (
       // Array class or simple notation([])
-      (listOrExpect === Array || listOrExpect.length === 0)
+      listOrExpect === Array ||
+      listOrExpect.length === 0
     ) {
       return true;
     }
-
 
     // Cache first expectation and value length
     const firstExpectation = listOrExpect[0];

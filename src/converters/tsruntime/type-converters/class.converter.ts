@@ -27,7 +27,9 @@ export class ClassConverter implements types.TypeConverter {
     this.transformers = transformers || new Map();
   }
 
-  public isConvertible(reflectedTypeOrClass: tsruntimeTypes.ReflectedType | any): boolean {
+  public isConvertible(
+    reflectedTypeOrClass: tsruntimeTypes.ReflectedType | any
+  ): boolean {
     return (
       this.isReflectedReference(reflectedTypeOrClass) ||
       // Passed direct result of tsruntime's getClassType
@@ -44,7 +46,11 @@ export class ClassConverter implements types.TypeConverter {
    */
   public convert(
     reflectedType:
-      | (tsruntimeTypes.ReflectedType | tsruntimeTypes.ReferenceType | tsruntimeTypes.ClassType)
+      | (
+          | tsruntimeTypes.ReflectedType
+          | tsruntimeTypes.ReferenceType
+          | tsruntimeTypes.ClassType
+        )
       | types.Class,
     converter: types.Converter
   ): Class | any {
@@ -54,21 +60,14 @@ export class ClassConverter implements types.TypeConverter {
       return type;
     }
 
-
     let properties: Record<keyof any, any> = Reflect.getMetadata(
       this.getCacheMetadataKey(true),
       reflectedType
     );
 
     if (properties === undefined) {
-      properties = this.resolveProperties(
-        type,
-        converter,
-        true
-      );
+      properties = this.resolveProperties(type, converter, true);
     }
-
-
 
     const classType = new Class(type, properties);
     const transformedClassType = this.transformType(classType);
@@ -86,7 +85,11 @@ export class ClassConverter implements types.TypeConverter {
    */
   public reflect(
     reflectedType:
-      | (tsruntimeTypes.ReflectedType | tsruntimeTypes.ReferenceType | tsruntimeTypes.ClassType)
+      | (
+          | tsruntimeTypes.ReflectedType
+          | tsruntimeTypes.ReferenceType
+          | tsruntimeTypes.ClassType
+        )
       | types.Class,
     converter: types.Converter
   ): Record<keyof any, any> {
@@ -124,18 +127,19 @@ export class ClassConverter implements types.TypeConverter {
     if (this.isCached(type, isConverted)) {
       properties = this.resolveCached(type, isConverted);
     } else {
-      const storedReflectedType = Reflect.getMetadata(REFLECTED_TYPE_PROPS_KEY, type);
-      let reflectedClass: tsruntimeTypes.ClassType
+      const storedReflectedType = Reflect.getMetadata(
+        REFLECTED_TYPE_PROPS_KEY,
+        type
+      );
+      let reflectedClass: tsruntimeTypes.ClassType;
       if (storedReflectedType !== undefined) {
         reflectedClass = storedReflectedType;
       } else {
         reflectedClass = this.reflectClassType(type);
       }
 
-      const parentProperties: Record<
-        keyof any,
-        any
-      > = this.resolveParentProperties(type, converter, isConverted);
+      const parentProperties: Record<keyof any, any> =
+        this.resolveParentProperties(type, converter, isConverted);
 
       const objConverter = converter.getConverter(
         TypeKind.Object
@@ -225,7 +229,9 @@ export class ClassConverter implements types.TypeConverter {
    * @param reflectedType - Reflected type.
    * @returns Returns true if reflected type is a class, else false.
    */
-  protected isReflectedClass(reflectedType: tsruntimeTypes.ReflectedType): boolean {
+  protected isReflectedClass(
+    reflectedType: tsruntimeTypes.ReflectedType
+  ): boolean {
     return reflectedType?.kind === 19;
   }
 

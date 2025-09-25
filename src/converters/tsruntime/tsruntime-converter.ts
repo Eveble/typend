@@ -6,7 +6,6 @@ import { TypeKind } from '../../enums/type-kind.enum';
 import { isClass } from '@eveble/helpers';
 
 export class TSRuntimeConverter implements types.Converter {
-
   // Fast O(1) lookup array indexed by TypeKind
   public typeConverters: Array<types.TypeConverter | undefined> = [];
 
@@ -24,7 +23,9 @@ export class TSRuntimeConverter implements types.Converter {
   /**
    * Ultra-fast converter resolution using direct array indexing
    */
-  private findConverter(reflectedType: tsruntimeTypes.ReflectedType): types.TypeConverter | undefined {
+  private findConverter(
+    reflectedType: tsruntimeTypes.ReflectedType
+  ): types.TypeConverter | undefined {
     return this.typeConverters[reflectedType.kind];
   }
 
@@ -72,7 +73,7 @@ export class TSRuntimeConverter implements types.Converter {
       const parts = [
         `kind:${reflectedType.kind}`,
         `type:${reflectedType.type?.name || 'unknown'}`,
-        `args:${reflectedType.arguments?.length || 0}`
+        `args:${reflectedType.arguments?.length || 0}`,
       ];
 
       if (reflectedType.arguments) {
@@ -99,7 +100,6 @@ export class TSRuntimeConverter implements types.Converter {
    */
   public reflect(reflectedType: tsruntimeTypes.ReflectedType): types.Type {
     const converter = this.findConverter(reflectedType);
-
 
     if (converter) {
       return converter.reflect(reflectedType, this);
@@ -129,13 +129,15 @@ export class TSRuntimeConverter implements types.Converter {
     this.typeConverters[kind] = typeConverter;
   }
 
-
   /**
    * Overrides already existing type converter by kind mapping on converter.
    * @param kind - Kind for which type converter mapping is registered or overridden.
    * @param converter - `TypeConverter` instance for registration.
    */
-  public overrideConverter(kind: TypeKind, converter: types.TypeConverter): void {
+  public overrideConverter(
+    kind: TypeKind,
+    converter: types.TypeConverter
+  ): void {
     this.registerConverter(kind, converter, true);
   }
 
@@ -148,7 +150,7 @@ export class TSRuntimeConverter implements types.Converter {
    */
   public getConverter(type: TypeKind): types.TypeConverter {
     if (this.typeConverters[type] === undefined) {
-      throw new Error(`Type converter for kind '${type}' is not registered.`)
+      throw new Error(`Type converter for kind '${type}' is not registered.`);
     }
     return this.typeConverters[type] as types.TypeConverter;
   }
@@ -167,6 +169,6 @@ export class TSRuntimeConverter implements types.Converter {
    * @param kind - Kind as type converter mapping.
    */
   public removeConverter(type: TypeKind): void {
-    this.typeConverters[type] = undefined
+    this.typeConverters[type] = undefined;
   }
 }

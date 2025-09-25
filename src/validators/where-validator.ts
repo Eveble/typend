@@ -5,8 +5,10 @@ import { types } from '../types';
 import { PatternValidator } from '../pattern-validator';
 import { Where } from '../patterns/where';
 
-export class WhereValidator extends PatternValidator
-  implements types.PatternValidator {
+export class WhereValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided explicit pattern or implicit expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

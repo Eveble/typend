@@ -42,7 +42,6 @@ class Typend implements types.Library {
     expectation: types.Expectation | Utility,
     isStrict = true
   ): boolean {
-
     return this.validator.validate(
       value,
       this.processExpectation(expectation),
@@ -107,11 +106,11 @@ class Typend implements types.Library {
   public setDescriber(describer: types.Describer): void {
     this.describer = describer;
 
-    ((Pattern as any) as types.PatternType).setDescriber(describer);
-    ((PatternValidator as any) as types.PatternValidatorType).setDescriber(
+    (Pattern as any as types.PatternType).setDescriber(describer);
+    (PatternValidator as any as types.PatternValidatorType).setDescriber(
       describer
     );
-    ((Utility as any) as types.UtilityType).setDescriber(describer);
+    (Utility as any as types.UtilityType).setDescriber(describer);
   }
 
   /**
@@ -161,7 +160,7 @@ class Typend implements types.Library {
    */
   protected processExpectation(expectation: types.Expectation): any {
     if (isUtility(expectation)) {
-      const utility: types.Utility = (expectation as any) as types.Utility;
+      const utility: types.Utility = expectation as any as types.Utility;
       return utility.generate(this);
     }
     if (isPatternClass(expectation)) {

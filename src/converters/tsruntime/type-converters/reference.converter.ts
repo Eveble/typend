@@ -1,6 +1,6 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from "../../../types";
-import { isPlainObjectFast } from "../../../helpers";
+import { types } from '../../../types';
+import { isPlainObjectFast } from '../../../helpers';
 import { InstanceOf } from '../../../patterns/instance-of';
 import { List } from '../../../patterns/list';
 import { Collection } from '../../../patterns/collection';
@@ -12,12 +12,19 @@ export class ReferenceConverter implements types.TypeConverter {
     return reflectedType.kind === TypeKind.Reference;
   }
 
-  public convert(reflectedType: tsruntimeTypes.ReferenceType, converter: types.Converter): any {
+  public convert(
+    reflectedType: tsruntimeTypes.ReferenceType,
+    converter: types.Converter
+  ): any {
     if (converter.getConverter(TypeKind.Array).isConvertible(reflectedType)) {
-      return converter.getConverter(TypeKind.Array).convert(reflectedType, converter);
+      return converter
+        .getConverter(TypeKind.Array)
+        .convert(reflectedType, converter);
     }
     if (converter.getConverter(TypeKind.Class).isConvertible(reflectedType)) {
-      return converter.getConverter(TypeKind.Class).convert(reflectedType, converter);
+      return converter
+        .getConverter(TypeKind.Class)
+        .convert(reflectedType, converter);
     }
 
     // Handle Array<T> special case
@@ -25,7 +32,9 @@ export class ReferenceConverter implements types.TypeConverter {
       const expectations: any[] = [];
       for (const argument of reflectedType.arguments) {
         if (argument.kind === TypeKind.Reference) {
-          expectations.push(new InstanceOf((argument as tsruntimeTypes.ReferenceType).type));
+          expectations.push(
+            new InstanceOf((argument as tsruntimeTypes.ReferenceType).type)
+          );
         } else {
           expectations.push(converter.convert(argument));
         }
@@ -43,13 +52,19 @@ export class ReferenceConverter implements types.TypeConverter {
     return new InstanceOf(reflectedType.type);
   }
 
-  public reflect(reflectedType: tsruntimeTypes.ReferenceType, converter: types.Converter): any {
-
+  public reflect(
+    reflectedType: tsruntimeTypes.ReferenceType,
+    converter: types.Converter
+  ): any {
     if (converter.getConverter(TypeKind.Array).isConvertible(reflectedType)) {
-      return converter.getConverter(TypeKind.Array).reflect(reflectedType, converter);
+      return converter
+        .getConverter(TypeKind.Array)
+        .reflect(reflectedType, converter);
     }
     if (converter.getConverter(TypeKind.Class).isConvertible(reflectedType)) {
-      return converter.getConverter(TypeKind.Class).reflect(reflectedType, converter);
+      return converter
+        .getConverter(TypeKind.Class)
+        .reflect(reflectedType, converter);
     }
     // Handle Array<T> special case
     if (reflectedType.type === Array && reflectedType.arguments) {
@@ -70,5 +85,4 @@ export class ReferenceConverter implements types.TypeConverter {
 
     return reflectedType.type;
   }
-
 }

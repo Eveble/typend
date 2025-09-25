@@ -11,8 +11,10 @@ import { getResolvablePath, isResolvablePath } from '../helpers';
 import { types } from '../types';
 import { Class } from '../patterns/class';
 
-export class ClassValidator extends PatternValidator
-  implements types.PatternValidator {
+export class ClassValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

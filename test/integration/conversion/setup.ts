@@ -42,27 +42,33 @@ compositeObjectConverter.add(new PropsOfConverter(), 0);
 compositeObjectConverter.add(new TypeOfConverter(), 1);
 compositeObjectConverter.add(new ObjectConverter(), 2);
 
-converter.registerConverter(TypeKind.Any,  new AnyConverter());
-converter.registerConverter(TypeKind.String,  new StringConverter());
-converter.registerConverter(TypeKind.Number,  new NumberConverter());
-converter.registerConverter(TypeKind.Boolean,  new BooleanConverter());
-converter.registerConverter(TypeKind.StringLiteral,  new StringLiteralConverter());
-converter.registerConverter(TypeKind.NumberLiteral,  new NumberLiteralConverter());
-converter.registerConverter(TypeKind.FalseLiteral,  new FalseLiteralConverter());
-converter.registerConverter(TypeKind.TrueLiteral,  new TrueLiteralConverter());
-converter.registerConverter(TypeKind.EnumLiteral,  new EnumLiteralConverter());
-converter.registerConverter(TypeKind.ESSymbol,  new ESSymbolConverter());
-converter.registerConverter(TypeKind.Void,  new VoidConverter());
-converter.registerConverter(TypeKind.Undefined,  new UndefinedConverter());
-converter.registerConverter(TypeKind.Null,  new NullConverter());
-converter.registerConverter(TypeKind.Never,  new NeverConverter());
-converter.registerConverter(TypeKind.Tuple,  new TupleConverter());
-converter.registerConverter(TypeKind.Union,  new UnionConverter());
-converter.registerConverter(TypeKind.Reference,  new ReferenceConverter());
-converter.registerConverter(TypeKind.Class,  new ClassConverter());
-converter.registerConverter(TypeKind.Unknown,  new UnknownConverter());
-converter.registerConverter(TypeKind.Function,  new FunctionConverter());
-converter.registerConverter(TypeKind.Array,  new ArrayConverter());
+converter.registerConverter(TypeKind.Any, new AnyConverter());
+converter.registerConverter(TypeKind.String, new StringConverter());
+converter.registerConverter(TypeKind.Number, new NumberConverter());
+converter.registerConverter(TypeKind.Boolean, new BooleanConverter());
+converter.registerConverter(
+  TypeKind.StringLiteral,
+  new StringLiteralConverter()
+);
+converter.registerConverter(
+  TypeKind.NumberLiteral,
+  new NumberLiteralConverter()
+);
+converter.registerConverter(TypeKind.FalseLiteral, new FalseLiteralConverter());
+converter.registerConverter(TypeKind.TrueLiteral, new TrueLiteralConverter());
+converter.registerConverter(TypeKind.EnumLiteral, new EnumLiteralConverter());
+converter.registerConverter(TypeKind.ESSymbol, new ESSymbolConverter());
+converter.registerConverter(TypeKind.Void, new VoidConverter());
+converter.registerConverter(TypeKind.Undefined, new UndefinedConverter());
+converter.registerConverter(TypeKind.Null, new NullConverter());
+converter.registerConverter(TypeKind.Never, new NeverConverter());
+converter.registerConverter(TypeKind.Tuple, new TupleConverter());
+converter.registerConverter(TypeKind.Union, new UnionConverter());
+converter.registerConverter(TypeKind.Reference, new ReferenceConverter());
+converter.registerConverter(TypeKind.Class, new ClassConverter());
+converter.registerConverter(TypeKind.Unknown, new UnknownConverter());
+converter.registerConverter(TypeKind.Function, new FunctionConverter());
+converter.registerConverter(TypeKind.Array, new ArrayConverter());
 
 const describer = new Describer();
 describer.registerDescriber('debug', new DebugDescriber());

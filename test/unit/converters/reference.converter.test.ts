@@ -78,7 +78,9 @@ describe(`ReferenceConverter`, function () {
         // Ensure class converter check returns true
         converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
         classConverter.isConvertible.withArgs(reflectedType).returns(true);
-        classConverter.convert.withArgs(reflectedType, converter).returns(new InstanceOf(MyClass));
+        classConverter.convert
+          .withArgs(reflectedType, converter)
+          .returns(new InstanceOf(MyClass));
 
         const result = typeConverter.convert(reflectedType, converter);
         expect(result).to.be.instanceof(InstanceOf);
@@ -86,10 +88,17 @@ describe(`ReferenceConverter`, function () {
 
         // Verify converter interactions
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(reflectedType);
+        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(reflectedType);
-        expect(classConverter.convert).to.have.been.calledWith(reflectedType, converter);
+        expect(classConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
+        expect(classConverter.convert).to.have.been.calledWith(
+          reflectedType,
+          converter
+        );
       });
 
       it('returns direct InstanceOf when no specific converter matches', () => {
@@ -111,9 +120,13 @@ describe(`ReferenceConverter`, function () {
 
         // Verify converter interactions but no convert calls
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(reflectedType);
+        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(reflectedType);
+        expect(classConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
         expect(arrayConverter.convert).to.not.have.been.called;
         expect(classConverter.convert).to.not.have.been.called;
       });
@@ -131,17 +144,26 @@ describe(`ReferenceConverter`, function () {
         // Ensure array converter check returns true
         converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
         arrayConverter.isConvertible.withArgs(reflectedType).returns(true);
-        arrayConverter.convert.withArgs(reflectedType, converter).returns(convertedArray);
+        arrayConverter.convert
+          .withArgs(reflectedType, converter)
+          .returns(convertedArray);
 
         const arrayType = typeConverter.convert(reflectedType, converter);
         expect(arrayType).to.be.equal(convertedArray);
 
         // Verify converter interactions
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(reflectedType);
-        expect(arrayConverter.convert).to.have.been.calledWith(reflectedType, converter);
+        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
+        expect(arrayConverter.convert).to.have.been.calledWith(
+          reflectedType,
+          converter
+        );
         // Class converter should not be called since array converter handled it
-        expect(converter.getConverter).to.not.have.been.calledWith(TypeKind.Class);
+        expect(converter.getConverter).to.not.have.been.calledWith(
+          TypeKind.Class
+        );
       });
     });
   });
@@ -162,17 +184,26 @@ describe(`ReferenceConverter`, function () {
         // Ensure class converter check returns true
         converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
         classConverter.isConvertible.withArgs(reflectedType).returns(true);
-        classConverter.reflect.withArgs(reflectedType, converter).returns(MyClass);
+        classConverter.reflect
+          .withArgs(reflectedType, converter)
+          .returns(MyClass);
 
         const result = typeConverter.reflect(reflectedType, converter);
         expect(result).to.be.equal(MyClass);
 
         // Verify converter interactions
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(reflectedType);
+        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(reflectedType);
-        expect(classConverter.reflect).to.have.been.calledWith(reflectedType, converter);
+        expect(classConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
+        expect(classConverter.reflect).to.have.been.calledWith(
+          reflectedType,
+          converter
+        );
       });
 
       it('returns direct type reference when no specific converter matches', () => {
@@ -193,9 +224,13 @@ describe(`ReferenceConverter`, function () {
 
         // Verify converter interactions but no reflect calls
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(reflectedType);
+        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(reflectedType);
+        expect(classConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
         expect(arrayConverter.reflect).to.not.have.been.called;
         expect(classConverter.reflect).to.not.have.been.called;
       });
@@ -213,17 +248,26 @@ describe(`ReferenceConverter`, function () {
         // Ensure array converter check returns true
         converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
         arrayConverter.isConvertible.withArgs(reflectedType).returns(true);
-        arrayConverter.reflect.withArgs(reflectedType, converter).returns(reflectedArray);
+        arrayConverter.reflect
+          .withArgs(reflectedType, converter)
+          .returns(reflectedArray);
 
         const arrayType = typeConverter.reflect(reflectedType, converter);
         expect(arrayType).to.be.equal(reflectedArray);
 
         // Verify converter interactions
         expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(reflectedType);
-        expect(arrayConverter.reflect).to.have.been.calledWith(reflectedType, converter);
+        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+          reflectedType
+        );
+        expect(arrayConverter.reflect).to.have.been.calledWith(
+          reflectedType,
+          converter
+        );
         // Class converter should not be called since array converter handled it
-        expect(converter.getConverter).to.not.have.been.calledWith(TypeKind.Class);
+        expect(converter.getConverter).to.not.have.been.calledWith(
+          TypeKind.Class
+        );
       });
     });
   });

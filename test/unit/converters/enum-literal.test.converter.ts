@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { EnumLiteralConverter } from '../../../src/converters/tsruntime/type-converters/enum-literal.converter';
 import { Equals } from '../../../src/patterns/equals';
 
-
 describe(`EnumLiteralConverter`, function () {
   let typeConverter: EnumLiteralConverter;
 

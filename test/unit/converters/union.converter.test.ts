@@ -178,13 +178,14 @@ describe(`UnionConverter`, function () {
           kind: TypeKind.Union,
           types: [
             { kind: TypeKind.Reference, type: MyClass },
-            { kind: TypeKind.Reference, type: MyOtherClass }
-          ]
+            { kind: TypeKind.Reference, type: MyOtherClass },
+          ],
         };
 
-        expect(
-          typeConverter.reflect(unionType, converter)
-        ).to.be.eql([MyClass, MyOtherClass]);
+        expect(typeConverter.reflect(unionType, converter)).to.be.eql([
+          MyClass,
+          MyOtherClass,
+        ]);
       });
 
       it('reflects mixed union with primitives and references', () => {
@@ -193,16 +194,18 @@ describe(`UnionConverter`, function () {
           types: [
             { kind: TypeKind.String },
             { kind: TypeKind.Reference, type: MyClass },
-            { kind: TypeKind.Number }
-          ]
+            { kind: TypeKind.Number },
+          ],
         };
 
         converter.reflect.withArgs({ kind: TypeKind.String }).returns(String);
         converter.reflect.withArgs({ kind: TypeKind.Number }).returns(Number);
 
-        expect(
-          typeConverter.reflect(unionType, converter)
-        ).to.be.eql([MyClass, Number, String]);
+        expect(typeConverter.reflect(unionType, converter)).to.be.eql([
+          MyClass,
+          Number,
+          String,
+        ]);
       });
     });
 
@@ -220,15 +223,18 @@ describe(`UnionConverter`, function () {
           kind: TypeKind.Union,
           types: [
             { kind: TypeKind.Reference, type: MyClass },
-            { kind: TypeKind.Undefined }
-          ]
+            { kind: TypeKind.Undefined },
+          ],
         };
 
-        converter.reflect.withArgs({ kind: TypeKind.Undefined }).returns(undefined);
+        converter.reflect
+          .withArgs({ kind: TypeKind.Undefined })
+          .returns(undefined);
 
-        expect(
-          typeConverter.reflect(unionType, converter)
-        ).to.be.eql([MyClass, undefined]);
+        expect(typeConverter.reflect(unionType, converter)).to.be.eql([
+          MyClass,
+          undefined,
+        ]);
       });
     });
   });
@@ -252,8 +258,8 @@ describe(`UnionConverter`, function () {
           kind: TypeKind.Union,
           types: [
             { kind: TypeKind.Reference, type: MyClass },
-            { kind: TypeKind.Reference, type: MyOtherClass }
-          ]
+            { kind: TypeKind.Reference, type: MyOtherClass },
+          ],
         };
 
         const result = typeConverter.convert(unionType, converter);
@@ -271,10 +277,10 @@ describe(`UnionConverter`, function () {
             {
               kind: TypeKind.Reference,
               type: Array,
-              arguments: [{ kind: TypeKind.String }]
+              arguments: [{ kind: TypeKind.String }],
             },
-            { kind: TypeKind.Number }
-          ]
+            { kind: TypeKind.Number },
+          ],
         };
 
         converter.convert.withArgs({ kind: TypeKind.String }).returns(String);
@@ -293,8 +299,8 @@ describe(`UnionConverter`, function () {
           types: [
             { kind: TypeKind.String },
             { kind: TypeKind.Reference, type: MyClass },
-            { kind: TypeKind.Number }
-          ]
+            { kind: TypeKind.Number },
+          ],
         };
 
         converter.convert.withArgs({ kind: TypeKind.String }).returns(String);
@@ -318,17 +324,18 @@ describe(`UnionConverter`, function () {
         expect(result).to.be.eql([true]);
       });
 
-
       it('converts optional reference type(class|undefined) as instance of Optional pattern', () => {
         const unionType: any = {
           kind: TypeKind.Union,
           types: [
             { kind: TypeKind.Reference, type: MyClass },
-            { kind: TypeKind.Undefined }
-          ]
+            { kind: TypeKind.Undefined },
+          ],
         };
 
-        converter.convert.withArgs({ kind: TypeKind.Undefined }).returns(undefined);
+        converter.convert
+          .withArgs({ kind: TypeKind.Undefined })
+          .returns(undefined);
 
         const result = typeConverter.convert(unionType, converter);
         expect(result).to.be.instanceof(Optional);
@@ -342,21 +349,22 @@ describe(`UnionConverter`, function () {
             {
               kind: TypeKind.Reference,
               type: Array,
-              arguments: [{ kind: TypeKind.String }]
+              arguments: [{ kind: TypeKind.String }],
             },
-            { kind: TypeKind.Undefined }
-          ]
+            { kind: TypeKind.Undefined },
+          ],
         };
 
         converter.convert.withArgs({ kind: TypeKind.String }).returns(String);
-        converter.convert.withArgs({ kind: TypeKind.Undefined }).returns(undefined);
+        converter.convert
+          .withArgs({ kind: TypeKind.Undefined })
+          .returns(undefined);
 
         const result = typeConverter.convert(unionType, converter);
         expect(result).to.be.instanceof(Optional);
         expect(result[0]).to.be.instanceof(List);
         expect(result[0]).to.be.eql([String]);
       });
-
     });
   });
 });

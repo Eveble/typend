@@ -4,8 +4,10 @@ import { NotAMemberError } from '../errors';
 import { types } from '../types';
 import { OneOf } from '../patterns/one-of';
 
-export class OneOfValidator extends PatternValidator
-  implements types.PatternValidator {
+export class OneOfValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

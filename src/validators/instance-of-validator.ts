@@ -11,11 +11,13 @@ import { UnmatchedTypeError, InvalidTypeError } from '../errors';
 import { types } from '../types';
 import { InstanceOf } from '../patterns/instance-of';
 
-export class InstanceOfValidator extends PatternValidator
-  implements types.PatternValidator {
-    static MAPPINGS = {
-      symbol: Symbol,
-    } as const;
+export class InstanceOfValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
+  static MAPPINGS = {
+    symbol: Symbol,
+  } as const;
 
   /**
    * Evaluates if validator can handle provided explicit pattern or implicit expectation.

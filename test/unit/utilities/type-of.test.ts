@@ -7,7 +7,7 @@ import { TypeOf } from '../../../src/utilities/type-of';
 import { types } from '../../../src/types';
 import { Collection } from '../../../src/patterns/collection';
 import { Class } from '../../../src/patterns/class';
-import { validable } from '../../../src/annotations/validable';
+import { Validable } from '../../../src/annotations/validable';
 import { Any } from '../../../src/patterns/any';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
 import { Type } from '../../../src/decorators/type.decorator';
@@ -183,7 +183,7 @@ describe(`TypeOf`, function () {
     });
 
     it(`generates instance of Any pattern for non-validable types`, () => {
-      @validable(false)
+      @Validable(false)
       @Type()
       class MyClass {
         value: string;

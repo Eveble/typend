@@ -6,8 +6,10 @@ import { PatternValidator } from '../pattern-validator';
 import { Equals } from '../patterns/equals';
 import { isPlainObjectFast } from '../helpers';
 
-export class EqualsValidator extends PatternValidator
-  implements types.PatternValidator {
+export class EqualsValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided explicit pattern or implicit expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.
@@ -57,34 +59,34 @@ export class EqualsValidator extends PatternValidator
 
     const expectation =
       equalsOrExpect instanceof Equals ? equalsOrExpect[0] : equalsOrExpect;
-      if (expectation === value) {
-        return true;
-      }
+    if (expectation === value) {
+      return true;
+    }
 
     let isValid = false;
     let errorMessage = 'Expected %s to be equal to %s';
 
-
     // nil
     if (value == null) {
       isValid = expectation === value;
-    // RegExp
+      // RegExp
     } else if (expectation instanceof RegExp) {
       isValid = expectation.test(value);
       errorMessage = 'Expected %s to match %s';
-    // Error instances
+      // Error instances
     } else if (isErrorInstance(expectation)) {
-      isValid = expectation.message === value.message &&
-                expectation.constructor === value.constructor;
-    // ValueObject specific case helpers
+      isValid =
+        expectation.message === value.message &&
+        expectation.constructor === value.constructor;
+      // ValueObject specific case helpers
     } else if (isFunction(expectation?.isSame)) {
       isValid = expectation.isSame(value);
       errorMessage = `Expected %s to pass %s is same evaluation`;
-    // ValueObject
+      // ValueObject
     } else if (isFunction(expectation?.equals)) {
       isValid = expectation.equals(value);
       errorMessage = `Expected %s to pass %s equality evaluation`;
-    // Dates instances or other values with valueOf method
+      // Dates instances or other values with valueOf method
     } else if (
       !['string', 'number', 'boolean', 'symbol'].includes(typeof value) &&
       !(value instanceof Map) &&

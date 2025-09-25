@@ -6,8 +6,10 @@ import { ClassConverter } from '../../../src/converters/tsruntime/type-converter
 import { Class, Collection, InstanceOf, types } from '../../../src';
 import { Type } from '../../../src/decorators/type.decorator';
 import { TypeKind } from '../../../src/enums/type-kind.enum';
-import { PROPERTIES_KEY, REFLECTION_KEY } from '../../../src/constants/metadata-keys';
-
+import {
+  PROPERTIES_KEY,
+  REFLECTION_KEY,
+} from '../../../src/constants/metadata-keys';
 
 chai.use(sinonChai);
 

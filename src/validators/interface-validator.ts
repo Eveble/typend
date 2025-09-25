@@ -7,8 +7,10 @@ import { PatternValidator } from '../pattern-validator';
 import { getResolvablePath, isPlainObjectFast } from '../helpers';
 import { InvalidTypeError } from '../errors';
 
-export class InterfaceValidator extends PatternValidator
-  implements types.PatternValidator {
+export class InterfaceValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

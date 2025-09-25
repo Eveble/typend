@@ -3,8 +3,10 @@ import { types } from '../types';
 import { Never } from '../patterns/never';
 import { ValidationError } from '../errors';
 
-export class NeverValidator extends PatternValidator
-  implements types.PatternValidator {
+export class NeverValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

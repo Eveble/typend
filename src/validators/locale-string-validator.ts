@@ -3,8 +3,10 @@ import { types } from '../types';
 import { LocaleString } from '../patterns/locale-string';
 import { ValidationError } from '../errors';
 
-export class LocaleStringValidator extends PatternValidator
-  implements types.PatternValidator {
+export class LocaleStringValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided expectation.
    * @param expectation - Evaluated explicit `Pattern` instance or implicit expectation.

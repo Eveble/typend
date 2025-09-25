@@ -1,18 +1,18 @@
 import { expect } from 'chai';
-import { validable } from '../../../src/annotations/validable';
+import { Validable } from '../../../src/annotations/validable';
 import { isValidable } from '../../../src/helpers';
 
 describe(`validable`, function () {
-  @validable(false)
+  @Validable(false)
   class Parent {}
 
-  @validable(true)
+  @Validable(true)
   class Child extends Parent {}
 
-  @validable()
+  @Validable()
   class ExplicitValidable {}
 
-  @validable(true)
+  @Validable(true)
   class ExplicitTrueValidable {}
 
   class ImplicitValidable {}

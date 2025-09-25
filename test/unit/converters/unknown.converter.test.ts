@@ -43,7 +43,9 @@ describe(`UnknownConverter`, function () {
 
   describe('reflection', () => {
     it('reflects unknown type to instance of Unknown', () => {
-      expect(typeConverter.reflect(reflect<unknown>())).to.be.instanceof(Unknown);
+      expect(typeConverter.reflect(reflect<unknown>())).to.be.instanceof(
+        Unknown
+      );
     });
 
     it('reflects Unknown2 type kind to instance of Unknown', () => {
@@ -55,7 +57,9 @@ describe(`UnknownConverter`, function () {
 
   describe('conversion', () => {
     it('converts unknown reflected type to instance of Unknown', () => {
-      expect(typeConverter.convert(reflect<unknown>())).to.be.instanceof(Unknown);
+      expect(typeConverter.convert(reflect<unknown>())).to.be.instanceof(
+        Unknown
+      );
     });
 
     it('converts Unknown2 type kind to instance of Unknown', () => {

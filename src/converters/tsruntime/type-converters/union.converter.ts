@@ -1,5 +1,5 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from "../../../types";
+import { types } from '../../../types';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { OneOf } from '../../../patterns/one-of';
 import { Optional } from '../../../patterns/optional';
@@ -12,13 +12,17 @@ export class UnionConverter implements types.TypeConverter {
     return reflectedType.kind === TypeKind.Union;
   }
 
-  public convert(reflectedType: tsruntimeTypes.ReflectedType, converter: types.Converter): Optional | OneOf {
+  public convert(
+    reflectedType: tsruntimeTypes.ReflectedType,
+    converter: types.Converter
+  ): Optional | OneOf {
     const expectations: any[] = [];
     for (const arg of (reflectedType as tsruntimeTypes.UnionType).types) {
       if (arg.kind === TypeKind.Reference) {
         if (arg.type !== Array) {
-          expectations.push(new InstanceOf((arg as tsruntimeTypes.ReferenceType).type));
-
+          expectations.push(
+            new InstanceOf((arg as tsruntimeTypes.ReferenceType).type)
+          );
         } else {
           for (const argument of arg.arguments) {
             expectations.push(new List(converter.convert(argument)));
@@ -31,7 +35,8 @@ export class UnionConverter implements types.TypeConverter {
 
     let pattern;
     if (expectations.length === 2 && expectations.includes(undefined)) {
-      const expectation = expectations[0] !== undefined ? expectations[0] : expectations[1];
+      const expectation =
+        expectations[0] !== undefined ? expectations[0] : expectations[1];
       pattern = new Optional(expectation);
     } else {
       pattern = new OneOf(...expectations);
@@ -40,7 +45,10 @@ export class UnionConverter implements types.TypeConverter {
     return pattern;
   }
 
-  public reflect(reflectedType: tsruntimeTypes.ReflectedType, converter: types.Converter): any[] {
+  public reflect(
+    reflectedType: tsruntimeTypes.ReflectedType,
+    converter: types.Converter
+  ): any[] {
     const expectations: any[] = [];
     for (const arg of (reflectedType as tsruntimeTypes.UnionType).types) {
       if (arg.kind === TypeKind.Reference) {

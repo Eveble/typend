@@ -31,7 +31,6 @@ export class TypeOf extends WrapperPattern implements types.Utility {
    * @returns Instance of `Type` pattern or instance of `Any` pattern if type is not validable.
    */
   public generate(library: types.Library): Class | Any {
-
     const type = this[0];
     if (!isType(type)) {
       throw new UndefinableClassError(getTypeName(type) as string);

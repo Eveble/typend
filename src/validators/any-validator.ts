@@ -2,8 +2,10 @@ import { Any } from '../patterns/any';
 import { PatternValidator } from '../pattern-validator';
 import { types } from '../types';
 
-export class AnyValidator extends PatternValidator
-  implements types.PatternValidator {
+export class AnyValidator
+  extends PatternValidator
+  implements types.PatternValidator
+{
   /**
    * Evaluates if validator can handle provided expectation.
    * @param expectation - Evaluated explicit `Pattern` or implicit expectation.

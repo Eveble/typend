@@ -14,7 +14,7 @@ import {
   isSpecial,
 } from '../../src/helpers';
 import { types } from '../../src/types';
-import { validable } from '../../src/annotations/validable';
+import { Validable } from '../../src/annotations/validable';
 import { Class } from '../../src/patterns/class';
 import { InstanceOf } from '../../src/patterns/instance-of';
 import { Interface } from '../../src/patterns/interface';
@@ -234,21 +234,21 @@ describe(`helpers`, function () {
 
   describe('isValidable', () => {
     it('returns true for classes that are implicitly validable', () => {
-      @validable()
+      @Validable()
       class MyClass {}
 
       expect(isValidable(MyClass)).to.be.true;
     });
 
     it('returns true for classes that are explicitly validable', () => {
-      @validable(true)
+      @Validable(true)
       class MyClass {}
 
       expect(isValidable(MyClass)).to.be.true;
     });
 
     it('returns false for classes that are not explicitly validable', () => {
-      @validable(false)
+      @Validable(false)
       class MyClass {}
 
       expect(isValidable(MyClass)).to.be.false;

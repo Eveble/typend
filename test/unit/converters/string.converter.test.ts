@@ -26,7 +26,6 @@ describe(`StringConverter`, function () {
     it('reflects string type to String constructor', () => {
       expect(typeConverter.reflect(reflect<string>())).to.be.equal(String);
     });
-
   });
 
   describe('conversion', () => {
@@ -35,6 +34,5 @@ describe(`StringConverter`, function () {
       expect(result).to.be.instanceof(InstanceOf);
       expect(result).to.be.eql(new InstanceOf(String));
     });
-
   });
 });

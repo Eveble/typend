@@ -1,5 +1,5 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
-import { types } from "../../../types";
+import { types } from '../../../types';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { Equals } from '../../../patterns/equals';
 
@@ -10,7 +10,9 @@ export class StringLiteralConverter implements types.TypeConverter {
   }
 
   public convert(reflectedType: tsruntimeTypes.ReflectedType): Equals {
-    return new Equals((reflectedType as tsruntimeTypes.StringLiteralType).value);
+    return new Equals(
+      (reflectedType as tsruntimeTypes.StringLiteralType).value
+    );
   }
 
   public reflect(reflectedType: tsruntimeTypes.ReflectedType): string {
