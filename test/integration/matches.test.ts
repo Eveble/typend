@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { define } from '../../src/decorators/define';
 import {
   validate,
   any,
@@ -17,8 +16,9 @@ import {
   list,
   tuple,
 } from '../../src/index';
+import { Type } from '../../src/decorators/type.decorator';
 
-@define()
+@Type()
 class MyClass {
   public value: string;
 
@@ -26,7 +26,7 @@ class MyClass {
     this.value = value;
   }
 }
-@define()
+@Type()
 class MyOtherClass {
   public value: string;
 

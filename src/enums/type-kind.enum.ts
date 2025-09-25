@@ -1,0 +1,25 @@
+export enum TypeKind {
+  Any = 1,
+  String = 2,
+  Number = 3,
+  Boolean = 4,
+  StringLiteral = 5,
+  NumberLiteral = 6,
+  FalseLiteral = 7,
+  TrueLiteral = 8,
+  EnumLiteral = 9,
+  ESSymbol = 10,
+  Void = 11,
+  Undefined = 12,
+  Null = 13,
+  Never = 14,
+  Object = 15, // Will be reflected for custom types
+  Tuple = 16,
+  Union = 17,
+  Reference = 18,  // Generic types, Array<T>, etc.
+  Class = 19,
+  Unknown = 20,
+  Function = 21,
+  Unknown2 = 999,
+  Array = 1000
+}

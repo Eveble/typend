@@ -8,19 +8,18 @@ import {
   isPatternClass,
   isPattern,
   isUtility,
-  isDefined,
+  isType,
   isValidable,
   isInstanceOfExpectation,
   isSpecial,
 } from '../../src/helpers';
 import { types } from '../../src/types';
-import { define } from '../../src/decorators/define';
 import { validable } from '../../src/annotations/validable';
-
 import { Class } from '../../src/patterns/class';
 import { InstanceOf } from '../../src/patterns/instance-of';
 import { Interface } from '../../src/patterns/interface';
 import { VALIDATION_TYPE_KEY } from '../../src/constants/literal-keys';
+import { Type } from '../../src/decorators/type.decorator';
 
 describe(`helpers`, function () {
   describe('getResolvablePath', () => {
@@ -217,19 +216,19 @@ describe(`helpers`, function () {
     });
   });
 
-  describe('isDefined', () => {
+  describe('isType', () => {
     it('returns true for class constructors implementing @define decorator', () => {
-      @define()
+      @Type()
       class DefinableClass {}
 
-      expect(isDefined(DefinableClass)).to.be.true;
+      expect(isType(DefinableClass)).to.be.true;
     });
 
     it('returns false for class constructors not implementing @define decorator', () => {
       class DefaultClass {}
 
-      expect(isDefined(undefined)).to.be.false;
-      expect(isDefined(DefaultClass)).to.be.false;
+      expect(isType(undefined)).to.be.false;
+      expect(isType(DefaultClass)).to.be.false;
     });
   });
 

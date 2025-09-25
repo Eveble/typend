@@ -10,7 +10,7 @@ import * as LITERAL_KEYS from './constants/literal-keys';
 import { internal } from './annotations/internal';
 import { validable } from './annotations/validable';
 // Decorators
-import { define } from './decorators/define';
+import { Type } from './decorators/type.decorator';
 // Errors
 import {
   ValidationError,
@@ -88,21 +88,31 @@ import { FallbackDescriber } from './describers/fallback-describer';
 import { DescriptionListDescriber } from './describers/description-list-describer';
 import { DebugDescriber } from './describers/debug-describer';
 // Type Converters
-import { ArrayConverter } from './converters/tsruntime/type-converters/array-converter';
-import { ClassConverter } from './converters/tsruntime/type-converters/class-converter';
-import { FunctionConverter } from './converters/tsruntime/type-converters/function-converter';
-import { NativeConverter } from './converters/tsruntime/type-converters/native-converter';
-import { NilConverter } from './converters/tsruntime/type-converters/nil-converter';
-import { ObjectConverter } from './converters/tsruntime/type-converters/object-converter';
-import { PrimitiveConverter } from './converters/tsruntime/type-converters/primitive-converter';
-import { ReferenceConverter } from './converters/tsruntime/type-converters/reference-converter';
-import { TupleConverter } from './converters/tsruntime/type-converters/tuple-converter';
-import { UnionConverter } from './converters/tsruntime/type-converters/union-converter';
-import { UnknownConverter } from './converters/tsruntime/type-converters/unknown-converter';
-import { UnrecognizedConverter } from './converters/tsruntime/type-converters/unrecognized-converter';
-import { LiteralConverter } from './converters/tsruntime/type-converters/literal-converter';
 import { PropsOfConverter } from './converters/tsruntime/validation-converters/props-of-converter';
+import { ObjectConverter } from './converters/tsruntime/type-converters/object.converter';
 import { TypeOfConverter } from './converters/tsruntime/validation-converters/type-of-converter';
+import { AnyConverter } from './converters/tsruntime/type-converters/any.converter';
+import { StringConverter } from './converters/tsruntime/type-converters/string.converter';
+import { NumberConverter } from './converters/tsruntime/type-converters/number.converter';
+import { BooleanConverter } from './converters/tsruntime/type-converters/boolean.converter';
+import { StringLiteralConverter } from './converters/tsruntime/type-converters/string-literal.converter';
+import { NumberLiteralConverter } from './converters/tsruntime/type-converters/number-literal.converter';
+import { FalseLiteralConverter } from './converters/tsruntime/type-converters/false-literal.converter';
+import { TrueLiteralConverter } from './converters/tsruntime/type-converters/true-literal.converter';
+import { EnumLiteralConverter } from './converters/tsruntime/type-converters/enum-literal.converter';
+import { ESSymbolConverter } from './converters/tsruntime/type-converters/essymbol.converter';
+import { VoidConverter } from './converters/tsruntime/type-converters/void.converter';
+import { NullConverter } from './converters/tsruntime/type-converters/null.converter';
+import { UndefinedConverter } from './converters/tsruntime/type-converters/undefined.converter';
+import { NeverConverter } from './converters/tsruntime/type-converters/never.converter';
+import { TupleConverter } from './converters/tsruntime/type-converters/tuple.converter';
+import { UnionConverter } from './converters/tsruntime/type-converters/union.converter';
+import { ReferenceConverter } from './converters/tsruntime/type-converters/reference.converter';
+import { ClassConverter } from './converters/tsruntime/type-converters/class.converter';
+import { UnknownConverter } from './converters/tsruntime/type-converters/unknown.converter';
+import { FunctionConverter } from './converters/tsruntime/type-converters/function.converter';
+import { ArrayConverter } from './converters/tsruntime/type-converters/array.converter';
+
 import { TSRuntimeConverter } from './converters/tsruntime/tsruntime-converter';
 // Type transformers
 import { InjectingPropsTransformer } from './converters/transformers/injecting-props-transformer';
@@ -122,11 +132,13 @@ import {
   isPatternClass,
   isPattern,
   isUtility,
-  isDefined,
+  isType,
   isValidable,
   getMatchingParentProto,
   isSpecial,
 } from './helpers';
+import { CompositeTypeConverter } from './converters/tsruntime/type-converters/composite.converter';
+import { TypeKind } from './enums/type-kind.enum';
 
 const KINDS = LITERAL_KEYS.KINDS;
 
@@ -139,23 +151,39 @@ const classTransformers: Map<string, types.TypeTransformer> = new Map();
 classTransformers.set('internal', new InternalPropsTransformer());
 classTransformers.set('inject', new InjectingPropsTransformer());
 
+
 // Converters
 const converter: types.Converter = new TSRuntimeConverter();
-converter.registerConverter(KINDS.PROPERTIES_OF, new PropsOfConverter());
-converter.registerConverter(KINDS.TYPE_OF, new TypeOfConverter());
-converter.registerConverter(KINDS.CLASS, new ClassConverter(classTransformers));
-converter.registerConverter(KINDS.TUPLE, new TupleConverter());
-converter.registerConverter(KINDS.UNION, new UnionConverter());
-converter.registerConverter(KINDS.NATIVE, new NativeConverter());
-converter.registerConverter(KINDS.NIL, new NilConverter());
-converter.registerConverter(KINDS.ARRAY, new ArrayConverter());
-converter.registerConverter(KINDS.FUNCTION, new FunctionConverter());
-converter.registerConverter(KINDS.OBJECT, new ObjectConverter());
-converter.registerConverter(KINDS.PRIMITIVE, new PrimitiveConverter());
-converter.registerConverter(KINDS.REFERENCE, new ReferenceConverter());
-converter.registerConverter(KINDS.UNKNOWN, new UnknownConverter());
-converter.registerConverter(KINDS.UNRECOGNIZED, new UnrecognizedConverter());
-converter.registerConverter(KINDS.LITERAL, new LiteralConverter());
+
+// Initialize Object as composite converter
+const compositeObjectConverter = new CompositeTypeConverter();
+converter.registerConverter(TypeKind.Object, compositeObjectConverter);
+
+compositeObjectConverter.add(new PropsOfConverter(), 0);
+compositeObjectConverter.add(new TypeOfConverter(), 1);
+compositeObjectConverter.add(new ObjectConverter(), 2);
+
+converter.registerConverter(TypeKind.Any,  new AnyConverter());
+converter.registerConverter(TypeKind.String,  new StringConverter());
+converter.registerConverter(TypeKind.Number,  new NumberConverter());
+converter.registerConverter(TypeKind.Boolean,  new BooleanConverter());
+converter.registerConverter(TypeKind.StringLiteral,  new StringLiteralConverter());
+converter.registerConverter(TypeKind.NumberLiteral,  new NumberLiteralConverter());
+converter.registerConverter(TypeKind.FalseLiteral,  new FalseLiteralConverter());
+converter.registerConverter(TypeKind.TrueLiteral,  new TrueLiteralConverter());
+converter.registerConverter(TypeKind.EnumLiteral,  new EnumLiteralConverter());
+converter.registerConverter(TypeKind.ESSymbol,  new ESSymbolConverter());
+converter.registerConverter(TypeKind.Void,  new VoidConverter());
+converter.registerConverter(TypeKind.Undefined,  new UndefinedConverter());
+converter.registerConverter(TypeKind.Null,  new NullConverter());
+converter.registerConverter(TypeKind.Never,  new NeverConverter());
+converter.registerConverter(TypeKind.Tuple,  new TupleConverter());
+converter.registerConverter(TypeKind.Union,  new UnionConverter());
+converter.registerConverter(TypeKind.Reference,  new ReferenceConverter());
+converter.registerConverter(TypeKind.Class,  new ClassConverter());
+converter.registerConverter(TypeKind.Unknown,  new UnknownConverter());
+converter.registerConverter(TypeKind.Function,  new FunctionConverter());
+converter.registerConverter(TypeKind.Array,  new ArrayConverter());
 
 // Register pattern validators on validator
 const validator: types.Validator = new Validator();
@@ -478,21 +506,7 @@ export {
   DescriptionListDescriber,
   DebugDescriber,
   // Converters
-  ArrayConverter,
-  ClassConverter,
-  FunctionConverter,
-  NativeConverter,
-  NilConverter,
-  ObjectConverter,
-  PrimitiveConverter,
-  ReferenceConverter,
-  TupleConverter,
-  UnionConverter,
-  UnknownConverter,
-  UnrecognizedConverter,
-  LiteralConverter,
-  PropsOfConverter,
-  TypeOfConverter,
+
   TSRuntimeConverter,
   // Type transformers
   InjectingPropsTransformer,
@@ -512,7 +526,7 @@ export {
   isPatternClass,
   isPattern,
   isUtility,
-  isDefined,
+  isType,
   isValidable,
   getMatchingParentProto,
   isSpecial,
@@ -533,7 +547,7 @@ export {
   internal,
   validable,
   // Decorators
-  define,
+  Type,
   // Patterns
   any,
   iof,

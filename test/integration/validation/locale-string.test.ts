@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import { define } from '../../../src/decorators/define';
 import { $PropsOf, check } from '../../../src';
 import { LocaleString } from '../../../src/patterns/locale-string';
 import { ValidationError } from '../../../src/errors';
+import { Type } from '../../../src/decorators/type.decorator';
 
 describe('LocaleString validation on classes', function () {
-  @define()
+  @Type()
   class MyLocaleClass {
     public value: LocaleString;
 

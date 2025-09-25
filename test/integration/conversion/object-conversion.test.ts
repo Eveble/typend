@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { reflect } from 'tsruntime';
 import { converter } from './setup';
-import { define } from '../../../src/decorators/define';
 import { Collection } from '../../../src/patterns/collection';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 import { Equals } from '../../../src/patterns/equals';
@@ -13,9 +12,10 @@ import { Optional } from '../../../src/patterns/optional';
 import { OneOf } from '../../../src/patterns/one-of';
 import { Tuple } from '../../../src/patterns/tuple';
 import { Interface } from '../../../src/patterns/interface';
+import { Type } from '../../../src/decorators/type.decorator';
 
 describe(`Object conversion`, function () {
-  @define()
+  @Type()
   class MyClass {
     key: string;
   }

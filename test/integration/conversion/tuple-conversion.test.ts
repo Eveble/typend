@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { reflect } from 'tsruntime';
-import { define } from '../../../src/decorators/define';
 import { converter } from './setup';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 import { Tuple } from '../../../src/patterns/tuple';
@@ -9,6 +8,7 @@ import { Any } from '../../../src/patterns/any';
 import { Void } from '../../../src/patterns/void';
 import { Never } from '../../../src/patterns/never';
 import { Collection } from '../../../src/patterns/collection';
+import { Type } from '../../../src/decorators/type.decorator';
 
 describe(`Tuple conversion`, function () {
   type MyType = {
@@ -27,12 +27,12 @@ describe(`Tuple conversion`, function () {
     second: number;
   }
 
-  @define()
+  @Type()
   class MyClass {
     first: string;
   }
 
-  @define()
+  @Type()
   class MyOtherClass {
     second: number;
   }

@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { ValidationError } from '../../src/errors';
-import { define } from '../../src/decorators/define';
 import { Interface } from '../../src/patterns/interface';
 import { InstanceOf } from '../../src/patterns/instance-of';
 import {
@@ -15,6 +14,7 @@ import {
   convert,
   reflect,
 } from '../../src/index';
+import { Type } from '../../src/decorators/type.decorator';
 
 describe('API', () => {
   interface Employee {
@@ -37,7 +37,7 @@ describe('API', () => {
     getAge: Function,
   });
 
-  @define()
+  @Type()
   class Parent {
     name: string;
 
@@ -57,10 +57,10 @@ describe('API', () => {
     }
   }
 
-  @define()
+  @Type()
   class Child extends Parent {}
 
-  @define()
+  @Type()
   class Person {
     name: string;
 

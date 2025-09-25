@@ -1,7 +1,6 @@
 import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import { reflect } from 'tsruntime';
-import { define } from '../../../src/decorators/define';
 import { converter } from './setup';
 import { Class } from '../../../src/patterns/class';
 import { InstanceOf } from '../../../src/patterns/instance-of';
@@ -14,11 +13,12 @@ import { OneOf } from '../../../src/patterns/one-of';
 import { Optional } from '../../../src/patterns/optional';
 import { Tuple } from '../../../src/patterns/tuple';
 import { Collection } from '../../../src/patterns/collection';
+import { Type } from '../../../src/decorators/type.decorator';
 
 chai.use(sinonChai);
 
 describe(`Class conversion`, function () {
-  @define()
+  @Type()
   class MyClass {
     key: string;
   }
@@ -48,7 +48,7 @@ describe(`Class conversion`, function () {
 
   describe('reflected', () => {
     it('ensures tha class property key as symbol is preserved on class definitions', () => {
-      @define()
+      @Type()
       class SymbolClass {
         [symbolAsAKey]: string;
       }
@@ -59,7 +59,7 @@ describe(`Class conversion`, function () {
     });
 
     it(`ensures tha use of 'Reflect.ownKeys' does not impact on class properties key names matching build-in native ones`, () => {
-      @define()
+      @Type()
       class EnsureKeysClass {
         length: number;
       }
@@ -70,7 +70,7 @@ describe(`Class conversion`, function () {
     });
 
     it(`returns properties notated as not-null(bang operator)`, () => {
-      @define()
+      @Type()
       class BangClass {
         key!: string;
       }
@@ -81,7 +81,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns reflected class with native type properties', () => {
-      @define()
+      @Type()
       class NativeClass {
         any: any;
 
@@ -104,7 +104,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns reflected class with primitive types properties', () => {
-      @define()
+      @Type()
       class PrimitiveClass {
         null: null;
 
@@ -135,7 +135,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns reflected class with literal primitive types properties', () => {
-      @define()
+      @Type()
       class ValueLiteralClass {
         stringLiteral: 'my-string';
 
@@ -158,7 +158,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns reflected class with union types properties', () => {
-      @define()
+      @Type()
       class UnionClass {
         optionalString?: string;
 
@@ -193,7 +193,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns reflected class with tuple types properties', () => {
-      @define()
+      @Type()
       class TupleClass {
         stringTuple: [string];
 
@@ -237,7 +237,7 @@ describe(`Class conversion`, function () {
         [symbolAsAKey]: string; // Symbols are not iterable(!), thats why were using Reflect.ownKeys on TSRuntimeConverter.prototype.decodeProps
       };
 
-      @define()
+      @Type()
       class NestedClass {
         objectTypeWithSymbol: ObjectTypeWithSymbol;
       }
@@ -252,7 +252,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns reflected class with class property', () => {
-      @define()
+      @Type()
       class NestedClass {
         class: MyClass;
       }
@@ -268,7 +268,7 @@ describe(`Class conversion`, function () {
         second: number;
       };
 
-      @define()
+      @Type()
       class TypeClass {
         type: MyType;
       }
@@ -287,7 +287,7 @@ describe(`Class conversion`, function () {
         second: number;
       }
 
-      @define()
+      @Type()
       class InterfaceClass {
         interface: MyInterface;
       }
@@ -303,7 +303,7 @@ describe(`Class conversion`, function () {
 
   describe('conversion', () => {
     it('ensures tha class property key as symbol is preserved on class definitions', () => {
-      @define()
+      @Type()
       class SymbolClass {
         [symbolAsAKey]: string;
       }
@@ -316,7 +316,7 @@ describe(`Class conversion`, function () {
     });
 
     it(`ensures tha use of 'Reflect.ownKeys' does not impact on class properties key names matching build-in native ones`, () => {
-      @define()
+      @Type()
       class EnsureKeysClass {
         length: number;
       }
@@ -329,7 +329,7 @@ describe(`Class conversion`, function () {
     });
 
     it(`returns properties notated as not-null(bang operator)`, () => {
-      @define()
+      @Type()
       class BangClass {
         key!: string;
       }
@@ -342,7 +342,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns converted class with native type properties', () => {
-      @define()
+      @Type()
       class NativeClass {
         any: any;
 
@@ -367,7 +367,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns converted class with primitive types properties', () => {
-      @define()
+      @Type()
       class PrimitiveClass {
         null: null;
 
@@ -401,7 +401,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns converted class with literal primitive types properties', () => {
-      @define()
+      @Type()
       class ValueLiteralClass {
         stringLiteral: 'my-string';
 
@@ -426,7 +426,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns converted class with union types properties', () => {
-      @define()
+      @Type()
       class UnionClass {
         optionalString?: string;
 
@@ -467,7 +467,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns converted class with tuple types properties', () => {
-      @define()
+      @Type()
       class TupleClass {
         stringTuple: [string];
 
@@ -531,7 +531,7 @@ describe(`Class conversion`, function () {
         [symbolAsAKey]: string; // Symbols are not iterable(!), thats why were using Reflect.ownKeys on TSRuntimeConverter.prototype.decodeProps
       };
 
-      @define()
+      @Type()
       class NestedClass {
         objectTypeWithSymbol: ObjectTypeWithSymbol;
       }
@@ -548,7 +548,7 @@ describe(`Class conversion`, function () {
     });
 
     it('returns converted class with class property', () => {
-      @define()
+      @Type()
       class NestedClass {
         class: MyClass;
       }
@@ -566,7 +566,7 @@ describe(`Class conversion`, function () {
         second: number;
       };
 
-      @define()
+      @Type()
       class TypeClass {
         type: MyType;
       }
@@ -587,7 +587,7 @@ describe(`Class conversion`, function () {
         second: number;
       }
 
-      @define()
+      @Type()
       class InterfaceClass {
         interface: MyInterface;
       }

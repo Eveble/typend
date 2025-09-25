@@ -1,4 +1,4 @@
-export const DEFINABLE_KEY: unique symbol = Symbol('eveble:flags:definable');
+export const TYPE_KEY: unique symbol = Symbol('eveble:flags:type');
 
 export const PROPERTIES_KEY: unique symbol = Symbol(
   'eveble:containers:definition'

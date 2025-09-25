@@ -8,6 +8,7 @@ import {
   VALIDATION_PAYLOAD_KEY,
   KINDS,
 } from '../../../constants/literal-keys';
+import { TypeKind } from '../../../enums/type-kind.enum';
 
 export class PropsOfConverter implements types.TypeConverter {
   /**
@@ -37,7 +38,7 @@ export class PropsOfConverter implements types.TypeConverter {
       `properties.${VALIDATION_PAYLOAD_KEY.toString()}`
     );
     const classConverter = converter.getConverter(
-      KINDS.CLASS
+      TypeKind.Class
     ) as types.TypeConverter;
     return classConverter.isConvertible(validationPayload, converter);
   }
@@ -58,7 +59,7 @@ export class PropsOfConverter implements types.TypeConverter {
     );
 
     const classConverter = converter.getConverter(
-      KINDS.CLASS
+      TypeKind.Class
     ) as types.TypeConverter;
     const classType: Class | undefined = classConverter.convert(
       nestedReflectedType,
@@ -82,9 +83,8 @@ export class PropsOfConverter implements types.TypeConverter {
       reflectedType,
       `properties.${VALIDATION_PAYLOAD_KEY.toString()}`
     );
-
     const classConverter = converter.getConverter(
-      KINDS.CLASS
+      TypeKind.Class
     ) as types.TypeConverter;
     return classConverter.reflect(nestedReflectedType, converter);
   }

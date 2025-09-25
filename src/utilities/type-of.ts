@@ -2,7 +2,7 @@ import { isClass, getTypeName } from '@eveble/helpers';
 import { Utility } from '../utility';
 import { InvalidTypeError, UndefinableClassError } from '../errors';
 import { types } from '../types';
-import { isValidable, isDefined } from '../helpers';
+import { isValidable, isType } from '../helpers';
 import { Class } from '../patterns/class';
 import { Any } from '../patterns/any';
 import { WrapperPattern } from '../wrapper-pattern';
@@ -31,8 +31,9 @@ export class TypeOf extends WrapperPattern implements types.Utility {
    * @returns Instance of `Type` pattern or instance of `Any` pattern if type is not validable.
    */
   public generate(library: types.Library): Class | Any {
+
     const type = this[0];
-    if (!isDefined(type)) {
+    if (!isType(type)) {
       throw new UndefinableClassError(getTypeName(type) as string);
     }
     if (!isValidable(type)) {

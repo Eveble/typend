@@ -6,10 +6,10 @@ import { InstanceOf } from '../../../src/patterns/instance-of';
 import { Equals } from '../../../src/patterns/equals';
 import { Any } from '../../../src/patterns/any';
 import { Collection } from '../../../src/patterns/collection';
-import { define } from '../../../src/decorators/define';
+import { Type } from '../../../src/decorators/type.decorator';
 
 describe(`Array conversion`, function () {
-  @define()
+  @Type()
   class MyClass {
     key: string;
   }

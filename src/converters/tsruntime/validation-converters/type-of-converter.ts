@@ -7,6 +7,7 @@ import {
   VALIDATION_PAYLOAD_KEY,
   KINDS,
 } from '../../../constants/literal-keys';
+import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 
 export class TypeOfConverter implements types.TypeConverter {
   /**
@@ -32,7 +33,7 @@ export class TypeOfConverter implements types.TypeConverter {
     );
 
     const classConverter = converter.getConverter(
-      KINDS.CLASS
+      TypeKind.Class
     ) as types.TypeConverter;
     return (
       validationType?.value === KINDS.TYPE_OF &&
@@ -56,7 +57,7 @@ export class TypeOfConverter implements types.TypeConverter {
     );
 
     const classConverter = converter.getConverter(
-      KINDS.CLASS
+      TypeKind.Class
     ) as types.TypeConverter;
     const classType: Class = classConverter.convert(
       nestedReflectedType,
@@ -81,7 +82,7 @@ export class TypeOfConverter implements types.TypeConverter {
     );
 
     const classConverter = converter.getConverter(
-      KINDS.CLASS
+      TypeKind.Class
     ) as types.TypeConverter;
     return classConverter.reflect(nestedReflectedType, converter);
   }

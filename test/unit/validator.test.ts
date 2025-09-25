@@ -251,28 +251,6 @@ describe(`Validator`, function () {
           validator
         );
       });
-
-      it('replaces undefined values with property initializers from expectations if they are set', () => {
-        const val = undefined;
-        const pattern = new MyPattern(String);
-        const initializer = 'my-initializer-value';
-        pattern.setInitializer(initializer);
-        const patternValidator = stubInterface<types.PatternValidator>();
-
-        const validator = new Validator();
-        validator.registerValidator('MyValidator', patternValidator);
-        patternValidator.validate
-          .withArgs(initializer, pattern, validator)
-          .returns(true);
-
-        expect(validator.validate(val, pattern)).to.be.true;
-        expect(patternValidator.validate).to.be.calledOnce;
-        expect(patternValidator.validate).to.be.calledWithExactly(
-          initializer,
-          pattern,
-          validator
-        );
-      });
     });
 
     context('implicit expectations', () => {

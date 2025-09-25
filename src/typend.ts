@@ -42,6 +42,7 @@ class Typend implements types.Library {
     expectation: types.Expectation | Utility,
     isStrict = true
   ): boolean {
+
     return this.validator.validate(
       value,
       this.processExpectation(expectation),

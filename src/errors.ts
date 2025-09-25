@@ -1,5 +1,6 @@
 import ExtendableError from 'es6-error';
 import { format } from 'util';
+import { TypeKind } from './enums/type-kind.enum';
 
 export class TypeDescriberExistsError extends ExtendableError {
   constructor(type: string) {
@@ -21,7 +22,7 @@ export class InvalidDefinitionError extends ExtendableError {
 }
 
 export class TypeConverterExists extends TypeError {
-  constructor(type: string) {
+  constructor(type: TypeKind) {
     super(`Converter for type '${type}' is already registered`);
   }
 }
@@ -90,7 +91,7 @@ export class PatternValidatorNotFoundError extends ExtendableError {
 export class UndefinableClassError extends ExtendableError {
   constructor(typeName: string) {
     super(
-      `${typeName}: provided argument must be a class that implements '@define()' decorator`
+      `${typeName}: provided argument must be a class that implements '@Type()' decorator`
     );
   }
 }

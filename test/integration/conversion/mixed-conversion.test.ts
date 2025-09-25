@@ -1,12 +1,9 @@
 import { expect } from 'chai';
-import { reflect } from 'tsruntime';
-import { define } from '../../../src/decorators/define';
 import { converter } from './setup';
 import { Any } from '../../../src/patterns/any';
 import { Void } from '../../../src/patterns/void';
 import { Never } from '../../../src/patterns/never';
 import { Unknown } from '../../../src/patterns/unknown';
-import { Unrecognized } from '../../../src/patterns/unrecognized';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 import { Equals } from '../../../src/patterns/equals';
 import { Optional } from '../../../src/patterns/optional';
@@ -14,15 +11,17 @@ import { OneOf } from '../../../src/patterns/one-of';
 import { Tuple } from '../../../src/patterns/tuple';
 import { Collection } from '../../../src/patterns/collection';
 import { List } from '../../../src/patterns/list';
-import { Integer } from '../../../src/patterns/integer';
 import { $PropsOf } from '../../../src/utility-types';
-import { Class } from '../../../src/patterns/class';
 import { Interface } from '../../../src/patterns/interface';
+import { Integer } from '../../../src/patterns/integer';
+import { Type } from '../../../src/decorators/type.decorator';
+import { reflect } from 'tsruntime';
+import { Class } from '../../../src/patterns/class';
 
 describe(`Mixed conversion`, function () {
   type optional<T> = T | undefined;
 
-  @define()
+  @Type()
   class MyClass {
     field: string;
   }
@@ -66,7 +65,7 @@ describe(`Mixed conversion`, function () {
     c,
   }
 
-  @define()
+  @Type()
   class MyType {
     any: any;
 
@@ -185,6 +184,7 @@ describe(`Mixed conversion`, function () {
 
     object: object; // Urecognized, reflectedType.kind: 999
   }
+
   describe('reflection', () => {
     const expectedProps = {
       any: new Any(),
@@ -259,7 +259,7 @@ describe(`Mixed conversion`, function () {
       simpleGeneric: [String, undefined],
       regexp: RegExp,
       integer: Integer,
-      object: new Unrecognized(),
+      object: new Unknown(),
       [symbolAsAKey]: String,
     };
 
@@ -278,7 +278,6 @@ describe(`Mixed conversion`, function () {
     it(`returns reflected type properties by use of '$PropsOf'`, () => {
       const properties = converter.reflect(reflect<$PropsOf<MyType>>());
       expect(properties).to.be.instanceof(Object);
-
       for (const [key, value] of Object.entries(properties)) {
         expect(
           expectedProps[key as any],
@@ -401,7 +400,7 @@ describe(`Mixed conversion`, function () {
       simpleGeneric: new Optional(new InstanceOf(String)),
       regexp: new InstanceOf(RegExp),
       integer: Integer,
-      object: new Unrecognized(),
+      object: new Unknown(),
       [symbolAsAKey]: new InstanceOf(String),
     };
 
@@ -421,7 +420,6 @@ describe(`Mixed conversion`, function () {
 
     it(`returns converted type properties by use of '$PropsOf'`, () => {
       const properties = converter.convert(reflect<$PropsOf<MyType>>());
-
       for (const [key, value] of Object.entries(properties)) {
         expect(
           expectedProps[key as any],

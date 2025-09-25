@@ -1,3 +1,5 @@
+import { TypeKind } from "./enums/type-kind.enum";
+
 /*
 https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines
 
@@ -58,21 +60,22 @@ export namespace types {
   export type Type = any;
 
   export interface Converter {
-    typeConverters: Map<string, TypeConverter>;
+    typeConverters: Array<types.TypeConverter | undefined>;
     convert(reflectedType: any): Type;
     reflect(reflectedType: any): Type;
     registerConverter(
-      kind: string,
+      kind: TypeKind,
       converter: TypeConverter,
       shouldOverride?: boolean
     ): void;
-    overrideConverter(kind: string, converter: TypeConverter): void;
-    getConverter(kind: string): TypeConverter | undefined;
-    hasConverter(kind: string): boolean;
-    removeConverter(kind: string): void;
+    overrideConverter(kind: TypeKind, converter: TypeConverter): void;
+    getConverter(type: TypeKind): types.TypeConverter;
+    hasConverter(kind: TypeKind): boolean;
+    removeConverter(kind: TypeKind): void;
   }
 
   export interface TypeConverter {
+    priority?: number;
     isConvertible(reflectedType: any, converter?: Converter): boolean;
     convert(reflectedType?: any, converter?: Converter): Type;
     reflect(reflectedType?: any, converter?: Converter): Type;
@@ -88,6 +91,14 @@ export namespace types {
   export interface TypeTransformer extends Transformer {
     canTransform(type: Type, ...args: any[]): boolean;
     transform(type: Type, ...args: any[]): Type;
+  }
+
+  export interface TypeDefinition {
+    kind: string;
+    name?: string;
+    properties?: Record<string, any>;
+    pattern?: Pattern;
+    originalType?: any;
   }
 
   /*

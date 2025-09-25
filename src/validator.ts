@@ -52,12 +52,6 @@ export class Validator implements types.Validator {
     let result: boolean | undefined;
     if (isPattern(processedExpectation)) {
       let validatedValue = value;
-      // In case where expectation has property initializer set - we must assume
-      // that for TypeScript v3.7/ES7 JavaScript undefined value will be replaced
-      // with property initializer AFTER the construction
-      if (processedExpectation.hasInitializer()) {
-        validatedValue = processedExpectation.getInitializer();
-      }
       result = this.handleExplicitPattern(validatedValue, processedExpectation);
     }
 
@@ -240,6 +234,7 @@ export class Validator implements types.Validator {
   protected handleExplicitPattern(value: any, pattern: types.Pattern): boolean {
     const validatorKind = pattern.getKind();
     const validator = this.getValidator(validatorKind);
+
     if (validator === undefined) {
       throw new PatternValidatorNotFoundError(validatorKind);
     }

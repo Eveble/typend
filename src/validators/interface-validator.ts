@@ -72,6 +72,7 @@ export class InterfaceValidator extends PatternValidator
       const diffPath = difference.path.join('.');
       const key = getResolvablePath(diffPath, pattern);
       const valueFromPath = get(value, key);
+
       const expectationFromPath = get(pattern, key);
       try {
         validator.validate(valueFromPath, expectationFromPath);

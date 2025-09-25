@@ -1,17 +1,31 @@
 import { Types as tsruntimeTypes } from 'tsruntime';
 import { types } from '../../types';
 import { TypeConverterExists } from '../../errors';
-import { KINDS } from '../../constants/literal-keys';
+import { Pattern } from '../../pattern';
+import { TypeKind } from '../../enums/type-kind.enum';
+import { isClass } from '@eveble/helpers';
 
 export class TSRuntimeConverter implements types.Converter {
-  public typeConverters: Map<string, types.TypeConverter>;
+
+  // Fast O(1) lookup array indexed by TypeKind
+  public typeConverters: Array<types.TypeConverter | undefined> = [];
+
+  protected definitionCache = new Map<any, types.TypeDefinition>();
+  protected patternCache = new Map<string, Pattern>();
 
   /**
    * Creates an instance of TSRuntimeConverter.
    * @param typeConverters - Optional mappings of `TypeConverter`(s) as a `Map` instance.
    */
-  constructor(typeConverters?: Map<string, types.TypeConverter>) {
-    this.typeConverters = typeConverters || new Map();
+  constructor(typeConverters?: Array<types.TypeConverter | undefined>) {
+    this.typeConverters = typeConverters || [];
+  }
+
+  /**
+   * Ultra-fast converter resolution using direct array indexing
+   */
+  private findConverter(reflectedType: tsruntimeTypes.ReflectedType): types.TypeConverter | undefined {
+    return this.typeConverters[reflectedType.kind];
   }
 
   /**
@@ -24,16 +38,54 @@ export class TSRuntimeConverter implements types.Converter {
    * @returns Converted type as native type or `Pattern` instance.
    */
   public convert(reflectedType: tsruntimeTypes.ReflectedType): types.Type {
-    for (const typeConverter of this.typeConverters.values()) {
-      if (typeConverter.isConvertible(reflectedType, this) === true) {
-        return typeConverter.convert(reflectedType, this);
-      }
+    const cacheKey = this.createCacheKey(reflectedType);
+    // if (this.patternCache.has(cacheKey)) {
+    //   return this.patternCache.get(cacheKey)!;
+    // }
+
+    const converter = this.findConverter(reflectedType);
+    if (converter) {
+      const pattern = converter.convert(reflectedType, this);
+      this.patternCache.set(cacheKey, pattern);
+      return pattern;
     }
 
-    const unknownConverter = this.getConverter(
-      KINDS.UNKNOWN
-    ) as types.TypeConverter;
-    return unknownConverter?.convert(reflectedType);
+    if (isClass(reflectedType)) {
+      const classConverter = this.getConverter(TypeKind.Class);
+      const pattern = classConverter.convert(reflectedType, this);
+      this.patternCache.set(cacheKey, pattern);
+      return pattern;
+    }
+
+    // Fallback to unknown converter if no direct match found
+    const unknownConverter = this.typeConverters[TypeKind.Unknown];
+    const pattern = unknownConverter?.convert(reflectedType, this);
+    if (pattern) {
+      this.patternCache.set(cacheKey, pattern);
+    }
+    return pattern;
+  }
+
+  public createCacheKey(reflectedType: tsruntimeTypes.ReflectedType): string {
+    if (reflectedType.kind === TypeKind.Reference) {
+      // Create a unique key for reference types that includes function names
+      const parts = [
+        `kind:${reflectedType.kind}`,
+        `type:${reflectedType.type?.name || 'unknown'}`,
+        `args:${reflectedType.arguments?.length || 0}`
+      ];
+
+      if (reflectedType.arguments) {
+        reflectedType.arguments.forEach((arg, index) => {
+          parts.push(`arg${index}:${this.createCacheKey(arg)}`);
+        });
+      }
+
+      return parts.join('|');
+    }
+
+    // For non-reference types, use JSON stringify
+    return JSON.stringify(reflectedType);
   }
 
   /**
@@ -46,52 +98,59 @@ export class TSRuntimeConverter implements types.Converter {
    * @returns Reflected type as native type or `Pattern` instance.
    */
   public reflect(reflectedType: tsruntimeTypes.ReflectedType): types.Type {
-    for (const typeConverter of this.typeConverters.values()) {
-      if (typeConverter.isConvertible(reflectedType, this) === true) {
-        return typeConverter.reflect(reflectedType, this);
-      }
+    const converter = this.findConverter(reflectedType);
+
+
+    if (converter) {
+      return converter.reflect(reflectedType, this);
     }
-    const unknownConverter = this.getConverter(
-      KINDS.UNKNOWN
-    ) as types.TypeConverter;
-    return unknownConverter?.reflect(reflectedType);
+
+    // Fallback to unknown converter
+    const unknownConverter = this.typeConverters[TypeKind.Unknown];
+    return unknownConverter?.reflect(reflectedType, this);
   }
 
   /**
    * Registers type converter on converter.
-   * @param kind - Kind for which type converter mapping is registered.
+   * @param kind - `TypeKind` for which type converter mapping is registered.
    * @param typeConverter - `TypeConverter` instance for registration.
    * @param shouldOverride - Optional flag indicating that type mapping should be overridden if exist.
    * @throws {TypeConverterExists}
    * Thrown if mapping would overridden on existing type converter without explicit call.
    */
   public registerConverter(
-    kind: string,
+    kind: TypeKind,
     typeConverter: types.TypeConverter,
     shouldOverride = false
   ): void {
     if (this.hasConverter(kind) && !shouldOverride) {
       throw new TypeConverterExists(kind);
     }
-    this.typeConverters.set(kind, typeConverter);
+    this.typeConverters[kind] = typeConverter;
   }
+
 
   /**
    * Overrides already existing type converter by kind mapping on converter.
    * @param kind - Kind for which type converter mapping is registered or overridden.
    * @param converter - `TypeConverter` instance for registration.
    */
-  public overrideConverter(kind: string, converter: types.TypeConverter): void {
+  public overrideConverter(kind: TypeKind, converter: types.TypeConverter): void {
     this.registerConverter(kind, converter, true);
   }
 
   /**
    * Returns type converter.
-   * @param kind - Kind as type converter mapping.
+   * @param kind - Kind as type converter mapping `TypeKind`.
    * @returns `TypeConverter` instance if found, else `undefined`.
+   * @throws {Error}
+   * Thrown if type converter for kind is not registered.
    */
-  public getConverter(type: string): types.TypeConverter | undefined {
-    return this.typeConverters.get(type);
+  public getConverter(type: TypeKind): types.TypeConverter {
+    if (this.typeConverters[type] === undefined) {
+      throw new Error(`Type converter for kind '${type}' is not registered.`)
+    }
+    return this.typeConverters[type] as types.TypeConverter;
   }
 
   /**
@@ -99,15 +158,15 @@ export class TSRuntimeConverter implements types.Converter {
    * @param kind - Kind as type converter mapping.
    * @returns Returns `true` if type is registered, else `false`.
    */
-  public hasConverter(type: string): boolean {
-    return this.typeConverters.has(type);
+  public hasConverter(type: TypeKind): boolean {
+    return this.typeConverters[type] !== undefined;
   }
 
   /**
    * Removes converter by mapping type.
    * @param kind - Kind as type converter mapping.
    */
-  public removeConverter(type: string): void {
-    this.typeConverters.delete(type);
+  public removeConverter(type: TypeKind): void {
+    this.typeConverters[type] = undefined
   }
 }

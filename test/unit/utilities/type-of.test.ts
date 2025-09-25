@@ -7,10 +7,10 @@ import { TypeOf } from '../../../src/utilities/type-of';
 import { types } from '../../../src/types';
 import { Collection } from '../../../src/patterns/collection';
 import { Class } from '../../../src/patterns/class';
-import { define } from '../../../src/decorators/define';
 import { validable } from '../../../src/annotations/validable';
 import { Any } from '../../../src/patterns/any';
 import { WrapperPattern } from '../../../src/wrapper-pattern';
+import { Type } from '../../../src/decorators/type.decorator';
 
 describe(`TypeOf`, function () {
   let converter: any;
@@ -165,7 +165,7 @@ describe(`TypeOf`, function () {
 
   describe('generation', () => {
     it(`generates instance of Type pattern for type`, () => {
-      @define()
+      @Type()
       class MyClass {
         value: string;
       }
@@ -183,8 +183,8 @@ describe(`TypeOf`, function () {
     });
 
     it(`generates instance of Any pattern for non-validable types`, () => {
-      @define()
       @validable(false)
+      @Type()
       class MyClass {
         value: string;
       }
@@ -202,7 +202,7 @@ describe(`TypeOf`, function () {
       const typeOf = new TypeOf(MyClass);
       expect(() => typeOf.generate(library)).to.throw(
         UndefinableClassError,
-        `MyClass: provided argument must be a class that implements '@define()' decorator`
+        `MyClass: provided argument must be a class that implements '@Type()' decorator`
       );
     });
   });

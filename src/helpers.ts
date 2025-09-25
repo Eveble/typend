@@ -3,7 +3,7 @@ import { Types as tsrTypes } from 'tsruntime';
 import { has, isPlainObject } from 'lodash';
 import { getPrototypeListOf } from 'polytype';
 import { isClass, isConstructor } from '@eveble/helpers';
-import { DEFINABLE_KEY, VALIDATION_KEY } from './constants/metadata-keys';
+import { TYPE_KEY, VALIDATION_KEY } from './constants/metadata-keys';
 import { types } from './types';
 import { Class } from './patterns/class';
 import { InstanceOf } from './patterns/instance-of';
@@ -85,7 +85,6 @@ export function getMatchingParentProto(
   matcher: (proto: types.Prototype) => boolean
 ): types.Prototype | undefined {
   const parentProtos = getPrototypeListOf(childProto);
-
   for (const evaluatedProto of parentProtos) {
     if (matcher(evaluatedProto)) {
       return evaluatedProto;
@@ -137,15 +136,15 @@ export function isUtility(arg: any): boolean {
 }
 
 /**
- * Evaluates if provided class constructor has `@define` decorator applied.
+ * Evaluates if provided class constructor has `@Type` decorator applied.
  * @param ctor - Class constructor.
  * @returns Returns `true` if provided class is definable, else `false`.
  */
-export function isDefined(ctor: any): boolean {
+export function isType(ctor: any): boolean {
   if (ctor === undefined) {
     return false;
   }
-  return Reflect.getOwnMetadata(DEFINABLE_KEY, ctor) || false;
+  return Reflect.getOwnMetadata(TYPE_KEY, ctor) || false;
 }
 
 /**

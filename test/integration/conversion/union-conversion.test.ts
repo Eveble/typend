@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { reflect } from 'tsruntime';
-import { define } from '../../../src/decorators/define';
 import { converter } from './setup';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 import { Optional } from '../../../src/patterns/optional';
@@ -8,6 +7,7 @@ import { OneOf } from '../../../src/patterns/one-of';
 import { Equals } from '../../../src/patterns/equals';
 import { Collection } from '../../../src/patterns/collection';
 import { List } from '../../../src/patterns/list';
+import { Type } from '../../../src/decorators/type.decorator';
 
 describe(`Union conversion`, function () {
   type MyType = {
@@ -26,12 +26,12 @@ describe(`Union conversion`, function () {
     second: number;
   }
 
-  @define()
+  @Type()
   class MyClass {
     first: string;
   }
 
-  @define()
+  @Type()
   class MyOtherClass {
     second: number;
   }
