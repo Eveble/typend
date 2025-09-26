@@ -101,16 +101,18 @@ function Validable(isValidable = true) {
     };
 }
 
-const REFLECTED_TYPE_PROPS_KEY = 'REFLECTED_TYPE';
+const REFLECTED_TYPE_PROPS_KEY = 'REFLECTED_TYPE_PROPS_KEY';
+const CONVERTED_TYPE_PROPS_KEY = 'CONVERTED_TYPE_PROPS_KEY';
+const REFLECTED_TYPE_KEY = 'REFLECTED_TYPE_KEY';
 
 function Type(...args) {
     function reflectiveFn(reflectedType) {
         return (target) => {
-            Type.beforeDefine(target, reflectedType, ...args);
-            Reflect.defineMetadata(REFLECTED_TYPE_PROPS_KEY, reflectedType, target);
+            Type.beforeHook(target, reflectedType, ...args);
+            Reflect.defineMetadata(REFLECTED_TYPE_KEY, reflectedType, target);
             Reflect.defineMetadata(TYPE_KEY, true, target);
             defineReflectMetadata(target, reflectedType);
-            Type.afterDefine(target, reflectedType, ...args);
+            Type.afterHook(target, reflectedType, ...args);
             const classSource = target.toString();
             const hasExplicitConstructor = /constructor\s*\([^)]*\)\s*\{[\s\S]*?\}/m.test(classSource);
             const hasCustomLogic = hasExplicitConstructor &&
@@ -170,7 +172,7 @@ function Type(...args) {
                 }
                 Object.defineProperty(Wrapped, 'name', { value: target.name });
             }
-            Reflect.defineMetadata(REFLECTED_TYPE_PROPS_KEY, reflectedType, Wrapped);
+            Reflect.defineMetadata(REFLECTED_TYPE_KEY, reflectedType, Wrapped);
             Reflect.defineMetadata(TYPE_KEY, true, Wrapped);
             defineReflectMetadata(Wrapped, reflectedType);
             return Wrapped;
@@ -179,10 +181,10 @@ function Type(...args) {
     const reflect = createReflective(reflectiveFn);
     return reflect;
 }
-Type.beforeDefine = function (target, ...args) {
+Type.beforeHook = function (target, ...args) {
     return target && args ? undefined : undefined;
 };
-Type.afterDefine = function (target, ...args) {
+Type.afterHook = function (target, ...args) {
     return target && args ? undefined : undefined;
 };
 
@@ -2121,7 +2123,9 @@ class ClassConverter {
         return finalProperties;
     }
     getClassSpecificCacheKey(type, isConverted) {
-        const baseKey = isConverted ? 'converted' : 'reflected';
+        const baseKey = isConverted
+            ? CONVERTED_TYPE_PROPS_KEY
+            : REFLECTED_TYPE_PROPS_KEY;
         const className = type.name || 'Anonymous';
         return `${baseKey}_${className}_${type.toString().slice(0, 50)}`;
     }

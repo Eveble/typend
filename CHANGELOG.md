@@ -1,3 +1,13 @@
+# [3.0.0](https://github.com/eveble/typend/compare/v2.0.0...v3.0.0) (2025-09-26)
+
+
+* refactor!: change hook names to beforeHook and afterHook on @Type decorator ([9ea7e4e](https://github.com/eveble/typend/commit/9ea7e4e5ebb0e3bfc93b99db4fcaddb39644a2d7))
+
+
+### BREAKING CHANGES
+
+* change hook names to beforeHook and afterHook on @Type decorator
+
 # [2.0.0](https://github.com/eveble/typend/compare/v1.1.3...v2.0.0) (2025-09-25)
 
 
