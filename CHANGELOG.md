@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/eveble/typend/compare/v3.0.0...v3.0.1) (2025-09-26)
+
+
+### Bug Fixes
+
+* property initializers on empty constructor argument ([d6a7c6a](https://github.com/eveble/typend/commit/d6a7c6a28ee92c88936021bf51f338863fe36db9))
+
 # [3.0.0](https://github.com/eveble/typend/compare/v2.0.0...v3.0.0) (2025-09-26)
 
 

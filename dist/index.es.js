@@ -115,8 +115,12 @@ function Type(...args) {
             Type.afterHook(target, reflectedType, ...args);
             const classSource = target.toString();
             const hasExplicitConstructor = /constructor\s*\([^)]*\)\s*\{[\s\S]*?\}/m.test(classSource);
+            const isCompilerGenerated = hasExplicitConstructor &&
+                /constructor\s*\(\s*\)\s*\{\s*super\s*\(\s*\.\.\.arguments\s*\)\s*;/.test(classSource);
             const hasCustomLogic = hasExplicitConstructor &&
-                (/this\.\w+\([^)]*\)/.test(classSource) ||
+                !isCompilerGenerated &&
+                (/constructor\s*\([^)]+\)/.test(classSource) ||
+                    /this\.\w+\([^)]*\)/.test(classSource) ||
                     /console\.log/.test(classSource) ||
                     /throw\s+/.test(classSource) ||
                     /if\s*\(/.test(classSource) ||
@@ -130,9 +134,24 @@ function Type(...args) {
                 Wrapped = new Function('target', `return class ${target.name} extends target {
              constructor(...ctorArgs) {
                super(...ctorArgs);
+              //  console.log('After super() call, this:', Object.keys(this), this);
+
+               // If no properties were set by super() call, it means property initializers
+               // from the original class weren't applied. We need to apply them manually.
+               if (Object.keys(this).length === 0) {
+                 // Create a temporary instance of the original class to get default values
+                 const tempInstance = new target();
+                //  console.log('Temp instance with initializers:', Object.keys(tempInstance), tempInstance);
+                 // Copy the property initializers
+                 Object.assign(this, tempInstance);
+                //  console.log('After copying initializers, this:', Object.keys(this), this);
+               }
+
                const props = ctorArgs[0];
                if (props && typeof props === "object") {
+                //  console.log('Applying props:', props);
                  Object.assign(this, props);
+                //  console.log('After Object.assign, this:', Object.keys(this), this);
                }
              }
            }`)(target);
