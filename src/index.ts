@@ -125,7 +125,7 @@ import { Describer } from './describer';
 import { Description, DescriptionList } from './description';
 import { Pattern } from './pattern';
 import { PatternValidator } from './pattern-validator';
-
+// Helpers
 import {
   isInstanceOfExpectation,
   getResolvablePath,
@@ -138,8 +138,10 @@ import {
   getMatchingParentProto,
   isSpecial,
 } from './helpers';
-
+// Enums
 import { TypeKind } from './enums/type-kind.enum';
+// Chai
+import { equivalentClassChai } from './chai/equivalent-class.chai-plugin';
 
 const KINDS = LITERAL_KEYS.KINDS;
 
@@ -597,4 +599,6 @@ export {
   number,
   boolean,
   symbol,
+  // Chai
+  equivalentClassChai,
 };

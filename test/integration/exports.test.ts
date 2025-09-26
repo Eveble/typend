@@ -127,6 +127,8 @@ import {
   getMatchingParentProto,
   isSpecial,
 } from '../../src/helpers';
+// Chai
+import { equivalentClassChai } from '../../src/chai/equivalent-class.chai-plugin';
 
 import {
   // Errors
@@ -269,6 +271,8 @@ import {
   Validable as ValidableExported,
   // Decorators
   Type as TypeExported,
+  // Chai
+  equivalentClassChai as equivalentClassChaiExported,
   // Patterns
   any,
   iof,
@@ -916,6 +920,12 @@ describe('exports', () => {
     it('typeOf', () => {
       class MyClass {}
       expect(typeOf(MyClass)).to.be.instanceof(TypeOf);
+    });
+  });
+
+  describe('chai', () => {
+    it('equivalentClassChaiExported', () => {
+      expect(equivalentClassChai).to.be.equal(equivalentClassChaiExported);
     });
   });
 });
