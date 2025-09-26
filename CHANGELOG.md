@@ -1,3 +1,15 @@
+# [3.1.0](https://github.com/eveble/typend/compare/v3.0.1...v3.1.0) (2025-09-26)
+
+
+### Bug Fixes
+
+* fix eslint errors ([8f551d8](https://github.com/eveble/typend/commit/8f551d8a795f2124d69d42c1229f08adcfaa1509))
+
+
+### Features
+
+* add equivalentClassChai plugin ([a058153](https://github.com/eveble/typend/commit/a0581539f0fa3a72d39ba5824ccdb7ffbdd69603))
+
 ## [3.0.1](https://github.com/eveble/typend/compare/v3.0.0...v3.0.1) (2025-09-26)
 
 

@@ -9,6 +9,7 @@ var lodash = require('lodash');
 var polytype = require('polytype');
 var deepDiff = require('deep-diff');
 var merge = require('deepmerge');
+require('chai');
 
 const TYPE_KEY = Symbol('eveble:flags:type');
 const PROPERTIES_KEY = Symbol('eveble:containers:definition');
@@ -2649,6 +2650,120 @@ Describer.describers = {
     [KINDS$1.DESCRIPTION_LIST]: DescriptionListDescriber,
 };
 
+const defaultOptions = {
+    checkName: true,
+    checkPrototypeChain: true,
+    checkInstantiation: true,
+    checkStaticProperties: false,
+    checkInstanceMethods: false,
+    instantiationArgs: [],
+};
+function equivalentClassChai(chai, utils) {
+    utils.addMethod(chai.Assertion.prototype, 'equivalentClass', function (expected, options = {}) {
+        const actual = this._obj;
+        const opts = { ...defaultOptions, ...options };
+        if (typeof actual !== 'function') {
+            throw new Error('Expected actual value to be a constructor function');
+        }
+        if (typeof expected !== 'function') {
+            throw new Error('Expected expected value to be a constructor function');
+        }
+        const failures = [];
+        if (opts.checkName) {
+            const nameMatches = actual.name === expected.name;
+            if (!nameMatches) {
+                failures.push(`names don't match: actual="${actual.name}", expected="${expected.name}"`);
+            }
+        }
+        if (opts.checkPrototypeChain) {
+            const actualParentProto = Object.getPrototypeOf(actual.prototype);
+            const expectedParentProto = Object.getPrototypeOf(expected.prototype);
+            const prototypeMatches = actualParentProto === expectedParentProto;
+            if (!prototypeMatches) {
+                failures.push("prototype chains don't match");
+            }
+        }
+        if (opts.checkStaticProperties) {
+            const actualStaticKeys = Reflect.ownKeys(actual).filter((key) => key !== 'prototype' && key !== 'name' && key !== 'length');
+            const expectedStaticKeys = Reflect.ownKeys(expected).filter((key) => key !== 'prototype' && key !== 'name' && key !== 'length');
+            const staticPropsMatch = actualStaticKeys.length === expectedStaticKeys.length &&
+                actualStaticKeys.every((key) => expectedStaticKeys.includes(key));
+            if (!staticPropsMatch) {
+                failures.push("static properties don't match");
+            }
+        }
+        if (opts.checkInstanceMethods) {
+            const actualMethods = Reflect.ownKeys(actual.prototype).filter((key) => key !== 'constructor');
+            const expectedMethods = Reflect.ownKeys(expected.prototype).filter((key) => key !== 'constructor');
+            const methodsMatch = actualMethods.length === expectedMethods.length &&
+                actualMethods.every((method) => expectedMethods.includes(method));
+            if (!methodsMatch) {
+                failures.push("instance methods don't match");
+            }
+        }
+        if (opts.checkInstantiation) {
+            try {
+                const actualInstance = new actual(...(opts.instantiationArgs || []));
+                const expectedInstance = new expected(...(opts.instantiationArgs || []));
+                const actualInstanceProto = Object.getPrototypeOf(actualInstance);
+                const expectedInstanceProto = Object.getPrototypeOf(expectedInstance);
+                let instanceBehaviorMatches = false;
+                if (actualInstanceProto === expectedInstanceProto) {
+                    instanceBehaviorMatches = true;
+                }
+                else {
+                    const actualParent = Object.getPrototypeOf(actualInstanceProto);
+                    const expectedParent = Object.getPrototypeOf(expectedInstanceProto);
+                    if (actualParent === expectedParent) {
+                        instanceBehaviorMatches = true;
+                    }
+                    else {
+                        const actualChain = [];
+                        let current = actualInstance;
+                        while (current && current.constructor !== Object) {
+                            actualChain.push(current.constructor);
+                            current = Object.getPrototypeOf(current);
+                        }
+                        const expectedChain = [];
+                        current = expectedInstance;
+                        while (current && current.constructor !== Object) {
+                            expectedChain.push(current.constructor);
+                            current = Object.getPrototypeOf(current);
+                        }
+                        instanceBehaviorMatches = actualChain.some((ctor) => expectedChain.includes(ctor));
+                    }
+                }
+                if (!instanceBehaviorMatches) {
+                    failures.push("instance behavior doesn't match (different prototype chains)");
+                }
+                try {
+                    if (typeof actualInstance !== typeof expectedInstance) {
+                        failures.push(`instance types differ: actual=${typeof actualInstance}, expected=${typeof expectedInstance}`);
+                    }
+                }
+                catch (e) {
+                }
+            }
+            catch (actualError) {
+                try {
+                    new expected(...(opts.instantiationArgs || []));
+                    failures.push(`actual constructor throws error: ${actualError.message}`);
+                }
+                catch (expectedError) {
+                    if (actualError.constructor !== expectedError.constructor) {
+                        failures.push(`constructors throw different error types: actual=${actualError.constructor.name}, expected=${expectedError.constructor.name}`);
+                    }
+                }
+            }
+        }
+        const isEquivalent = failures.length === 0;
+        const failureMessage = failures.length > 0
+            ? `Classes are not equivalent:\n  - ${failures.join('\n  - ')}`
+            : '';
+        this.assert(isEquivalent, `expected #{this} to be equivalent to #{exp}${failureMessage ? `\n${failureMessage}` : ''}`, `expected #{this} to not be equivalent to #{exp}`, expected, actual);
+    });
+}
+
 const KINDS = KINDS$1;
 const describer = new Describer();
 describer.setFormatting('default');
@@ -2930,6 +3045,7 @@ exports.convert = convert;
 exports.converter = converter;
 exports.describer = describer;
 exports.eq = eq;
+exports.equivalentClassChai = equivalentClassChai;
 exports.getMatchingParentProto = getMatchingParentProto;
 exports.getResolvablePath = getResolvablePath;
 exports.instanceOf = instanceOf;
