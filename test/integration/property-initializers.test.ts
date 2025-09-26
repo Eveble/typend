@@ -56,6 +56,31 @@ describe('property initializers in child classes', () => {
     expect(u.getName()).to.equal('Alice');
   });
 
+  it(`ensures that the property initializers are working when no argument is passed to the constructor`, () => {
+    @Type('MyClass')
+    class MyClass extends Struct {
+      stringKey = 'my-string';
+
+      numberKey = 1337;
+    }
+    expect(new MyClass()).to.be.eql({
+      stringKey: 'my-string',
+      numberKey: 1337,
+    });
+  });
+  it(`ensures that the property initializers are working even when empty object is passed to the constructor`, () => {
+    @Type('MyClass')
+    class MyClass extends Struct {
+      stringKey = 'my-string';
+
+      numberKey = 1337;
+    }
+    expect(new MyClass({})).to.be.eql({
+      stringKey: 'my-string',
+      numberKey: 1337,
+    });
+  });
+
   it('preserves inheritance chain with @Type', () => {
     class Base extends Struct {
       base = true;

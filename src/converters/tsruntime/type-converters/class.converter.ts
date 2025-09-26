@@ -16,7 +16,10 @@ import {
 } from '../../../constants/metadata-keys';
 import { Class } from '../../../patterns/class';
 import { Collection } from '../../../patterns/collection';
-import { CONVERTED_TYPE_PROPS_KEY, REFLECTED_TYPE_PROPS_KEY } from '../../../constants/keys';
+import {
+  CONVERTED_TYPE_PROPS_KEY,
+  REFLECTED_TYPE_PROPS_KEY,
+} from '../../../constants/keys';
 import { TypeKind } from '../../../enums/type-kind.enum';
 
 // TypeKind.Class = 19 / 18
@@ -210,7 +213,9 @@ export class ClassConverter implements types.TypeConverter {
     type: types.Class,
     isConverted: boolean
   ): string {
-    const baseKey = isConverted ? CONVERTED_TYPE_PROPS_KEY : REFLECTED_TYPE_PROPS_KEY;
+    const baseKey = isConverted
+      ? CONVERTED_TYPE_PROPS_KEY
+      : REFLECTED_TYPE_PROPS_KEY;
     const className = type.name || 'Anonymous';
     // Use the constructor function itself as part of the key to ensure uniqueness
     return `${baseKey}_${className}_${type.toString().slice(0, 50)}`;

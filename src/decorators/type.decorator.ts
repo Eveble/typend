@@ -77,41 +77,68 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
        */
 
       // Detection of custom constructors:
-      // 1. Check if the class source contains explicit constructor definition
-      // 2. Check if constructor has parameters (length > 0) but parent doesn't
-      // 3. Check if constructor body contains more than just super() call
+      // We need to distinguish between:
+      // 1. Truly custom constructors (written by developer)
+      // 2. Compiler-generated constructors for property initializers
       const classSource = target.toString();
+
       const hasExplicitConstructor =
         /constructor\s*\([^)]*\)\s*\{[\s\S]*?\}/m.test(classSource);
 
-      // Check if this is likely a custom constructor by looking for method calls other than super()
-      const hasCustomLogic =
-        hasExplicitConstructor &&
-        (/this\.\w+\([^)]*\)/.test(classSource) || // calls to this.methodName()
-          /console\.log/.test(classSource) || // console.log calls
-          /throw\s+/.test(classSource) || // throw statements
-          /if\s*\(/.test(classSource) || // conditional logic
-          /for\s*\(/.test(classSource) || // loops
-          /while\s*\(/.test(classSource)); // while loops
+      // Check if this is a compiler-generated constructor for property initializers
+      // These typically have the pattern: constructor() { super(...arguments); this.prop = value; }
+      const isCompilerGenerated = hasExplicitConstructor &&
+        /constructor\s*\(\s*\)\s*\{\s*super\s*\(\s*\.\.\.arguments\s*\)\s*;/.test(classSource);
+
+      // Check if this is a truly custom constructor by looking for:
+      // - Parameters in constructor signature
+      // - Method calls other than property assignments
+      // - Console logs, throws, conditionals, etc.
+      const hasCustomLogic = hasExplicitConstructor && !isCompilerGenerated &&
+        (/constructor\s*\([^)]+\)/.test(classSource) || // has parameters
+         /this\.\w+\([^)]*\)/.test(classSource) || // calls to this.methodName()
+         /console\.log/.test(classSource) || // console.log calls
+         /throw\s+/.test(classSource) || // throw statements
+         /if\s*\(/.test(classSource) || // conditional logic
+         /for\s*\(/.test(classSource) || // loops
+         /while\s*\(/.test(classSource)); // while loops
+
+      // console.log(`${target.name} - hasExplicitConstructor: ${hasExplicitConstructor}, isCompilerGenerated: ${isCompilerGenerated}, hasCustomLogic: ${hasCustomLogic}`);
 
       let Wrapped: any;
 
       if (hasCustomLogic) {
-        // If class has custom constructor logic, don't wrap it
-        // Just apply the metadata and return the original class
+        // If class has truly custom constructor logic, don't wrap it
         Wrapped = target;
+        // console.log(`${target.name} has custom constructor logic - preserving original`);
       } else {
-        // Apply the wrapper for classes without custom constructors or with simple constructors
-        // (to handle property initializer issue)
+        // Apply the wrapper for classes without custom constructors
+        // This includes classes with compiler-generated constructors for property initializers
+        // console.log(`${target.name} applying wrapper for property initializers`);
 
         Wrapped = new Function(
           'target',
           `return class ${target.name} extends target {
              constructor(...ctorArgs) {
                super(...ctorArgs);
+              //  console.log('After super() call, this:', Object.keys(this), this);
+
+               // If no properties were set by super() call, it means property initializers
+               // from the original class weren't applied. We need to apply them manually.
+               if (Object.keys(this).length === 0) {
+                 // Create a temporary instance of the original class to get default values
+                 const tempInstance = new target();
+                //  console.log('Temp instance with initializers:', Object.keys(tempInstance), tempInstance);
+                 // Copy the property initializers
+                 Object.assign(this, tempInstance);
+                //  console.log('After copying initializers, this:', Object.keys(this), this);
+               }
+
                const props = ctorArgs[0];
                if (props && typeof props === "object") {
+                //  console.log('Applying props:', props);
                  Object.assign(this, props);
+                //  console.log('After Object.assign, this:', Object.keys(this), this);
                }
              }
            }`
