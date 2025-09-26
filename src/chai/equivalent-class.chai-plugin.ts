@@ -1,3 +1,5 @@
+import { use } from 'chai';
+
 /**
  * Configuration options for equivalentClass matcher
  */
@@ -122,7 +124,9 @@ export function equivalentClassChai(chai: any, utils: any): void {
       // Check 5: Instantiation behavior
       if (opts.checkInstantiation) {
         try {
+          // eslint-disable-next-line new-cap
           const actualInstance = new actual(...(opts.instantiationArgs || []));
+          // eslint-disable-next-line new-cap
           const expectedInstance = new expected(
             ...(opts.instantiationArgs || [])
           );
@@ -187,6 +191,7 @@ export function equivalentClassChai(chai: any, utils: any): void {
           }
         } catch (actualError) {
           try {
+            // eslint-disable-next-line new-cap
             new expected(...(opts.instantiationArgs || []));
             // Expected works but actual doesn't
             failures.push(
@@ -228,8 +233,7 @@ export function equivalentClassChai(chai: any, utils: any): void {
  * Utility function to easily set up the plugin
  */
 export function setupEquivalentClassMatcher(): void {
-  const chai = require('chai');
-  chai.use(equivalentClassChai);
+  use(equivalentClassChai);
 }
 
 /**
