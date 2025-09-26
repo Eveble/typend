@@ -4,21 +4,21 @@ import {
   defineReflectMetadata,
   MarkReflective,
 } from 'tsruntime';
-import { REFLECTED_TYPE_PROPS_KEY } from '../constants/keys';
+import { REFLECTED_TYPE_KEY } from '../constants/keys';
 import { types } from '../types';
 import { TYPE_KEY } from '../constants/metadata-keys';
 
 export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
   function reflectiveFn(reflectedType: tsruntimeTypes.ReflectedType): any {
     return <T extends { new (...cargs: any[]): any }>(target: T): T => {
-      Type.beforeDefine(target, reflectedType, ...args);
+      Type.beforeHook(target, reflectedType, ...args);
 
       // Store the reflected type BEFORE any wrapping
-      Reflect.defineMetadata(REFLECTED_TYPE_PROPS_KEY, reflectedType, target);
+      Reflect.defineMetadata(REFLECTED_TYPE_KEY, reflectedType, target);
       Reflect.defineMetadata(TYPE_KEY, true, target);
       defineReflectMetadata(target, reflectedType);
 
-      Type.afterDefine(target, reflectedType, ...args);
+      Type.afterHook(target, reflectedType, ...args);
 
       /**
        * [⚠️][⚠️][⚠️]
@@ -179,7 +179,7 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
 
       // ALWAYS ensure the reflected type metadata is on the final class
       // Store the reflected type metadata on the wrapped class
-      Reflect.defineMetadata(REFLECTED_TYPE_PROPS_KEY, reflectedType, Wrapped);
+      Reflect.defineMetadata(REFLECTED_TYPE_KEY, reflectedType, Wrapped);
       Reflect.defineMetadata(TYPE_KEY, true, Wrapped);
 
       // Apply tsruntime metadata to the wrapped class
@@ -199,7 +199,7 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
  * @param target - Class constructor.
  * @param args - Optional arguments that were passed back to Type decorator.
  */
-Type.beforeDefine = function (target: any, ...args: any[]): void {
+Type.beforeHook = function (target: any, ...args: any[]): void {
   return target && args ? undefined : undefined;
 };
 
@@ -208,6 +208,6 @@ Type.beforeDefine = function (target: any, ...args: any[]): void {
  * @param target - Class constructor.
  * @param args - Optional arguments that were passed back to Type decorator.
  */
-Type.afterDefine = function (target: any, ...args: any[]): void {
+Type.afterHook = function (target: any, ...args: any[]): void {
   return target && args ? undefined : undefined;
 };

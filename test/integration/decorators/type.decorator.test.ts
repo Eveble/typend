@@ -59,9 +59,9 @@ describe(`Type`, () => {
   });
 
   describe('hooks', () => {
-    it('sets beforeDefine hook on decorator', () => {
+    it('sets beforeHook hook on decorator', () => {
       const name = 'MyType';
-      function beforeDefine(
+      function beforeHook(
         target: any,
         reflectedType: tsruntimeTypes.ReflectedType,
         typeName: string
@@ -69,7 +69,7 @@ describe(`Type`, () => {
         target.target = target;
         target.typeName = typeName;
       }
-      Type.beforeDefine = beforeDefine;
+      Type.beforeHook = beforeHook;
 
       @Type(name)
       class MyType {}
@@ -77,9 +77,9 @@ describe(`Type`, () => {
       expect((MyType as any).typeName).to.be.equal(name);
     });
 
-    it('sets afterDefine hook on decorator', () => {
+    it('sets afterHook hook on decorator', () => {
       const name = 'MyType';
-      function afterDefine(
+      function afterHook(
         target: any,
         reflectedType: tsruntimeTypes.ReflectedType,
         typeName: string
@@ -87,7 +87,7 @@ describe(`Type`, () => {
         target.target = target;
         target.typeName = typeName;
       }
-      Type.afterDefine = afterDefine;
+      Type.afterHook = afterHook;
 
       @Type(name)
       class MyType {}
