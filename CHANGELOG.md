@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/eveble/typend/compare/v3.1.1...v3.1.2) (2025-09-29)
+
+
+### Bug Fixes
+
+* move patch-package to dependencies ([fa58118](https://github.com/eveble/typend/commit/fa58118fa136ca311d50af5e3e1dd285190ca3b5))
+
 ## [3.1.1](https://github.com/eveble/typend/compare/v3.1.0...v3.1.1) (2025-09-29)
 
 
