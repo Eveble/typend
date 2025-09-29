@@ -87,21 +87,26 @@ export function Type(...args: any[]): MarkReflective<types.ClassDecorator> {
 
       // Check if this is a compiler-generated constructor for property initializers
       // These typically have the pattern: constructor() { super(...arguments); this.prop = value; }
-      const isCompilerGenerated = hasExplicitConstructor &&
-        /constructor\s*\(\s*\)\s*\{\s*super\s*\(\s*\.\.\.arguments\s*\)\s*;/.test(classSource);
+      const isCompilerGenerated =
+        hasExplicitConstructor &&
+        /constructor\s*\(\s*\)\s*\{\s*super\s*\(\s*\.\.\.arguments\s*\)\s*;/.test(
+          classSource
+        );
 
       // Check if this is a truly custom constructor by looking for:
       // - Parameters in constructor signature
       // - Method calls other than property assignments
       // - Console logs, throws, conditionals, etc.
-      const hasCustomLogic = hasExplicitConstructor && !isCompilerGenerated &&
+      const hasCustomLogic =
+        hasExplicitConstructor &&
+        !isCompilerGenerated &&
         (/constructor\s*\([^)]+\)/.test(classSource) || // has parameters
-         /this\.\w+\([^)]*\)/.test(classSource) || // calls to this.methodName()
-         /console\.log/.test(classSource) || // console.log calls
-         /throw\s+/.test(classSource) || // throw statements
-         /if\s*\(/.test(classSource) || // conditional logic
-         /for\s*\(/.test(classSource) || // loops
-         /while\s*\(/.test(classSource)); // while loops
+          /this\.\w+\([^)]*\)/.test(classSource) || // calls to this.methodName()
+          /console\.log/.test(classSource) || // console.log calls
+          /throw\s+/.test(classSource) || // throw statements
+          /if\s*\(/.test(classSource) || // conditional logic
+          /for\s*\(/.test(classSource) || // loops
+          /while\s*\(/.test(classSource)); // while loops
 
       // console.log(`${target.name} - hasExplicitConstructor: ${hasExplicitConstructor}, isCompilerGenerated: ${isCompilerGenerated}, hasCustomLogic: ${hasCustomLogic}`);
 
