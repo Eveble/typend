@@ -1,3 +1,10 @@
+## [3.1.4](https://github.com/eveble/typend/compare/v3.1.3...v3.1.4) (2025-09-29)
+
+
+### Bug Fixes
+
+* update tsruntime to custom Eveble fix v5.0.2 ([dbb459b](https://github.com/eveble/typend/commit/dbb459b12485aa9c11791d379d726c6cf522c217))
+
 ## [3.1.3](https://github.com/eveble/typend/compare/v3.1.2...v3.1.3) (2025-09-29)
 
 
