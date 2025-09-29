@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { expect } from 'chai';
-import { internal } from '../../../src/annotations/internal';
+import { Internal } from '../../../src/annotations/internal';
 import {
   INTERNAL_PROPS_KEY,
   INTERNAL_METHODS_KEY,
@@ -11,20 +11,20 @@ describe(`internal`, () => {
   class Parent {
     parent: string;
 
-    @internal internalParentKey: number;
+    @Internal internalParentKey: number;
 
-    @internal internalOtherParentKey: number;
+    @Internal internalOtherParentKey: number;
 
     myMethod(): void {
       return undefined;
     }
 
-    @internal
+    @Internal
     internalParentMethod(): void {
       return undefined;
     }
 
-    @internal
+    @Internal
     internalOtherParentMethod(): void {
       return undefined;
     }
@@ -33,9 +33,9 @@ describe(`internal`, () => {
   class Child extends Parent {
     child: number;
 
-    @internal internalChildKey: number;
+    @Internal internalChildKey: number;
 
-    @internal
+    @Internal
     internalChildMethod(): void {
       return undefined;
     }

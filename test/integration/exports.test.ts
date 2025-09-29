@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 // Annotations
-import { internal } from '../../src/annotations/internal';
+import { Internal } from '../../src/annotations/internal';
 import { Validable } from '../../src/annotations/validable';
 // Decorators
 import { Type } from '../../src/decorators/type.decorator';
@@ -32,7 +32,7 @@ import { Equals } from '../../src/patterns/equals';
 import { InstanceOf } from '../../src/patterns/instance-of';
 import { Integer } from '../../src/patterns/integer';
 import { Interface } from '../../src/patterns/interface';
-import { Internal } from '../../src/patterns/internal';
+import { Internal as InternalPattern } from '../../src/patterns/internal';
 import { List } from '../../src/patterns/list';
 import { LocaleString } from '../../src/patterns/locale-string';
 import { Maybe } from '../../src/patterns/maybe';
@@ -157,7 +157,7 @@ import {
   InstanceOf as InstanceOfExported,
   Integer as IntegerExported,
   Interface as InterfaceExported,
-  Internal as InternalExported,
+  InternalPattern as InternalPatternExported,
   List as ListExported,
   LocaleString as LocaleStringExported,
   Maybe as MaybeExported,
@@ -267,7 +267,7 @@ import {
   convert,
   reflect,
   // Annotations
-  internal as internalExported,
+  Internal as InternalExported,
   Validable as ValidableExported,
   // Decorators
   Type as TypeExported,
@@ -306,7 +306,7 @@ import {
 describe('exports', () => {
   describe('annotations', () => {
     it('internal', () => {
-      expect(internal).to.be.equal(internalExported);
+      expect(Internal).to.be.equal(InternalExported);
     });
     it('Validable', () => {
       expect(Validable).to.be.equal(ValidableExported);
@@ -405,8 +405,8 @@ describe('exports', () => {
     it('Interface', () => {
       expect(Interface).to.be.equal(InterfaceExported);
     });
-    it('Internal', () => {
-      expect(Internal).to.be.equal(InternalExported);
+    it('InternalPattern', () => {
+      expect(InternalPattern).to.be.equal(InternalPatternExported);
     });
     it('List', () => {
       expect(List).to.be.equal(ListExported);

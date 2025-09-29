@@ -23,7 +23,7 @@ import { types } from '../types';
  * }
  * ```
  */
-export function internal(proto: types.Prototype, propertyKey: string): void {
+export function Internal(proto: types.Prototype, propertyKey: string): void {
   const target: any = proto.constructor;
   const descriptor: PropertyDescriptor | undefined =
     Object.getOwnPropertyDescriptor(proto, propertyKey);

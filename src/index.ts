@@ -7,7 +7,7 @@ import { $PropsOf, $TypeOf } from './utility-types';
 import * as METADATA_KEYS from './constants/metadata-keys';
 import * as LITERAL_KEYS from './constants/literal-keys';
 // Annotations
-import { internal } from './annotations/internal';
+import { Internal } from './annotations/internal';
 import { Validable } from './annotations/validable';
 // Decorators
 import { Type } from './decorators/type.decorator';
@@ -39,7 +39,7 @@ import { Equals } from './patterns/equals';
 import { InstanceOf } from './patterns/instance-of';
 import { Integer } from './patterns/integer';
 import { Interface } from './patterns/interface';
-import { Internal } from './patterns/internal';
+import { Internal as InternalPattern } from './patterns/internal';
 import { List } from './patterns/list';
 import { LocaleString } from './patterns/locale-string';
 import { Maybe } from './patterns/maybe';
@@ -459,7 +459,7 @@ export {
   InstanceOf,
   Integer,
   Interface,
-  Internal,
+  InternalPattern,
   List,
   LocaleString,
   Maybe,
@@ -568,7 +568,7 @@ export {
   convert,
   reflect,
   // Annotations
-  internal,
+  Internal,
   Validable,
   // Decorators
   Type,
