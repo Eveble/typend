@@ -1,3 +1,10 @@
+## [3.1.3](https://github.com/eveble/typend/compare/v3.1.2...v3.1.3) (2025-09-29)
+
+
+### Bug Fixes
+
+* add patch for Partial type on tsruntime ([ae9571d](https://github.com/eveble/typend/commit/ae9571d61b2ebab841a286d59a381e5f29fa32d3))
+
 ## [3.1.2](https://github.com/eveble/typend/compare/v3.1.1...v3.1.2) (2025-09-29)
 
 
