@@ -10062,10 +10062,9 @@ tslib@^2.4.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
-tsruntime@5.0.1:
+"tsruntime@github:eveble/tsruntime#5.0.2":
   version "5.0.1"
-  resolved "https://registry.npmjs.org/tsruntime/-/tsruntime-5.0.1.tgz#da75fc70babf56f7f28f90ece4373961c7526707"
-  integrity sha512-6vjKzUvZrEZP0lOKrcSdivm1Fnvdr2CBgZzE97WSdB55xTwQymhcH/XFNpyTgE4uSJtG19VhlEORmOz2ODoSDQ==
+  resolved "https://codeload.github.com/eveble/tsruntime/tar.gz/7ccd1dac42daa2e83658f4f92d62c581128e49ff"
 
 tunnel-agent@^0.6.0:
   version "0.6.0"
