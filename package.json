@@ -51,8 +51,7 @@
     "es6-error": "^4.1.1",
     "lodash": "^4.17.21",
     "polytype": "^0.17.0",
-    "chai": "^4.3.7",
-    "patch-package": "^8.0.0"
+    "chai": "^4.3.7"
   },
   "devDependencies": {
     "@types/chai-as-promised": "^7.1.2",
@@ -136,8 +135,7 @@
     "docs:build": "npm run docs:clean && ./node_modules/.bin/typedoc --tsconfig typedoc.json && node ./website/.eveble/scripts/interface-converter.js && rm ./website/docs/api/index.md && cd website && npm run build",
     "docs": "npm run docs:clean && ./node_modules/.bin/typedoc --tsconfig typedoc.json && node ./website/.eveble/scripts/interface-converter.js && rm ./website/docs/api/index.md && cd ./website && npm run start",
     "semantic-release": "semantic-release",
-    "prepare": "npm run format && npm run lint && npm run build",
-    "postinstall": "./node_modules/.bin/patch-package"
+    "prepare": "npm run format && npm run lint && npm run build"
   },
   "scripts-info": {
     "explain": "Display information about the package scripts(info is already taken by yarn)",
