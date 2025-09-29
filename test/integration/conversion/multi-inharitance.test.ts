@@ -23,10 +23,6 @@ describe('complex inheritance chains with @Type decorator', () => {
     }
   }
 
-  it('test', () => {
-    expect(true).to.be.true;
-  });
-
   it('handles classes with custom constructors in deep inheritance chains', () => {
     @Type('MyCustomMessage', { isRegistrable: false })
     class MyCustomMessage extends Message {
