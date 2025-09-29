@@ -1,6 +1,6 @@
 {
   "name": "typend",
-  "version": "3.1.0",
+  "version": "3.0.1",
   "description": "Runtime validation for TypeScript",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -96,7 +96,7 @@
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "gulp-connect": "^5.7.0",
     "gulp-shell": "^0.8.0",
-    "gulp-typedoc": "^2.2.5",
+    "gulp-typedoc": "^3.0.2",
     "gulp": "^4.0.2",
     "typedoc-plugin-markdown": "^2.3.1",
     "typedoc": "^0.17.7",
@@ -104,7 +104,8 @@
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "chalk": "^5.3.0",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "patch-package": "^8.0.0"
   },
   "scripts": {
     "explain": "./node_modules/.bin/npm-scripts-info",
@@ -135,7 +136,8 @@
     "docs:build": "npm run docs:clean && ./node_modules/.bin/typedoc --tsconfig typedoc.json && node ./website/.eveble/scripts/interface-converter.js && rm ./website/docs/api/index.md && cd website && npm run build",
     "docs": "npm run docs:clean && ./node_modules/.bin/typedoc --tsconfig typedoc.json && node ./website/.eveble/scripts/interface-converter.js && rm ./website/docs/api/index.md && cd ./website && npm run start",
     "semantic-release": "semantic-release",
-    "prepare": "npm run format && npm run lint && npm run build"
+    "prepare": "npm run format && npm run lint && npm run build",
+    "postinstall": "patch-package"
   },
   "scripts-info": {
     "explain": "Display information about the package scripts(info is already taken by yarn)",
