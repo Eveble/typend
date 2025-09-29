@@ -83,7 +83,7 @@ var literalKeys = /*#__PURE__*/Object.freeze({
   VALIDATION_TYPE_PROPS_OF_KEY: VALIDATION_TYPE_PROPS_OF_KEY
 });
 
-function internal(proto, propertyKey) {
+function Internal$1(proto, propertyKey) {
     const target = proto.constructor;
     const descriptor = Object.getOwnPropertyDescriptor(proto, propertyKey);
     const type = descriptor === undefined ? 'property' : 'method';
@@ -2965,7 +2965,8 @@ exports.Integer = Integer;
 exports.IntegerValidator = IntegerValidator;
 exports.Interface = Interface;
 exports.InterfaceValidator = InterfaceValidator;
-exports.Internal = Internal;
+exports.Internal = Internal$1;
+exports.InternalPattern = Internal;
 exports.InternalPropsTransformer = InternalPropsTransformer;
 exports.InternalValidator = InternalValidator;
 exports.InvalidDefinitionError = InvalidDefinitionError;
@@ -3050,7 +3051,6 @@ exports.getMatchingParentProto = getMatchingParentProto;
 exports.getResolvablePath = getResolvablePath;
 exports.instanceOf = instanceOf;
 exports.integer = Integer;
-exports.internal = internal;
 exports.iof = iof;
 exports.is = is;
 exports.isInstanceOf = isInstanceOf;
