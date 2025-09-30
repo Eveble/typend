@@ -20,9 +20,11 @@ const INTERNAL_METHODS_KEY = Symbol('eveble:containers:internal:methods');
 const PATTERN_KEY = Symbol('eveble:pattern-kind');
 const VALIDATION_KEY = Symbol('eveble:flags:validation');
 const INTERFACE_NAME_KEY = Symbol('eveble:interface-name');
+const INITIALIZER_KEY = Symbol('eveble:initializer');
 
 var metadataKeys = /*#__PURE__*/Object.freeze({
   __proto__: null,
+  INITIALIZER_KEY: INITIALIZER_KEY,
   INJECTABLE_PROPERTIES_KEY: INJECTABLE_PROPERTIES_KEY,
   INTERFACE_NAME_KEY: INTERFACE_NAME_KEY,
   INTERNAL_METHODS_KEY: INTERNAL_METHODS_KEY,
@@ -116,88 +118,7 @@ function Type(...args) {
             Reflect.defineMetadata(TYPE_KEY, true, target);
             tsruntime.defineReflectMetadata(target, reflectedType);
             Type.afterHook(target, reflectedType, ...args);
-            const classSource = target.toString();
-            const hasExplicitConstructor = /constructor\s*\([^)]*\)\s*\{[\s\S]*?\}/m.test(classSource);
-            const isCompilerGenerated = hasExplicitConstructor &&
-                /constructor\s*\(\s*\)\s*\{\s*super\s*\(\s*\.\.\.arguments\s*\)\s*;/.test(classSource);
-            const hasCustomLogic = hasExplicitConstructor &&
-                !isCompilerGenerated &&
-                (/constructor\s*\([^)]+\)/.test(classSource) ||
-                    /this\.\w+\([^)]*\)/.test(classSource) ||
-                    /console\.log/.test(classSource) ||
-                    /throw\s+/.test(classSource) ||
-                    /if\s*\(/.test(classSource) ||
-                    /for\s*\(/.test(classSource) ||
-                    /while\s*\(/.test(classSource));
-            let Wrapped;
-            if (hasCustomLogic) {
-                Wrapped = target;
-            }
-            else {
-                Wrapped = new Function('target', `return class ${target.name} extends target {
-             constructor(...ctorArgs) {
-               super(...ctorArgs);
-              //  console.log('After super() call, this:', Object.keys(this), this);
-
-               // If no properties were set by super() call, it means property initializers
-               // from the original class weren't applied. We need to apply them manually.
-               if (Object.keys(this).length === 0) {
-                 // Create a temporary instance of the original class to get default values
-                 const tempInstance = new target();
-                //  console.log('Temp instance with initializers:', Object.keys(tempInstance), tempInstance);
-                 // Copy the property initializers
-                 Object.assign(this, tempInstance);
-                //  console.log('After copying initializers, this:', Object.keys(this), this);
-               }
-
-               const props = ctorArgs[0];
-               if (props && typeof props === "object") {
-                //  console.log('Applying props:', props);
-                 Object.assign(this, props);
-                //  console.log('After Object.assign, this:', Object.keys(this), this);
-               }
-             }
-           }`)(target);
-                const originalPrototype = Object.getPrototypeOf(target);
-                const originalInstancePrototype = Object.getPrototypeOf(target.prototype);
-                if (originalPrototype && originalPrototype !== Function.prototype) {
-                    Object.setPrototypeOf(Wrapped, originalPrototype);
-                }
-                if (originalInstancePrototype) {
-                    Object.setPrototypeOf(Wrapped.prototype, originalInstancePrototype);
-                }
-                for (const key of Reflect.ownKeys(target.prototype)) {
-                    if (key !== 'constructor' && !Wrapped.prototype.hasOwnProperty(key)) {
-                        const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);
-                        if (descriptor) {
-                            Object.defineProperty(Wrapped.prototype, key, descriptor);
-                        }
-                    }
-                }
-                for (const key of Reflect.ownKeys(target)) {
-                    if (key !== 'prototype' && key !== 'name' && key !== 'length') {
-                        const descriptor = Object.getOwnPropertyDescriptor(target, key);
-                        if (descriptor) {
-                            Object.defineProperty(Wrapped, key, descriptor);
-                        }
-                    }
-                }
-                const metadataKeys = Reflect.getMetadataKeys(target);
-                for (const key of metadataKeys) {
-                    const value = Reflect.getMetadata(key, target);
-                    Reflect.defineMetadata(key, value, Wrapped);
-                }
-                const prototypeMetadataKeys = Reflect.getMetadataKeys(target.prototype);
-                for (const key of prototypeMetadataKeys) {
-                    const value = Reflect.getMetadata(key, target.prototype);
-                    Reflect.defineMetadata(key, value, Wrapped.prototype);
-                }
-                Object.defineProperty(Wrapped, 'name', { value: target.name });
-            }
-            Reflect.defineMetadata(REFLECTED_TYPE_KEY, reflectedType, Wrapped);
-            Reflect.defineMetadata(TYPE_KEY, true, Wrapped);
-            tsruntime.defineReflectMetadata(Wrapped, reflectedType);
-            return Wrapped;
+            return target;
         };
     }
     const reflect = tsruntime.createReflective(reflectiveFn);
@@ -305,6 +226,15 @@ class Optional extends Array {
     getKind() {
         return this.constructor.kind;
     }
+    setInitializer(initializer) {
+        Reflect.defineMetadata(INITIALIZER_KEY, initializer, this);
+    }
+    hasInitializer() {
+        return Reflect.hasOwnMetadata(INITIALIZER_KEY, this);
+    }
+    getInitializer() {
+        return Reflect.getOwnMetadata(INITIALIZER_KEY, this);
+    }
 }
 Optional.kind = KINDS$1.OPTIONAL;
 
@@ -329,6 +259,15 @@ class Pattern extends Object {
     }
     describe(value) {
         return this.constructor.getDescriber().describe(value);
+    }
+    setInitializer(initializer) {
+        Reflect.defineMetadata(INITIALIZER_KEY, initializer, this);
+    }
+    hasInitializer() {
+        return Reflect.hasOwnMetadata(INITIALIZER_KEY, this);
+    }
+    getInitializer() {
+        return Reflect.getOwnMetadata(INITIALIZER_KEY, this);
     }
 }
 Pattern.kind = '';
@@ -366,6 +305,15 @@ class WrapperPattern extends Array {
     }
     onValidation(...expectations) {
         return true;
+    }
+    setInitializer(initializer) {
+        Reflect.defineMetadata(INITIALIZER_KEY, initializer, this);
+    }
+    hasInitializer() {
+        return Reflect.hasOwnMetadata(INITIALIZER_KEY, this);
+    }
+    getInitializer() {
+        return Reflect.getOwnMetadata(INITIALIZER_KEY, this);
     }
 }
 
@@ -1705,6 +1653,9 @@ class ObjectConverter {
         else {
             pattern = new Collection(properties);
         }
+        if (reflectedType.initializer) {
+            pattern.setInitializer(reflectedType.initializer());
+        }
         return pattern;
     }
     reflect(reflectedType, converter) {
@@ -1731,6 +1682,9 @@ class ObjectConverter {
                     else if (helpers.isClass(reflectedRefType.type) === false &&
                         isPlainObjectFast(reflectedRefType.type) === true) {
                         expectation = new Collection(reflectedRefType.type);
+                        if (reflectedProp.initializer) {
+                            expectation.setInitializer(reflectedProp.initializer());
+                        }
                     }
                     else {
                         expectation = new InstanceOf(reflectedRefType.type);
@@ -1785,7 +1739,11 @@ class StringConverter {
         return reflectedType.kind === TypeKind_1.String;
     }
     convert(reflectedType) {
-        return new InstanceOf(String);
+        const pattern = new InstanceOf(String);
+        if (reflectedType.initializer) {
+            pattern.setInitializer(reflectedType.initializer());
+        }
+        return pattern;
     }
     reflect(reflectedType) {
         return String;
@@ -1797,7 +1755,11 @@ class NumberConverter {
         return reflectedType.kind === TypeKind_1.Number;
     }
     convert(reflectedType) {
-        return new InstanceOf(Number);
+        const pattern = new InstanceOf(Number);
+        if (reflectedType.initializer) {
+            pattern.setInitializer(reflectedType.initializer());
+        }
+        return pattern;
     }
     reflect(reflectedType) {
         return Number;
@@ -1809,7 +1771,11 @@ class BooleanConverter {
         return reflectedType.kind === TypeKind_1.Boolean;
     }
     convert(reflectedType) {
-        return new InstanceOf(Boolean);
+        const pattern = new InstanceOf(Boolean);
+        if (reflectedType.initializer) {
+            pattern.setInitializer(reflectedType.initializer());
+        }
+        return pattern;
     }
     reflect(reflectedType) {
         return Boolean;
@@ -1881,7 +1847,11 @@ class ESSymbolConverter {
         return reflectedType.kind === TypeKind_1.ESSymbol;
     }
     convert(reflectedType) {
-        return new InstanceOf(Symbol);
+        const pattern = new InstanceOf(Symbol);
+        if (reflectedType.initializer) {
+            pattern.setInitializer(reflectedType.initializer());
+        }
+        return pattern;
     }
     reflect(reflectedType) {
         return Symbol;
@@ -1951,7 +1921,11 @@ class TupleConverter {
                 expectations.push(converter.convert(arg));
             }
         }
-        return new Tuple(...expectations);
+        const pattern = new Tuple(...expectations);
+        if (reflectedType.initializer) {
+            pattern.setInitializer(reflectedType.initializer());
+        }
+        return pattern;
     }
     reflect(reflectedType, converter) {
         const expectations = [];
@@ -1997,6 +1971,9 @@ class UnionConverter {
         else {
             pattern = new OneOf(...expectations);
         }
+        if (reflectedType.initializer) {
+            pattern.setInitializer(reflectedType.initializer());
+        }
         return pattern;
     }
     reflect(reflectedType, converter) {
@@ -2038,12 +2015,20 @@ class ReferenceConverter {
                     expectations.push(converter.convert(argument));
                 }
             }
-            return new List(...expectations);
+            const pattern = new List(...expectations);
+            if (reflectedType.initializer) {
+                pattern.setInitializer(reflectedType.initializer());
+            }
+            return pattern;
         }
         if (isPlainObjectFast(reflectedType.type)) {
             return new Collection(reflectedType.type);
         }
-        return new InstanceOf(reflectedType.type);
+        const pattern = new InstanceOf(reflectedType.type);
+        if (reflectedType.initializer) {
+            pattern.setInitializer(reflectedType.initializer());
+        }
+        return pattern;
     }
     reflect(reflectedType, converter) {
         if (converter.getConverter(TypeKind$1.Array).isConvertible(reflectedType)) {
@@ -2258,6 +2243,9 @@ class ArrayConverter {
             }
         }
         const pattern = new List(...expectations);
+        if (reflectedType.initializer) {
+            pattern.setInitializer(reflectedType.initializer());
+        }
         return pattern;
     }
     reflect(reflectedType, converter) {

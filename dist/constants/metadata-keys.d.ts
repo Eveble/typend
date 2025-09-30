@@ -7,3 +7,4 @@ export declare const INTERNAL_METHODS_KEY: unique symbol;
 export declare const PATTERN_KEY: unique symbol;
 export declare const VALIDATION_KEY: unique symbol;
 export declare const INTERFACE_NAME_KEY: unique symbol;
+export declare const INITIALIZER_KEY: unique symbol;

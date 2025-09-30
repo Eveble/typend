@@ -49,6 +49,9 @@ export declare namespace types {
     }
     interface Pattern {
         getKind(): string;
+        setInitializer(initializer: any): void;
+        hasInitializer(): boolean;
+        getInitializer(): any | undefined;
     }
     interface PatternType {
         new (arg: any): Pattern;

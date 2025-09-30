@@ -10,4 +10,7 @@ export declare abstract class Pattern extends Object {
     static setDescriber(describer: types.Describer): void;
     static getDescriber(): types.Describer;
     describe(value: any): string;
+    setInitializer(initializer: any): void;
+    hasInitializer(): boolean;
+    getInitializer(): any | undefined;
 }

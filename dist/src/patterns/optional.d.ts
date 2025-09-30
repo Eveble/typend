@@ -8,4 +8,7 @@ export declare class Optional extends Array implements types.Pattern {
     static getDescriber(): types.Describer;
     describe(value: any): string;
     getKind(): string;
+    setInitializer(initializer: any): void;
+    hasInitializer(): boolean;
+    getInitializer(): any | undefined;
 }

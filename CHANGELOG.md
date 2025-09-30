@@ -1,3 +1,16 @@
+## [3.1.5](https://github.com/eveble/typend/compare/v3.1.4...v3.1.5) (2025-09-30)
+
+
+### Bug Fixes
+
+* **deps:** pin tsruntime dep to eveble branch ([c949e90](https://github.com/eveble/typend/commit/c949e90e5043f8904d66f69e2a28d795f92f287d))
+* **deps:** remove patch-package ([9790576](https://github.com/eveble/typend/commit/9790576e5d6d0b665f4eb55eb5523bf380356761))
+
+
+### Reverts
+
+* add back property initializers ([70afe22](https://github.com/eveble/typend/commit/70afe226d8290bc5909fc5aead9930ff7cb6144c))
+
 ## [3.1.4](https://github.com/eveble/typend/compare/v3.1.3...v3.1.4) (2025-09-29)
 
 
