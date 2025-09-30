@@ -45,6 +45,10 @@ export class ArrayConverter implements types.TypeConverter {
     }
 
     const pattern = new List(...expectations);
+    if (reflectedType.initializer) {
+      pattern.setInitializer(reflectedType.initializer());
+    }
+
     return pattern;
   }
 

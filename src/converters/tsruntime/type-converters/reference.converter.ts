@@ -40,7 +40,11 @@ export class ReferenceConverter implements types.TypeConverter {
         }
       }
 
-      return new List(...expectations);
+      const pattern = new List(...expectations);
+      if (reflectedType.initializer) {
+        pattern.setInitializer(reflectedType.initializer());
+      }
+      return pattern;
     }
 
     // Handle plain objects
@@ -49,7 +53,11 @@ export class ReferenceConverter implements types.TypeConverter {
     }
 
     // Handle regular references
-    return new InstanceOf(reflectedType.type);
+    const pattern = new InstanceOf(reflectedType.type);
+    if (reflectedType.initializer) {
+      pattern.setInitializer(reflectedType.initializer());
+    }
+    return pattern;
   }
 
   public reflect(

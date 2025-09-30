@@ -155,4 +155,24 @@ describe(`Optional`, () => {
     expect(describer.describe).to.be.calledOnce;
     expect(describer.describe).to.be.calledWithExactly(val);
   });
+
+  describe('property initializers', () => {
+    describe('evaluation', () => {
+      it('returns true if property initializer is set on pattern', () => {
+        const pattern = new Optional();
+        pattern.setInitializer('my-initializer-value');
+        expect(pattern.hasInitializer()).to.be.true;
+      });
+      it('returns false if property initializer is missing from pattern', () => {
+        const pattern = new Optional();
+        expect(pattern.hasInitializer()).to.be.false;
+      });
+    });
+    it('sets the property initializer on pattern', () => {
+      const pattern = new Optional();
+      const initializer = 'my-initializer-value';
+      pattern.setInitializer(initializer);
+      expect(pattern.getInitializer()).to.be.equal(initializer);
+    });
+  });
 });

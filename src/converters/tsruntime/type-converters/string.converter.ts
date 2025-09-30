@@ -10,7 +10,11 @@ export class StringConverter implements types.TypeConverter {
   }
 
   public convert(reflectedType: tsruntimeTypes.ReflectedType): InstanceOf {
-    return new InstanceOf(String);
+    const pattern = new InstanceOf(String);
+    if (reflectedType.initializer) {
+      pattern.setInitializer(reflectedType.initializer());
+    }
+    return pattern;
   }
 
   public reflect(reflectedType: tsruntimeTypes.ReflectedType): typeof String {

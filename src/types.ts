@@ -110,6 +110,9 @@ export namespace types {
 
   export interface Pattern {
     getKind(): string;
+    setInitializer(initializer: any): void;
+    hasInitializer(): boolean;
+    getInitializer(): any | undefined;
   }
 
   export interface PatternType {

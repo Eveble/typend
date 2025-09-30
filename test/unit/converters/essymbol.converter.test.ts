@@ -41,5 +41,17 @@ describe(`ESSymbolConverter`, () => {
       expect(result).to.be.instanceof(InstanceOf);
       expect(result).to.be.eql(new InstanceOf(Symbol));
     });
+
+    it('converts symbol type with initializer', () => {
+      const testSymbol = Symbol('test');
+      const symbolType = {
+        kind: 10,
+        initializer: () => testSymbol,
+      };
+      const result = typeConverter.convert(symbolType);
+      expect(result).to.be.instanceof(InstanceOf);
+      expect(result.hasInitializer()).to.be.true;
+      expect(result.getInitializer()).to.equal(testSymbol);
+    });
   });
 });

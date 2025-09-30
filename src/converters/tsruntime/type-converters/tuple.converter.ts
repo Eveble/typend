@@ -26,7 +26,11 @@ export class TupleConverter implements types.TypeConverter {
       }
     }
 
-    return new Tuple(...expectations);
+    const pattern = new Tuple(...expectations);
+    if (reflectedType.initializer) {
+      pattern.setInitializer(reflectedType.initializer());
+    }
+    return pattern;
   }
 
   public reflect(

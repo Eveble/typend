@@ -253,6 +253,23 @@ describe(`UnionConverter`, () => {
         expect(result).to.be.eql([String, Number, Boolean]);
       });
 
+      it('converts one of type(two or more types) as instance of OneOf pattern with property initializer', () => {
+        const reflectedType = {
+          kind: 17,
+          initializer: (): any => 'my-value',
+          types: [{ kind: 2 }, { kind: 3 }, { kind: 4 }],
+        };
+
+        converter.convert.withArgs({ kind: 2 }).returns(String);
+        converter.convert.withArgs({ kind: 3 }).returns(Number);
+        converter.convert.withArgs({ kind: 4 }).returns(Boolean);
+        const result = typeConverter.convert(reflectedType, converter);
+        expect(result).to.be.instanceof(OneOf);
+        expect(result).to.be.eql([String, Number, Boolean]);
+        expect(result.hasInitializer()).to.be.true;
+        expect(result.getInitializer()).to.be.equal('my-value');
+      });
+
       it('converts one of reference types as instance of OneOf pattern', () => {
         const unionType: any = {
           kind: TypeKind.Union,
@@ -324,6 +341,21 @@ describe(`UnionConverter`, () => {
         expect(result).to.be.eql([true]);
       });
 
+      it('converts optional type(type|undefined) as instance of Optional pattern with property initializer', () => {
+        const reflectedType = {
+          kind: 17,
+          initializer: (): any => true,
+          types: [{ kind: 8 }, { kind: 12 }],
+        };
+        converter.convert.withArgs({ kind: 8 }).returns(true);
+        converter.convert.withArgs({ kind: 12 }).returns(undefined);
+        const result = typeConverter.convert(reflectedType, converter);
+        expect(result).to.be.instanceof(Optional);
+        expect(result).to.be.eql([true]);
+        expect(result.hasInitializer()).to.be.true;
+        expect(result.getInitializer()).to.be.equal(true);
+      });
+
       it('converts optional reference type(class|undefined) as instance of Optional pattern', () => {
         const unionType: any = {
           kind: TypeKind.Union,
@@ -364,6 +396,27 @@ describe(`UnionConverter`, () => {
         expect(result).to.be.instanceof(Optional);
         expect(result[0]).to.be.instanceof(List);
         expect(result[0]).to.be.eql([String]);
+      });
+
+      it('converts union with initializer containing reference types', () => {
+        const unionType: any = {
+          kind: TypeKind.Union,
+          initializer: (): any => new MyClass(),
+          types: [
+            { kind: TypeKind.Reference, type: MyClass },
+            { kind: TypeKind.Undefined },
+          ],
+        };
+
+        converter.convert
+          .withArgs({ kind: TypeKind.Undefined })
+          .returns(undefined);
+
+        const result = typeConverter.convert(unionType, converter);
+        expect(result).to.be.instanceof(Optional);
+        expect(result).to.be.eql([new InstanceOf(MyClass)]);
+        expect(result.hasInitializer()).to.be.true;
+        expect(result.getInitializer()).to.be.instanceOf(MyClass);
       });
     });
   });

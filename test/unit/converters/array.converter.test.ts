@@ -117,6 +117,21 @@ describe(`ArrayConverter`, () => {
       expect(arrayType).to.be.eql([String]);
     });
 
+    it('converts literal array assigned as property with initializer', () => {
+      const reflectedType = {
+        kind: 18,
+        initializer: (): any => ['my-value'],
+        arguments: [{ kind: 2 }],
+      };
+      converter.convert.withArgs({ kind: 2 }).returns(String);
+
+      const arrayType = typeConverter.convert(reflectedType, converter);
+      expect(arrayType).to.be.instanceof(List);
+      expect(arrayType).to.be.eql([String]);
+      expect(arrayType.hasInitializer()).to.be.true;
+      expect(arrayType.getInitializer()).to.be.eql(['my-value']);
+    });
+
     it('converts literal array with class', () => {
       const classConverter = stubInterface<types.TypeConverter>();
       converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);

@@ -26,6 +26,17 @@ describe(`NumberConverter`, () => {
     it('reflects number type to Number constructor', () => {
       expect(typeConverter.reflect(reflect<number>())).to.be.equal(Number);
     });
+
+    it('reflects number as a type with initializer', () => {
+      const reflectedType = {
+        kind: 3,
+        initializer: (): number => {
+          return 69;
+        },
+      };
+      const result = typeConverter.reflect(reflectedType);
+      expect(result).to.be.equal(Number);
+    });
   });
 
   describe('conversion', () => {
@@ -33,6 +44,20 @@ describe(`NumberConverter`, () => {
       const result = typeConverter.convert(reflect<number>());
       expect(result).to.be.instanceof(InstanceOf);
       expect(result).to.be.eql(new InstanceOf(Number));
+    });
+
+    it('converts number as type with initializer', () => {
+      const reflectedType = {
+        kind: 3,
+        initializer: (): number => {
+          return 69;
+        },
+      };
+      const result = typeConverter.convert(reflectedType);
+      expect(result).to.be.instanceof(InstanceOf);
+      expect(result).to.be.eql(new InstanceOf(Number));
+      expect(result.hasInitializer()).to.be.true;
+      expect(result.getInitializer()).to.be.equal(69);
     });
   });
 });
