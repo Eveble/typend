@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "reflect-metadata": "^0.2.1",
-    "tsruntime": "github:eveble/tsruntime#5.0.2",
+    "tsruntime": "github:eveble/tsruntime#eveble",
     "ts-patch": "3.1.2",
     "@eveble/helpers": "^1.0.4",
     "deep-diff": "^1.0.2",
