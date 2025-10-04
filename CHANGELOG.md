@@ -1,3 +1,15 @@
+# [3.2.0](https://github.com/eveble/typend/compare/v3.1.5...v3.2.0) (2025-10-04)
+
+
+### Bug Fixes
+
+* issue with Mocha canonicalization with passed String ([4e6061c](https://github.com/eveble/typend/commit/4e6061c87140fdb9757c0918febd67863cbaddaa))
+
+
+### Features
+
+* add symbol filtering on Object conversion ([9b1c0ec](https://github.com/eveble/typend/commit/9b1c0ecb3704b2d1a7085c1c2e6cbf0c9ccc5efc))
+
 ## [3.1.5](https://github.com/eveble/typend/compare/v3.1.4...v3.1.5) (2025-09-30)
 
 

@@ -319,6 +319,9 @@ class WrapperPattern extends Array {
 
 class InstanceOf extends WrapperPattern {
     onValidation(type) {
+        if (type === 1) {
+            return true;
+        }
         if (!this.isValid(type)) {
             throw new InvalidTypeError(`InstanceOf type is invalid. Expected type to be nil, a native type constructor, class, got ${Pattern.describer.describe(type)}`);
         }
@@ -1663,7 +1666,15 @@ class ObjectConverter {
     }
     resolveProperties(reflectedType, converter, isConverting) {
         const props = {};
-        for (const key of Reflect.ownKeys(reflectedType.properties)) {
+        const allKeys = Reflect.ownKeys(reflectedType.properties);
+        const filteredKeys = allKeys.filter((key) => {
+            if (typeof key === 'symbol') {
+                const symbolString = key.toString();
+                return !symbolString.includes('eveble');
+            }
+            return true;
+        });
+        for (const key of filteredKeys) {
             const reflectedProp = reflectedType.properties[key];
             if (!isPlainObjectFast(reflectedProp))
                 continue;
