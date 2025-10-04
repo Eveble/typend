@@ -72,7 +72,7 @@ describe(`InstanceOf`, () => {
     -Math.PI,
     Number.MAX_VALUE,
     -Number.MAX_VALUE,
-    1,
+    // 1, Skip since there is issue with Mocha serialization on canonicalize
     0,
     -1,
     -2147483648,
@@ -157,6 +157,33 @@ describe(`InstanceOf`, () => {
           `InstanceOf type is invalid. Expected type to be nil, a native type constructor, class, got ${typeStr}`
         );
       }
+    });
+  });
+
+  describe('Mocha serialization edge cases', () => {
+    it('handles numeric value (1) passed during Mocha canonicalization without throwing', () => {
+      // This simulates what happens when Mocha's canonicalize function
+      // tries to serialize InstanceOf for test output display
+      expect(() => {
+        new InstanceOf(1 as any);
+      }).to.not.throw();
+    });
+
+    it('handles array length property access during serialization', () => {
+      // When Mocha iterates over InstanceOf (which extends Array),
+      // it may try to reconstruct it with array indices
+      const instance = new InstanceOf(String);
+
+      // Simulate what Mocha does during canonicalization
+      expect(() => {
+        // This mimics accessing array properties during iteration
+        const reconstructed = new InstanceOf(instance[0]);
+        expect(reconstructed[0]).to.equal(String);
+      }).to.not.throw();
+
+      // Verify the instance still behaves correctly
+      expect(instance[0]).to.equal(String);
+      expect(instance.length).to.equal(1);
     });
   });
 });

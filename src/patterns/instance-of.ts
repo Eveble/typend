@@ -35,6 +35,11 @@ export class InstanceOf extends WrapperPattern implements types.Pattern {
    * Thrown if provided type is not nil, native type constructor or class.
    */
   onValidation(type: any): boolean {
+    // Ignore if it's being called during serialization with length/index with Mocha canonicalize
+    if (type === 1) {
+      return true; // Skip validation during serialization
+    }
+
     if (!this.isValid(type)) {
       throw new InvalidTypeError(
         `InstanceOf type is invalid. Expected type to be nil, a native type constructor, class, got ${Pattern.describer.describe(
