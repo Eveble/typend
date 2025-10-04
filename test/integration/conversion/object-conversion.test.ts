@@ -366,4 +366,71 @@ describe(`Object conversion`, () => {
       );
     });
   });
+
+  describe('symbol filtering', () => {
+    it('excludes symbols containing "eveble" prefix from converted object', () => {
+      const evebleSymbol1 = Symbol('eveble:config-key');
+      const evebleSymbol2 = Symbol('eveble:internal-key');
+      const regularSymbol = Symbol('regular-key');
+
+      type ObjectWithSymbols = {
+        regularProp: string;
+        [regularSymbol]: number;
+        [evebleSymbol1]: boolean;
+        [evebleSymbol2]: string;
+      };
+
+      const converted = converter.convert(reflect<ObjectWithSymbols>());
+      const collectionKeys = Reflect.ownKeys(converted);
+
+      // Should include regular properties and non-eveble symbols
+      expect(collectionKeys).to.include('regularProp');
+      expect(collectionKeys).to.include(regularSymbol);
+
+      // Should exclude eveble symbols
+      expect(collectionKeys).to.not.include(evebleSymbol1);
+      expect(collectionKeys).to.not.include(evebleSymbol2);
+
+      // Verify the structure
+      expect(converted).to.be.eql(
+        new Collection({
+          regularProp: new InstanceOf(String),
+          [regularSymbol]: new InstanceOf(Number),
+        })
+      );
+    });
+
+    it('handles objects with only eveble symbols gracefully', () => {
+      const evebleSymbol = Symbol('eveble:only-symbol');
+
+      type OnlyEvebleSymbols = {
+        [evebleSymbol]: string;
+      };
+
+      const converted = converter.convert(reflect<OnlyEvebleSymbols>());
+
+      // Should return empty Collection since all symbols are filtered
+      expect(converted).to.be.eql(new Collection({}));
+      expect(Reflect.ownKeys(converted).length).to.equal(0);
+    });
+
+    it('preserves symbols without "eveble" in their description', () => {
+      const mySymbol = Symbol('my-custom-symbol');
+      const anotherSymbol = Symbol('another-one');
+
+      type MixedSymbols = {
+        normalKey: string;
+        [mySymbol]: number;
+        [anotherSymbol]: boolean;
+      };
+
+      const converted = converter.convert(reflect<MixedSymbols>());
+      const collectionKeys = Reflect.ownKeys(converted);
+
+      expect(collectionKeys).to.have.lengthOf(3);
+      expect(collectionKeys).to.include('normalKey');
+      expect(collectionKeys).to.include(mySymbol);
+      expect(collectionKeys).to.include(anotherSymbol);
+    });
+  });
 });

@@ -47,8 +47,19 @@ export class ObjectConverter implements types.TypeConverter {
     converter: types.Converter,
     isConverting: boolean
   ): Record<keyof any, any> {
-    const props: Record<keyof any, any> = {};
-    for (const key of Reflect.ownKeys(reflectedType.properties)) {
+    const props = {};
+    const allKeys = Reflect.ownKeys(reflectedType.properties);
+
+    // Filter out eveble symbols
+    const filteredKeys = allKeys.filter((key) => {
+      if (typeof key === 'symbol') {
+        const symbolString = key.toString();
+        return !symbolString.includes('eveble');
+      }
+      return true;
+    });
+
+    for (const key of filteredKeys) {
       const reflectedProp: tsruntimeTypes.ReflectedType =
         reflectedType.properties[key as any];
 
