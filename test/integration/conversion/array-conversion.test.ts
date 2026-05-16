@@ -1,4 +1,14 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { reflect } from 'tsruntime';
 import { converter } from './setup';
 import { List } from '../../../src/patterns/list';
@@ -24,7 +34,7 @@ describe(`Array conversion`, () => {
         expect(
           converter.reflect(type),
           `Expected ${desc} to match reflected definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -45,12 +55,12 @@ describe(`Array conversion`, () => {
         expect(
           converter.reflect(type),
           `Expected ${desc} to match reflected definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
     it('reflects Array with class type', () => {
-      expect(converter.reflect(reflect<MyClass[]>()), 'MyClass[]').to.be.eql([
+      expect(converter.reflect(reflect<MyClass[]>()), 'MyClass[]').toEqual([
         MyClass,
       ]);
     });
@@ -77,7 +87,7 @@ describe(`Array conversion`, () => {
         expect(
           converter.reflect(type),
           `Expected ${desc} to match reflected definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -85,7 +95,7 @@ describe(`Array conversion`, () => {
       expect(
         converter.reflect(reflect<string[][]>()),
         `Expected string[][] to match reflected definition`
-      ).to.be.eql([[String]]);
+      ).toEqual([[String]]);
     });
   });
 
@@ -103,7 +113,7 @@ describe(`Array conversion`, () => {
         expect(
           converter.convert(type),
           `Expected ${desc} to match converted definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -136,12 +146,12 @@ describe(`Array conversion`, () => {
         expect(
           converter.convert(type),
           `Expected ${desc} to match converted definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
     it('converts Array with class type', () => {
-      expect(converter.convert(reflect<MyClass[]>()), 'MyClass[]').to.be.eql(
+      expect(converter.convert(reflect<MyClass[]>()), 'MyClass[]').toEqual(
         new List(new InstanceOf(MyClass))
       );
     });
@@ -172,7 +182,7 @@ describe(`Array conversion`, () => {
         expect(
           converter.convert(type),
           `Expected ${desc} to match converted definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -180,7 +190,7 @@ describe(`Array conversion`, () => {
       expect(
         converter.convert(reflect<string[][]>()),
         `Expected string[][] to match converted definition`
-      ).to.be.eql(new List(new List(new InstanceOf(String))));
+      ).toEqual(new List(new List(new InstanceOf(String))));
     });
   });
 });

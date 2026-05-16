@@ -1,6 +1,14 @@
-import { expect, use } from 'chai';
-import sinonChai from 'sinon-chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../vitest-helper';
 import { setTypeName } from '@eveble/helpers';
 import { CompactDescriber } from '../../src/describers/compact-describer';
 import { DebugDescriber } from '../../src/describers/debug-describer';
@@ -20,12 +28,10 @@ import {
 } from '../../src/errors';
 import { KINDS } from '../../src/constants/literal-keys';
 
-use(sinonChai);
-
 describe(`Identifier`, () => {
   let describer: any;
 
-  before(() => {
+  beforeAll(() => {
     describer = new Describer();
     describer.registerDescriber(KINDS.NATIVE, new NativeTypeDescriber());
     describer.registerDescriber(KINDS.ERROR, new ErrorDescriber());
@@ -51,7 +57,7 @@ describe(`Identifier`, () => {
         [KINDS.DESCRIPTION_LIST, stubInterface<types.TypeDescriber>()],
       ]);
       const instance = new Describer(describers);
-      expect(instance.getDescribers()).to.be.equal(describers);
+      expect(instance.getDescribers()).toBe(describers);
     });
   });
 
@@ -62,7 +68,7 @@ describe(`Identifier`, () => {
 
       const desc = new Describer();
       desc.registerDescriber(type, typeDescriber);
-      expect(desc.hasDescriber(type)).to.be.true;
+      expect(desc.hasDescriber(type)).toBe(true);
     });
 
     it(`throws TypeDescriberExistsError when overriding existing type describer`, () => {
@@ -71,7 +77,7 @@ describe(`Identifier`, () => {
 
       const desc = new Describer();
       desc.registerDescriber(type, typeDescriber);
-      expect(() => desc.registerDescriber(type, typeDescriber)).to.throw(
+      expect(() => desc.registerDescriber(type, typeDescriber)).toThrow(
         TypeDescriberExistsError,
         `Describer for type '${type}' would be overwritten. To
     override existing describer use 'Describer::overrideDescriber'`
@@ -86,7 +92,7 @@ describe(`Identifier`, () => {
       const desc = new Describer();
       desc.registerDescriber(type, typeDescriber);
       desc.overrideDescriber(type, otherDescriber);
-      expect(desc.getDescriber(type)).to.be.equal(otherDescriber);
+      expect(desc.getDescriber(type)).toBe(otherDescriber);
     });
 
     it(`returns true if type describer is registered`, () => {
@@ -95,18 +101,18 @@ describe(`Identifier`, () => {
 
       const desc = new Describer();
       desc.registerDescriber(type, typeDescriber);
-      expect(desc.hasDescriber(type)).to.be.true;
+      expect(desc.hasDescriber(type)).toBe(true);
     });
 
     it(`returns false if type describer is not registered`, () => {
       const desc = new Describer();
-      expect(desc.hasDescriber('my-not-registered-describer')).to.be.false;
+      expect(desc.hasDescriber('my-not-registered-describer')).toBe(false);
     });
 
     it(`throws TypeDescriberNotFoundError if type describer can't be found for specific type`, () => {
       const desc = new Describer();
       const type = 'native';
-      expect(() => desc.createDescription('my-value')).to.throw(
+      expect(() => desc.createDescription('my-value')).toThrow(
         TypeDescriberNotFoundError,
         `Describer for type '${type}' can't be found`
       );
@@ -129,7 +135,7 @@ describe(`Identifier`, () => {
       const desc = new Describer();
       desc.setFormatting(formatting);
       for (const [type, TypeDescriber] of Object.entries(describers)) {
-        expect(desc.getDescriber(type)).to.be.instanceof(TypeDescriber);
+        expect(desc.getDescriber(type)).toBeInstanceOf(TypeDescriber);
       }
     });
 
@@ -148,7 +154,7 @@ describe(`Identifier`, () => {
       const desc = new Describer();
       desc.setFormatting(formatting);
       for (const type of describers) {
-        expect(desc.getDescriber(type)).to.be.instanceof(DebugDescriber);
+        expect(desc.getDescriber(type)).toBeInstanceOf(DebugDescriber);
       }
     });
 
@@ -167,7 +173,7 @@ describe(`Identifier`, () => {
       const desc = new Describer();
       desc.setFormatting(formatting);
       for (const type of describers) {
-        expect(desc.getDescriber(type)).to.be.instanceof(CompactDescriber);
+        expect(desc.getDescriber(type)).toBeInstanceOf(CompactDescriber);
       }
     });
   });
@@ -176,131 +182,131 @@ describe(`Identifier`, () => {
     it('returns description for undefined', () => {
       const value = undefined;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'undefined';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'undefined',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for null', () => {
       const value = null;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'null';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: 'null',
         type: 'null',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for String', () => {
       const value = String;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'String';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'String',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Number', () => {
       const value = Number;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Number';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'Number',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Boolean', () => {
       const value = Boolean;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Boolean';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'Boolean',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for RegExp', () => {
       const value = RegExp;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'RegExp';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'RegExp',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Date', () => {
       const value = Date;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Date';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'Date',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Function', () => {
       const value = Function;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Function';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'Function',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Array', () => {
       const value = Array;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Array';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'Array',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Object', () => {
       const value = Object;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Object';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'Object',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
   });
 
@@ -308,118 +314,118 @@ describe(`Identifier`, () => {
     it('returns description for String', () => {
       const value = 'my-string';
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'String("my-string")';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: '"my-string"',
         type: 'String',
         message,
       });
-      expect(describer.describe(value)).to.be.eql('String("my-string")');
+      expect(describer.describe(value)).toEqual('String("my-string")');
     });
 
     it('returns description for Number', () => {
       const value = 1;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Number(1)';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: '1',
         type: 'Number',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Boolean(true)', () => {
       const value = true;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Boolean(true)';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: 'true',
         type: 'Boolean',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Boolean(false)', () => {
       const value = false;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Boolean(false)';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: 'false',
         type: 'Boolean',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for RegExp', () => {
       const value = /my-regexp/;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'RegExp(/my-regexp/)';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: '/my-regexp/',
         type: 'RegExp',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Date', () => {
       const value = new Date('2017-02-06T20:43:13.464Z');
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Date("2017-02-06T20:43:13.464Z")';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: '"2017-02-06T20:43:13.464Z"',
         type: 'Date',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Function', () => {
       const value = (): boolean => true;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Function';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'Function',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for an Array', () => {
       const value = [1, 'my-string', true];
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = '[Number(1), String("my-string"), Boolean(true)]';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: 'Number(1), String("my-string"), Boolean(true)',
         type: 'Array',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for an Object', () => {
       const value = { key: 'value' };
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = '{"key":String("value")}';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: '"key":String("value")',
         type: 'Object',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
   });
 
@@ -429,53 +435,53 @@ describe(`Identifier`, () => {
     it('returns description for Error', () => {
       const value = Error;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Error';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'Error',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for custom MyError class', () => {
       const value = MyError;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'MyError';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'MyError',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for Error instance', () => {
       const value = new Error('my-message');
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = `Error('my-message')`;
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: `'my-message'`,
         type: 'Error',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for custom MyError class instance', () => {
       const value = new MyError('my-message');
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = `MyError('my-message')`;
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: `'my-message'`,
         type: 'MyError',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
   });
 
@@ -495,15 +501,15 @@ describe(`Identifier`, () => {
           },
         };
         const description = describer.createDescription(value);
-        expect(description).to.be.instanceof(Description);
+        expect(description).toBeInstanceOf(Description);
         const message =
           '{"key-1":{"key-2":String, "key-3":Number}, "key-4":{"key-5":String("my-string"), "key-6":{"key-7":Number(1)}}}';
-        expect(description).to.be.eql({
+        expect(description).toEqual({
           value: `"key-1":{"key-2":String, "key-3":Number}, "key-4":{"key-5":String("my-string"), "key-6":{"key-7":Number(1)}}`,
           type: 'Object',
           message,
         });
-        expect(describer.describe(value)).to.be.eql(message);
+        expect(describer.describe(value)).toEqual(message);
       });
 
       it('returns description for object with multidimensional array', () => {
@@ -520,16 +526,16 @@ describe(`Identifier`, () => {
           },
         };
         const description = describer.createDescription(value);
-        expect(description).to.be.instanceof(Description);
+        expect(description).toBeInstanceOf(Description);
         const message =
           '{"key-1":{"key-2":[Number(1), String("my-string"), Boolean(true), [Number(4)]], "key-3":Number}, "key-4":{"key-5":String("my-string"), "key-6":{"key-7":Number(1)}}}';
-        expect(description).to.be.eql({
+        expect(description).toEqual({
           value:
             '"key-1":{"key-2":[Number(1), String("my-string"), Boolean(true), [Number(4)]], "key-3":Number}, "key-4":{"key-5":String("my-string"), "key-6":{"key-7":Number(1)}}',
           type: 'Object',
           message,
         });
-        expect(describer.describe(value)).to.be.eql(message);
+        expect(describer.describe(value)).toEqual(message);
       });
     });
 
@@ -537,8 +543,8 @@ describe(`Identifier`, () => {
       it('returns list description for multidimensional array', () => {
         const value = [[1, 'my-string', true, [4]], 'my-other-string'];
         const description = describer.createDescription(value);
-        expect(description).to.be.instanceof(DescriptionList);
-        expect(description).to.be.eql(
+        expect(description).toBeInstanceOf(DescriptionList);
+        expect(description).toEqual(
           new DescriptionList([
             new Description({
               value:
@@ -554,7 +560,7 @@ describe(`Identifier`, () => {
             }),
           ])
         );
-        expect(describer.describe(value)).to.be.equal(
+        expect(describer.describe(value)).toBe(
           `[[Number(1), String("my-string"), Boolean(true), [Number(4)]], String("my-other-string")]`
         );
       });
@@ -580,28 +586,28 @@ describe(`Identifier`, () => {
     it('returns description for class', () => {
       const value = new Dependency('my-value');
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Dependency({"value":"my-value"})';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: '{"value":"my-value"}',
         type: 'Dependency',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for class dependant on other class', () => {
       const dependency = new Dependency('my-value');
       const value = new MyDependingClass(dependency);
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'MyDependingClass({"dep":{"value":"my-value"}})';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: '{"dep":{"value":"my-value"}}',
         type: 'MyDependingClass',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
   });
 
@@ -620,27 +626,27 @@ describe(`Identifier`, () => {
     it('returns description for serializable class constructor', () => {
       const value = MyClass;
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Namespace.MyClass';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: undefined,
         type: 'Namespace.MyClass',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
 
     it('returns description for serializable class instance', () => {
       const value = new MyClass('my-value');
       const description = describer.createDescription(value);
-      expect(description).to.be.instanceof(Description);
+      expect(description).toBeInstanceOf(Description);
       const message = 'Namespace.MyClass({"value":"my-value"})';
-      expect(description).to.be.eql({
+      expect(description).toEqual({
         value: '{"value":"my-value"}',
         type: 'Namespace.MyClass',
         message,
       });
-      expect(describer.describe(value)).to.be.eql(message);
+      expect(describer.describe(value)).toEqual(message);
     });
   });
 });

@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { CollectionWithin } from '../../../src/patterns/collection-within';
 import { InvalidDefinitionError } from '../../../src/errors';
@@ -116,18 +116,18 @@ describe(`CollectionWithin`, () => {
   ];
 
   it(`extends Pattern`, () => {
-    expect(CollectionWithin.prototype).to.instanceof(Pattern);
+    expect(CollectionWithin.prototype).toBeInstanceOf(Pattern);
   });
 
   describe('construction', () => {
     it('takes valid definition as properties of object literal for construction', () => {
       const props = { key: 'value' };
-      expect(new CollectionWithin(props)).to.eql(props);
+      expect(new CollectionWithin(props)).toEqual(props);
     });
 
     it(`has assigned 'OBJECT_WITHIN' as type kind`, () => {
       const collectionWithin = new CollectionWithin({});
-      expect(collectionWithin.getKind()).to.be.equal(KINDS.OBJECT_WITHIN);
+      expect(collectionWithin.getKind()).toBe(KINDS.OBJECT_WITHIN);
     });
 
     it('throws InvalidDefinitionError for invalid definition on construction', () => {
@@ -137,7 +137,7 @@ describe(`CollectionWithin`, () => {
         expect(
           () => new CollectionWithin(props),
           `Expected properties ${propsStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidDefinitionError,
           `CollectionWithin properties is invalid. Expected properties to be a plain object, got ${propsStr}`
         );

@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { FalseLiteralConverter } from '../../../src/converters/tsruntime/type-converters/false-literal.converter';
 import { Equals } from '../../../src';
 
@@ -12,7 +21,7 @@ describe(`FalseLiteralConverter`, () => {
   describe('evaluation', () => {
     it('returns true for false literal type', () => {
       const falseLiteralType = { kind: 7 }; // TypeKind.FalseLiteral
-      expect(typeConverter.isConvertible(falseLiteralType)).to.be.true;
+      expect(typeConverter.isConvertible(falseLiteralType)).toBe(true);
     });
 
     it('returns false for non-false-literal types', () => {
@@ -22,7 +31,7 @@ describe(`FalseLiteralConverter`, () => {
         { kind: 8 }, // TrueLiteral
       ];
       for (const type of examples) {
-        expect(typeConverter.isConvertible(type)).to.be.false;
+        expect(typeConverter.isConvertible(type)).toBe(false);
       }
     });
   });
@@ -30,7 +39,7 @@ describe(`FalseLiteralConverter`, () => {
   describe('reflection', () => {
     it('reflects false literal type as false', () => {
       const falseLiteralType = { kind: 7 };
-      expect(typeConverter.reflect(falseLiteralType)).to.be.false;
+      expect(typeConverter.reflect(falseLiteralType)).toBe(false);
     });
   });
 
@@ -38,8 +47,8 @@ describe(`FalseLiteralConverter`, () => {
     it('converts false literal type to Equals pattern with false', () => {
       const falseLiteralType = { kind: 7 };
       const result = typeConverter.convert(falseLiteralType);
-      expect(result).to.be.instanceof(Equals);
-      expect(result).to.be.eql(new Equals(false));
+      expect(result).toBeInstanceOf(Equals);
+      expect(result).toEqual(new Equals(false));
     });
   });
 });

@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { Equals } from '../../../src/patterns/equals';
 import { Pattern } from '../../../src/pattern';
@@ -127,7 +127,7 @@ describe(`Equals`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(Equals.prototype).to.instanceof(WrapperPattern);
+    expect(Equals.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
@@ -138,13 +138,13 @@ describe(`Equals`, () => {
         expect(
           new Equals(expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([expectation]);
+        ).toEqual([expectation]);
       }
     });
 
     it(`has assigned 'EQUALS' as type kind`, () => {
       const equals = new Equals('my-expectation');
-      expect(equals.getKind()).to.be.equal(KINDS.EQUALS);
+      expect(equals.getKind()).toBe(KINDS.EQUALS);
     });
 
     it('throws InvalidTypeError for invalid expectation on construction', () => {
@@ -154,7 +154,7 @@ describe(`Equals`, () => {
         expect(
           () => new Equals(expectation),
           `Expected expectation ${expectationStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidTypeError,
           `Equality pattern expectation is invalid. Expected expectation to not be an plain object nor an array, got ${expectationStr}`
         );

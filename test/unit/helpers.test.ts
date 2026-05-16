@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { classes } from 'polytype';
 import { Types as tsrTypes } from 'tsruntime';
 import {
@@ -39,9 +48,7 @@ describe(`helpers`, () => {
         },
       };
 
-      expect(getResolvablePath('foo.baz.properties', props)).to.be.equal(
-        'foo.baz'
-      );
+      expect(getResolvablePath('foo.baz.properties', props)).toBe('foo.baz');
     });
 
     it('returns path to object node with nearest resolvable properties by omitting unreachable path segments', () => {
@@ -55,9 +62,7 @@ describe(`helpers`, () => {
         },
       };
 
-      expect(getResolvablePath('foo.baz.qux.quux', props)).to.be.equal(
-        'foo.baz'
-      );
+      expect(getResolvablePath('foo.baz.qux.quux', props)).toBe('foo.baz');
     });
   });
 
@@ -75,7 +80,7 @@ describe(`helpers`, () => {
         },
       };
 
-      expect(isResolvablePath('foo.baz.c', props)).to.be.true;
+      expect(isResolvablePath('foo.baz.c', props)).toBe(true);
     });
     it('returns false for non-resolvable path', () => {
       const props: Record<string, any> = {
@@ -90,7 +95,7 @@ describe(`helpers`, () => {
         },
       };
 
-      expect(isResolvablePath('foo.bar.a.c', props)).to.be.false;
+      expect(isResolvablePath('foo.bar.a.c', props)).toBe(false);
     });
   });
 
@@ -104,7 +109,7 @@ describe(`helpers`, () => {
 
       const matcher = (evaluatedProto: types.Prototype): boolean =>
         evaluatedProto.constructor.name === 'FirstMixin';
-      expect(getMatchingParentProto(MyLibrary.prototype, matcher)).to.be.equal(
+      expect(getMatchingParentProto(MyLibrary.prototype, matcher)).toBe(
         FirstMixin.prototype
       );
     });
@@ -114,8 +119,9 @@ describe(`helpers`, () => {
 
       const matcher = (evaluatedProto: types.Prototype): boolean =>
         evaluatedProto.constructor.name === 'FirstMixin';
-      expect(getMatchingParentProto(MyLibrary.prototype, matcher)).to.be
-        .undefined;
+      expect(
+        getMatchingParentProto(MyLibrary.prototype, matcher)
+      ).toBeUndefined();
     });
   });
 
@@ -126,13 +132,13 @@ describe(`helpers`, () => {
           return 'my-type';
         }
       }
-      expect(isPatternClass(MyPattern)).to.be.true;
+      expect(isPatternClass(MyPattern)).toBe(true);
     });
 
     it('returns false for arguments not implementing Pattern interface', () => {
       class MyPattern {}
 
-      expect(isPatternClass(MyPattern)).to.be.false;
+      expect(isPatternClass(MyPattern)).toBe(false);
     });
   });
 
@@ -143,14 +149,14 @@ describe(`helpers`, () => {
           return 'my-type';
         }
       }
-      expect(isPattern(new MyPattern())).to.be.true;
+      expect(isPattern(new MyPattern())).toBe(true);
     });
     it('returns false for value not implementing Pattern interface', () => {
       class MyPattern {}
 
-      expect(isPattern(undefined)).to.be.false;
-      expect(isPattern(null)).to.be.false;
-      expect(isPattern(new MyPattern())).to.be.false;
+      expect(isPattern(undefined)).toBe(false);
+      expect(isPattern(null)).toBe(false);
+      expect(isPattern(new MyPattern())).toBe(false);
     });
   });
 
@@ -160,38 +166,38 @@ describe(`helpers`, () => {
         key: string;
       }
       const classType = new Class(MyClass, { key: String });
-      expect(isInstanceOfExpectation(classType)).to.be.true;
+      expect(isInstanceOfExpectation(classType)).toBe(true);
     });
 
     it('returns true for instance of InstanceOf pattern', () => {
       class MyClass {
         key: string;
       }
-      expect(isInstanceOfExpectation(new InstanceOf(MyClass))).to.be.true;
+      expect(isInstanceOfExpectation(new InstanceOf(MyClass))).toBe(true);
     });
 
     it('returns true for instance of Interface pattern', () => {
       const intf = new Interface({
         key: String,
       });
-      expect(isInstanceOfExpectation(intf)).to.be.true;
+      expect(isInstanceOfExpectation(intf)).toBe(true);
     });
 
     it('returns true constructor functions', () => {
       class MyClass {
         key: string;
       }
-      expect(isInstanceOfExpectation(String)).to.be.true;
-      expect(isInstanceOfExpectation(Number)).to.be.true;
-      expect(isInstanceOfExpectation(Boolean)).to.be.true;
-      expect(isInstanceOfExpectation(MyClass)).to.be.true;
+      expect(isInstanceOfExpectation(String)).toBe(true);
+      expect(isInstanceOfExpectation(Number)).toBe(true);
+      expect(isInstanceOfExpectation(Boolean)).toBe(true);
+      expect(isInstanceOfExpectation(MyClass)).toBe(true);
     });
 
     it('returns false for value not implementing Pattern interface', () => {
-      expect(isInstanceOfExpectation(undefined)).to.be.false;
-      expect(isInstanceOfExpectation(null)).to.be.false;
-      expect(isInstanceOfExpectation('my-string')).to.be.false;
-      expect(isInstanceOfExpectation(1337)).to.be.false;
+      expect(isInstanceOfExpectation(undefined)).toBe(false);
+      expect(isInstanceOfExpectation(null)).toBe(false);
+      expect(isInstanceOfExpectation('my-string')).toBe(false);
+      expect(isInstanceOfExpectation(1337)).toBe(false);
     });
   });
 
@@ -202,15 +208,15 @@ describe(`helpers`, () => {
           return 'my-type';
         }
       }
-      expect(isUtility(new MyUtility())).to.be.true;
+      expect(isUtility(new MyUtility())).toBe(true);
     });
 
     it('returns false for arguments not implementing Pattern interface', () => {
       class MyUtility {}
 
-      expect(isUtility(undefined)).to.be.false;
-      expect(isUtility(null)).to.be.false;
-      expect(isUtility(new MyUtility())).to.be.false;
+      expect(isUtility(undefined)).toBe(false);
+      expect(isUtility(null)).toBe(false);
+      expect(isUtility(new MyUtility())).toBe(false);
     });
   });
 
@@ -219,14 +225,14 @@ describe(`helpers`, () => {
       @Type()
       class DefinableClass {}
 
-      expect(isType(DefinableClass)).to.be.true;
+      expect(isType(DefinableClass)).toBe(true);
     });
 
     it('returns false for class constructors not implementing @Type decorator', () => {
       class DefaultClass {}
 
-      expect(isType(undefined)).to.be.false;
-      expect(isType(DefaultClass)).to.be.false;
+      expect(isType(undefined)).toBe(false);
+      expect(isType(DefaultClass)).toBe(false);
     });
   });
 
@@ -235,21 +241,21 @@ describe(`helpers`, () => {
       @Validable()
       class MyClass {}
 
-      expect(isValidable(MyClass)).to.be.true;
+      expect(isValidable(MyClass)).toBe(true);
     });
 
     it('returns true for classes that are explicitly validable', () => {
       @Validable(true)
       class MyClass {}
 
-      expect(isValidable(MyClass)).to.be.true;
+      expect(isValidable(MyClass)).toBe(true);
     });
 
     it('returns false for classes that are not explicitly validable', () => {
       @Validable(false)
       class MyClass {}
 
-      expect(isValidable(MyClass)).to.be.false;
+      expect(isValidable(MyClass)).toBe(false);
     });
   });
 
@@ -263,7 +269,7 @@ describe(`helpers`, () => {
           } as tsrTypes.StringLiteralType,
         },
       };
-      expect(isSpecial(reflectedType)).to.be.true;
+      expect(isSpecial(reflectedType)).toBe(true);
     });
 
     it('returns false if reflected type is not a special type', () => {
@@ -271,7 +277,7 @@ describe(`helpers`, () => {
         kind: 15,
         properties: {},
       };
-      expect(isSpecial(reflectedType)).to.be.false;
+      expect(isSpecial(reflectedType)).toBe(false);
     });
   });
 });

@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "vitest:all",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+      "args": ["run", "--reporter", "verbose"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "smartStep": true,
+      "skipFiles": ["<node_internals>/**", "${workspaceRoot}/node_modules/**"],
+      "env": {
+        "NODE_ENV": "test"
+      }
+    },
+    {
+      "name": "vitest:current",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+      "args": ["--reporter", "verbose", "${file}"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "smartStep": true,
+      "skipFiles": ["<node_internals>/**", "${workspaceRoot}/node_modules/**"],
+      "env": {
+        "NODE_ENV": "test"
+      }
+    }
+  ]
+}

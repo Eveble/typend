@@ -1,6 +1,14 @@
-import { expect, use } from 'chai';
-import { stubInterface } from 'ts-sinon';
-import sinonChai from 'sinon-chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { ListValidator } from '../../../src/validators/list-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -11,8 +19,6 @@ import {
   UnmatchedTypeError,
   ValidationError,
 } from '../../../src/errors';
-
-use(sinonChai);
 
 describe(`ListValidator`, () => {
   let describer: any;
@@ -25,44 +31,44 @@ describe(`ListValidator`, () => {
   });
 
   it(`extends PatternValidator`, () => {
-    expect(ListValidator.prototype).to.instanceof(PatternValidator);
+    expect(ListValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
-    context('explicit expectation', () => {
+    describe('explicit expectation', () => {
       it('returns true for pattern instance of List', () => {
         const listValidator = new ListValidator();
-        expect(listValidator.canValidate(new List([]))).to.be.true;
+        expect(listValidator.canValidate(new List([]))).toBe(true);
       });
     });
 
-    context('implicit expectation', () => {
-      context('valid', () => {
+    describe('implicit expectation', () => {
+      describe('valid', () => {
         it('returns true for Array constructor expectation', () => {
           const listValidator = new ListValidator();
-          expect(listValidator.canValidate(Array)).to.be.true;
+          expect(listValidator.canValidate(Array)).toBe(true);
         });
 
         it('returns true for empty array expectation', () => {
           const listValidator = new ListValidator();
-          expect(listValidator.canValidate([])).to.be.true;
+          expect(listValidator.canValidate([])).toBe(true);
         });
 
         it('returns true for array with single value expectation', () => {
           const listValidator = new ListValidator();
-          expect(listValidator.canValidate([String])).to.be.true;
+          expect(listValidator.canValidate([String])).toBe(true);
         });
       });
 
-      context('invalid', () => {
+      describe('invalid', () => {
         it('returns false for non-array expectations', () => {
           const listValidator = new ListValidator();
-          expect(listValidator.canValidate({})).to.be.false;
+          expect(listValidator.canValidate({})).toBe(false);
         });
 
         it('returns false for array with more then one value', () => {
           const listValidator = new ListValidator();
-          expect(listValidator.canValidate([String, Number])).to.be.false;
+          expect(listValidator.canValidate([String, Number])).toBe(false);
         });
       });
     });
@@ -80,9 +86,9 @@ describe(`ListValidator`, () => {
 
       expect(() =>
         listValidator.validate(value, new List(Array), validator)
-      ).to.throw(InvalidTypeError, `Expected ${valueStr} to be an Array`);
-      expect(describer.describe).to.be.called;
-      expect(describer.describe).to.be.calledWith(value);
+      ).toThrow(InvalidTypeError, `Expected ${valueStr} to be an Array`);
+      expect(describer.describe).toHaveBeenCalled();
+      expect(describer.describe).toHaveBeenCalledWith(value);
     });
 
     it('ensures that expectation is pulled from List instance correctly', () => {
@@ -90,17 +96,18 @@ describe(`ListValidator`, () => {
       const value = [String];
       const expectation = new List(Array);
 
-      expect(listValidator.validate(value, expectation, validator)).to.be.true;
+      expect(listValidator.validate(value, expectation, validator)).toBe(true);
     });
 
-    context('expectation requires value to be just an array', () => {
+    describe('expectation requires value to be just an array', () => {
       it('returns true for any value as an array if provided expectation is Array constructor', () => {
         const listValidator = new ListValidator();
         const value = [String];
         const expectation = Array;
 
-        expect(listValidator.validate(value, expectation, validator)).to.be
-          .true;
+        expect(listValidator.validate(value, expectation, validator)).toBe(
+          true
+        );
       });
 
       it('returns true for any value as an array if provided expectation is empty Array instance', () => {
@@ -108,12 +115,13 @@ describe(`ListValidator`, () => {
         const value = [String];
         const expectation = [];
 
-        expect(listValidator.validate(value, expectation, validator)).to.be
-          .true;
+        expect(listValidator.validate(value, expectation, validator)).toBe(
+          true
+        );
       });
     });
 
-    context('expectation requires value to match', () => {
+    describe('expectation requires value to match', () => {
       it('returns true for value as an array matching provided expectation ', () => {
         const listValidator = new ListValidator();
         const value = ['first', 'second'];
@@ -122,11 +130,12 @@ describe(`ListValidator`, () => {
         validator.validate.withArgs('first', String).returns(true);
         validator.validate.withArgs('second', String).returns(true);
 
-        expect(listValidator.validate(value, expectation, validator)).to.be
-          .true;
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWith('first', String);
-        expect(validator.validate).to.be.calledWith('second', String);
+        expect(listValidator.validate(value, expectation, validator)).toBe(
+          true
+        );
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('first', String);
+        expect(validator.validate).toHaveBeenCalledWith('second', String);
       });
 
       it('re-throws ValidationError for value as an array that does not match expectation ', () => {
@@ -147,7 +156,7 @@ describe(`ListValidator`, () => {
 
         expect(() =>
           listValidator.validate(value, expectation, validator)
-        ).to.throw(
+        ).toThrow(
           UnmatchedTypeError,
           `Expected ${valueStr} to be matching an ${expectationStr}`
         );

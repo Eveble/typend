@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   validate,
@@ -12,7 +21,7 @@ describe('instanceOf', () => {
   it('check', () => {
     check<string>('foo');
     check<number>(1337);
-    expect(() => check<number>('foo')).to.throw(UnmatchedTypeError);
+    expect(() => check<number>('foo')).toThrow(UnmatchedTypeError);
   });
 
   it('validate', () => {

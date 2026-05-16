@@ -1,14 +1,20 @@
-import { expect, use } from 'chai';
-import { stubInterface } from 'ts-sinon';
-import sinonChai from 'sinon-chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { EqualsValidator } from '../../../src/validators/equals-validator';
 import { types } from '../../../src/types';
 import { PatternValidator } from '../../../src/pattern-validator';
 import { Equals } from '../../../src/patterns/equals';
 import { InvalidTypeError, UnequalValueError } from '../../../src/errors';
-
-use(sinonChai);
 
 describe(`EqualsValidator`, () => {
   let describer: any;
@@ -72,24 +78,24 @@ describe(`EqualsValidator`, () => {
       describer.describe.withArgs(val).returns(valStr);
       describer.describe.withArgs(expectation).returns(expectationStr);
 
-      expect(eqValidator.validate(val, expectation), expectedStr).to.be.true;
+      expect(eqValidator.validate(val, expectation), expectedStr).toBe(true);
     }
   }
 
   it(`extends PatternValidator`, () => {
-    expect(EqualsValidator.prototype).to.instanceof(PatternValidator);
+    expect(EqualsValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
-    context('explicit expectation', () => {
+    describe('explicit expectation', () => {
       it('returns true for pattern instance of Equals', () => {
         const eqValidator = new EqualsValidator();
-        expect(eqValidator.canValidate(new Equals('my-string'))).to.be.true;
+        expect(eqValidator.canValidate(new Equals('my-string'))).toBe(true);
       });
     });
 
-    context('implicit expectation', () => {
-      context('valid', () => {
+    describe('implicit expectation', () => {
+      describe('valid', () => {
         it('returns true for valid expectation as instances of equality-comparable types', () => {
           const VALID_EXPECTATIONS: any[] = [
             // Native types
@@ -132,7 +138,7 @@ describe(`EqualsValidator`, () => {
             expect(
               eqValidator.canValidate(expectation),
               `Expected expectation '${expectationStr}' to be valid for equality validation`
-            ).to.true;
+            ).toBe(true);
           }
         });
 
@@ -155,7 +161,7 @@ describe(`EqualsValidator`, () => {
             expect(
               eqValidator.canValidate(expectation),
               `Expected expectation '${expectationStr}' to be valid for equality validation`
-            ).to.true;
+            ).toBe(true);
           }
         });
 
@@ -172,7 +178,7 @@ describe(`EqualsValidator`, () => {
             expect(
               eqValidator.canValidate(expectation),
               `Expected expectation '${expectationStr}' to be valid for reference validation`
-            ).to.true;
+            ).toBe(true);
           }
         });
 
@@ -212,21 +218,21 @@ describe(`EqualsValidator`, () => {
             expect(
               eqValidator.canValidate(expectation),
               `Expected expectation '${expectationStr}' to be valid for reference validation`
-            ).to.true;
+            ).toBe(true);
           }
         });
       });
 
-      context('invalid', () => {
+      describe('invalid', () => {
         it('returns false for array expectation', () => {
           const eqValidator = new EqualsValidator();
-          expect(eqValidator.canValidate([])).to.be.false;
+          expect(eqValidator.canValidate([])).toBe(false);
         });
 
         it('returns false for plain object expectation', () => {
           const eqValidator = new EqualsValidator();
-          expect(eqValidator.canValidate({})).to.be.false;
-          expect(eqValidator.canValidate({ key: 'value' })).to.be.false;
+          expect(eqValidator.canValidate({})).toBe(false);
+          expect(eqValidator.canValidate({ key: 'value' })).toBe(false);
         });
       });
     });
@@ -243,12 +249,12 @@ describe(`EqualsValidator`, () => {
       describer.describe.withArgs(value).returns(inspect(value));
       describer.describe.withArgs(expectation).returns(inspect(expectation));
 
-      expect(() => eqValidator.validate(value, expectation)).to.throw(
+      expect(() => eqValidator.validate(value, expectation)).toThrow(
         InvalidTypeError,
         `Expected { key: 'value' } to not be a plain Object`
       );
-      expect(describer.describe).to.be.calledOnce;
-      expect(describer.describe).to.be.calledWith(value);
+      expect(describer.describe).toHaveBeenCalledTimes(1);
+      expect(describer.describe).toHaveBeenCalledWith(value);
     });
 
     it(`throws InvalidTypeError when provided value is an array`, () => {
@@ -259,12 +265,12 @@ describe(`EqualsValidator`, () => {
       describer.describe.withArgs(value).returns(inspect(value));
       describer.describe.withArgs(expectation).returns(inspect(expectation));
 
-      expect(() => eqValidator.validate(value, expectation)).to.throw(
+      expect(() => eqValidator.validate(value, expectation)).toThrow(
         InvalidTypeError,
         `Expected [ 'value' ] to not be an Array`
       );
-      expect(describer.describe).to.be.calledOnce;
-      expect(describer.describe).to.be.calledWith(value);
+      expect(describer.describe).toHaveBeenCalledTimes(1);
+      expect(describer.describe).toHaveBeenCalledWith(value);
     });
 
     it('ensures that expectation is pulled from Equals pattern instance instance correctly', () => {
@@ -272,10 +278,10 @@ describe(`EqualsValidator`, () => {
       const value = 'value';
       const equals = new Equals('value');
 
-      expect(eqValidator.validate(value, equals)).to.be.true;
+      expect(eqValidator.validate(value, equals)).toBe(true);
     });
 
-    context('valid values', () => {
+    describe('valid values', () => {
       it('returns true for nil equality check', () => {
         const matches: Matches = [
           [undefined, undefined],
@@ -367,7 +373,7 @@ describe(`EqualsValidator`, () => {
       });
     });
 
-    context('invalid values', () => {
+    describe('invalid values', () => {
       it('throws UnequalValueError for regexp not matching expectation', () => {
         const eqValidator = new EqualsValidator();
         const value = 'mismatch';
@@ -376,13 +382,13 @@ describe(`EqualsValidator`, () => {
         describer.describe.withArgs(value).returns(inspect(value));
         describer.describe.withArgs(expectation).returns(inspect(expectation));
 
-        expect(() => eqValidator.validate(value, expectation)).to.throw(
+        expect(() => eqValidator.validate(value, expectation)).toThrow(
           UnequalValueError,
           `Expected 'mismatch' to match /matches/`
         );
-        expect(describer.describe).to.be.calledTwice;
-        expect(describer.describe).to.be.calledWith(value);
-        expect(describer.describe).to.be.calledWith(expectation);
+        expect(describer.describe).toHaveBeenCalledTimes(2);
+        expect(describer.describe).toHaveBeenCalledWith(value);
+        expect(describer.describe).toHaveBeenCalledWith(expectation);
       });
 
       it('throws UnequalValueError for error instances that are not matching expectation by message or constructor', () => {
@@ -406,7 +412,7 @@ describe(`EqualsValidator`, () => {
           expect(
             () => eqValidator.validate(val, expectation),
             expectedStr
-          ).to.throw(
+          ).toThrow(
             UnequalValueError,
             `Expected ${valStr} to be equal to ${expectationStr}`
           );
@@ -421,13 +427,13 @@ describe(`EqualsValidator`, () => {
         describer.describe.withArgs(value).returns(inspect(value));
         describer.describe.withArgs(expectation).returns(inspect(expectation));
 
-        expect(() => eqValidator.validate(value, expectation)).to.throw(
+        expect(() => eqValidator.validate(value, expectation)).toThrow(
           UnequalValueError,
           `Expected IsSameClass { value: 'value' } to pass IsSameClass { value: 'other-value' } is same evaluation`
         );
-        expect(describer.describe).to.be.calledTwice;
-        expect(describer.describe).to.be.calledWith(value);
-        expect(describer.describe).to.be.calledWith(expectation);
+        expect(describer.describe).toHaveBeenCalledTimes(2);
+        expect(describer.describe).toHaveBeenCalledWith(value);
+        expect(describer.describe).toHaveBeenCalledWith(expectation);
       });
 
       it(`throws UnequalValueError for instances with 'equals' method not matching expectation`, () => {
@@ -438,13 +444,13 @@ describe(`EqualsValidator`, () => {
         describer.describe.withArgs(value).returns(inspect(value));
         describer.describe.withArgs(expectation).returns(inspect(expectation));
 
-        expect(() => eqValidator.validate(value, expectation)).to.throw(
+        expect(() => eqValidator.validate(value, expectation)).toThrow(
           UnequalValueError,
           `Expected EqualsClass { value: 'value' } to pass EqualsClass { value: 'other-value' } equality evaluation`
         );
-        expect(describer.describe).to.be.calledTwice;
-        expect(describer.describe).to.be.calledWith(value);
-        expect(describer.describe).to.be.calledWith(expectation);
+        expect(describer.describe).toHaveBeenCalledTimes(2);
+        expect(describer.describe).toHaveBeenCalledWith(value);
+        expect(describer.describe).toHaveBeenCalledWith(expectation);
       });
 
       it(`throws UnequalValueError for instances with 'valueOf' method not matching expectation`, () => {
@@ -468,7 +474,7 @@ describe(`EqualsValidator`, () => {
           expect(
             () => eqValidator.validate(val, expectation),
             expectedStr
-          ).to.throw(
+          ).toThrow(
             UnequalValueError,
             `Expected ${valStr} value to be equal to ${expectationStr}`
           );
@@ -503,7 +509,7 @@ describe(`EqualsValidator`, () => {
           expect(
             () => eqValidator.validate(val, expectation),
             expectedStr
-          ).to.throw(
+          ).toThrow(
             UnequalValueError,
             `Expected ${valStr} to be equal to ${expectationStr}`
           );
@@ -531,7 +537,7 @@ describe(`EqualsValidator`, () => {
           expect(
             () => eqValidator.validate(val, expectation),
             expectedStr
-          ).to.throw(
+          ).toThrow(
             UnequalValueError,
             `Expected ${valStr} to be equal to ${expectationStr}`
           );

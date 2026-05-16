@@ -1,6 +1,14 @@
-import { expect, use } from 'chai';
-import sinonChai from 'sinon-chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { Tuple } from '../../../src/patterns/tuple';
 import { types } from '../../../src/types';
@@ -13,8 +21,6 @@ import {
 } from '../../../src/errors';
 import { Optional } from '../../../src/patterns/optional';
 
-use(sinonChai);
-
 describe(`TupleValidator`, () => {
   let describer: any;
   let validator: any;
@@ -26,44 +32,45 @@ describe(`TupleValidator`, () => {
   });
 
   it(`extends PatternValidator`, () => {
-    expect(TupleValidator.prototype).to.instanceof(PatternValidator);
+    expect(TupleValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
-    context('explicit expectation', () => {
+    describe('explicit expectation', () => {
       it('returns true for pattern instance of Tuple', () => {
         const tupleValidator = new TupleValidator();
-        expect(tupleValidator.canValidate(new Tuple(String, Number))).to.be
-          .true;
+        expect(tupleValidator.canValidate(new Tuple(String, Number))).toBe(
+          true
+        );
       });
     });
 
-    context('implicit expectation', () => {
-      context('valid', () => {
+    describe('implicit expectation', () => {
+      describe('valid', () => {
         it('returns true for array with single value expectation', () => {
           const tupleValidator = new TupleValidator();
-          expect(tupleValidator.canValidate([String])).to.be.true;
+          expect(tupleValidator.canValidate([String])).toBe(true);
         });
 
         it('returns true for array with two or more values expectation', () => {
           const tupleValidator = new TupleValidator();
-          expect(tupleValidator.canValidate([String, Number])).to.be.true;
+          expect(tupleValidator.canValidate([String, Number])).toBe(true);
         });
       });
 
-      context('invalid', () => {
+      describe('invalid', () => {
         it('returns false for non-array expectations', () => {
           const tupleValidator = new TupleValidator();
-          expect(tupleValidator.canValidate({})).to.be.false;
-          expect(tupleValidator.canValidate(true)).to.be.false;
-          expect(tupleValidator.canValidate(false)).to.be.false;
-          expect(tupleValidator.canValidate(undefined)).to.be.false;
-          expect(tupleValidator.canValidate(null)).to.be.false;
+          expect(tupleValidator.canValidate({})).toBe(false);
+          expect(tupleValidator.canValidate(true)).toBe(false);
+          expect(tupleValidator.canValidate(false)).toBe(false);
+          expect(tupleValidator.canValidate(undefined)).toBe(false);
+          expect(tupleValidator.canValidate(null)).toBe(false);
         });
 
         it('returns false for empty array instance', () => {
           const tupleValidator = new TupleValidator();
-          expect(tupleValidator.canValidate([])).to.be.false;
+          expect(tupleValidator.canValidate([])).toBe(false);
         });
       });
     });
@@ -81,12 +88,12 @@ describe(`TupleValidator`, () => {
 
       expect(() =>
         tupleValidator.validate(value, new Tuple(String), validator)
-      ).to.throw(InvalidTypeError, `Expected ${valueStr} to be an Array`);
-      expect(describer.describe).to.be.called;
-      expect(describer.describe).to.be.calledWith(value);
+      ).toThrow(InvalidTypeError, `Expected ${valueStr} to be an Array`);
+      expect(describer.describe).toHaveBeenCalled();
+      expect(describer.describe).toHaveBeenCalledWith(value);
     });
 
-    context('valid values', () => {
+    describe('valid values', () => {
       it(`iterates through each expectation item and validates them against validator`, () => {
         const tupleValidator = new TupleValidator();
         const val = ['my-string', 2];
@@ -94,14 +101,14 @@ describe(`TupleValidator`, () => {
         validator.validate.withArgs('my-string', String).returns(true);
         validator.validate.withArgs(2, Number).returns(true);
 
-        expect(tupleValidator.validate(val, tuple, validator)).to.be.true;
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWithExactly('my-string', String);
-        expect(validator.validate).to.be.calledWithExactly(2, Number);
+        expect(tupleValidator.validate(val, tuple, validator)).toBe(true);
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('my-string', String);
+        expect(validator.validate).toHaveBeenCalledWith(2, Number);
       });
     });
 
-    context('invalid values', () => {
+    describe('invalid values', () => {
       it('throws NotAMemberError on failed validation result of value not matching one of provided expectations delegated to validator', () => {
         const tupleValidator = new TupleValidator();
         const val = ['my-string'];
@@ -112,15 +119,15 @@ describe(`TupleValidator`, () => {
         const tupleStr = inspect(tuple);
         describer.describe.withArgs(tuple).returns(tupleStr);
 
-        expect(() => tupleValidator.validate(val, tuple, validator)).to.throw(
+        expect(() => tupleValidator.validate(val, tuple, validator)).toThrow(
           NotAMemberError,
           `Expected undefined to be matching an ${tupleStr}`
         );
-        expect(validator.validate).to.be.calledOnce;
-        expect(validator.validate).to.be.calledWithExactly('my-string', Number);
-        expect(describer.describe).to.be.calledTwice;
-        expect(describer.describe).to.be.calledWithExactly(tuple);
-        expect(describer.describe).to.be.calledWithExactly(val);
+        expect(validator.validate).toHaveBeenCalledTimes(1);
+        expect(validator.validate).toHaveBeenCalledWith('my-string', Number);
+        expect(describer.describe).toHaveBeenCalledTimes(2);
+        expect(describer.describe).toHaveBeenCalledWith(tuple);
+        expect(describer.describe).toHaveBeenCalledWith(val);
       });
 
       it('throws NotAMemberError when there are more values in tuple then expected ones', () => {
@@ -137,16 +144,16 @@ describe(`TupleValidator`, () => {
         describer.describe.withArgs(val).returns(valStr);
         describer.describe.withArgs(tuple).returns(tupleStr);
 
-        expect(() => tupleValidator.validate(val, tuple, validator)).to.throw(
+        expect(() => tupleValidator.validate(val, tuple, validator)).toThrow(
           NotAMemberError,
           `Expected ${valStr} to be matching an ${tupleStr}`
         );
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWithExactly('my-string', String);
-        expect(validator.validate).to.be.calledWithExactly(1234, undefined);
-        expect(describer.describe).to.be.calledTwice;
-        expect(describer.describe).to.be.calledWithExactly(tuple);
-        expect(describer.describe).to.be.calledWithExactly(val);
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('my-string', String);
+        expect(validator.validate).toHaveBeenCalledWith(1234, undefined);
+        expect(describer.describe).toHaveBeenCalledTimes(2);
+        expect(describer.describe).toHaveBeenCalledWith(tuple);
+        expect(describer.describe).toHaveBeenCalledWith(val);
       });
 
       it('throws NotAMemberError when there are less values in tuple then expected ones', () => {
@@ -163,16 +170,16 @@ describe(`TupleValidator`, () => {
         describer.describe.withArgs(val).returns(valStr);
         describer.describe.withArgs(tuple).returns(tupleStr);
 
-        expect(() => tupleValidator.validate(val, tuple, validator)).to.throw(
+        expect(() => tupleValidator.validate(val, tuple, validator)).toThrow(
           NotAMemberError,
           `Expected ${valStr} to be matching an ${tupleStr}`
         );
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWithExactly('my-string', String);
-        expect(validator.validate).to.be.calledWithExactly(undefined, Number);
-        expect(describer.describe).to.be.calledTwice;
-        expect(describer.describe).to.be.calledWithExactly(tuple);
-        expect(describer.describe).to.be.calledWithExactly(val);
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('my-string', String);
+        expect(validator.validate).toHaveBeenCalledWith(undefined, Number);
+        expect(describer.describe).toHaveBeenCalledTimes(2);
+        expect(describer.describe).toHaveBeenCalledWith(tuple);
+        expect(describer.describe).toHaveBeenCalledWith(val);
       });
 
       it('does not throw NotAMemberError when there are less values in tuple then expected ones if they are optional', () => {
@@ -188,16 +195,16 @@ describe(`TupleValidator`, () => {
 
         expect(() =>
           tupleValidator.validate(val, tuple, validator)
-        ).to.not.throw(NotAMemberError);
+        ).not.toThrow(NotAMemberError);
 
-        expect(validator.validate).to.be.calledThrice;
-        expect(validator.validate).to.be.calledWithExactly('my-string', String);
-        expect(validator.validate).to.be.calledWithExactly(2, Number);
-        expect(validator.validate).to.be.calledWithExactly(
+        expect(validator.validate).toHaveBeenCalledTimes(3);
+        expect(validator.validate).toHaveBeenCalledWith('my-string', String);
+        expect(validator.validate).toHaveBeenCalledWith(2, Number);
+        expect(validator.validate).toHaveBeenCalledWith(
           undefined,
           new Optional(Boolean)
         );
-        expect(describer.describe).to.not.be.called;
+        expect(describer.describe).not.toHaveBeenCalled();
       });
     });
   });

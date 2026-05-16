@@ -1,6 +1,15 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { reflect } from 'tsruntime';
-import { stubInterface } from 'ts-sinon';
+import { stubInterface } from '../../vitest-helper';
 import { InstanceOf, List, types } from '../../../src';
 import { TypeKind } from '../../../src/enums/type-kind.enum';
 import { ArrayConverter } from '../../../src/converters/tsruntime/type-converters/array.converter';
@@ -30,7 +39,7 @@ describe(`ArrayConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -52,7 +61,7 @@ describe(`ArrayConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -60,7 +69,7 @@ describe(`ArrayConverter`, () => {
       expect(
         typeConverter.isConvertible(reflect<MyClass[]>()),
         `Expected MyClass[] to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns true for literal array with literal values', () => {
@@ -76,7 +85,7 @@ describe(`ArrayConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -84,14 +93,14 @@ describe(`ArrayConverter`, () => {
       expect(
         typeConverter.isConvertible(reflect<string[][]>()),
         `Expected string[][] to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
   });
 
   describe('reflection', () => {
     it('reflects literal array as an array', () => {
       converter.reflect.withArgs({ kind: 2 }).returns(String);
-      expect(typeConverter.reflect(reflect<string[]>(), converter)).to.be.eql([
+      expect(typeConverter.reflect(reflect<string[]>(), converter)).toEqual([
         String,
       ]);
     });
@@ -104,8 +113,8 @@ describe(`ArrayConverter`, () => {
         .returns(true);
 
       const arrayType = typeConverter.reflect(reflect<MyClass[]>(), converter);
-      expect(arrayType).to.be.instanceof(Array);
-      expect(arrayType).to.be.eql([MyClass]);
+      expect(arrayType).toBeInstanceOf(Array);
+      expect(arrayType).toEqual([MyClass]);
     });
   });
 
@@ -113,8 +122,8 @@ describe(`ArrayConverter`, () => {
     it('converts literal array as instance of List pattern', () => {
       converter.convert.withArgs({ kind: 2 }).returns(String);
       const arrayType = typeConverter.convert(reflect<string[]>(), converter);
-      expect(arrayType).to.be.instanceof(List);
-      expect(arrayType).to.be.eql([String]);
+      expect(arrayType).toBeInstanceOf(List);
+      expect(arrayType).toEqual([String]);
     });
 
     it('converts literal array assigned as property with initializer', () => {
@@ -126,10 +135,10 @@ describe(`ArrayConverter`, () => {
       converter.convert.withArgs({ kind: 2 }).returns(String);
 
       const arrayType = typeConverter.convert(reflectedType, converter);
-      expect(arrayType).to.be.instanceof(List);
-      expect(arrayType).to.be.eql([String]);
-      expect(arrayType.hasInitializer()).to.be.true;
-      expect(arrayType.getInitializer()).to.be.eql(['my-value']);
+      expect(arrayType).toBeInstanceOf(List);
+      expect(arrayType).toEqual([String]);
+      expect(arrayType.hasInitializer()).toBe(true);
+      expect(arrayType.getInitializer()).toEqual(['my-value']);
     });
 
     it('converts literal array with class', () => {
@@ -140,8 +149,8 @@ describe(`ArrayConverter`, () => {
         .returns(true);
 
       const arrayType = typeConverter.convert(reflect<MyClass[]>(), converter);
-      expect(arrayType).to.be.instanceof(List);
-      expect(arrayType).to.be.eql([new InstanceOf(MyClass)]);
+      expect(arrayType).toBeInstanceOf(List);
+      expect(arrayType).toEqual([new InstanceOf(MyClass)]);
     });
   });
 });

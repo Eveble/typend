@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   validate,
@@ -10,7 +19,7 @@ import {
 describe('List', () => {
   it('check', () => {
     check<string[]>(['foo']);
-    expect(() => check<number>(['foo'])).to.throw(ValidationError);
+    expect(() => check<number>(['foo'])).toThrow(ValidationError);
   });
   it('validate', () => {
     validate(['foo'], [String]);

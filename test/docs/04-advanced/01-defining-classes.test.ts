@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   Type,
   check,
@@ -27,17 +36,19 @@ describe('01-defining-classes', () => {
     }
   }
   it('defining class', () => {
-    expect(() => new Person('Jane', 'Doe', 28)).to.not.throw(Error);
-    expect(() => new Person('Jane', 'Doe')).to.not.throw(Error);
-    expect(() => new Person('Jane', undefined as any)).to.throw(
-      ValidationError
-    ); // lastName as string is required
+    expect(() => new Person('Jane', 'Doe', 28)).not.toThrow(Error);
+    expect(() => new Person('Jane', 'Doe')).not.toThrow(Error);
+    expect(() => new Person('Jane', undefined as any)).toThrow(ValidationError); // lastName as string is required
   });
 
   describe('propsOf', () => {
-    expect(is<$PropsOf<Person>>({ firstName: 'Jane', lastName: 'Doe' })).to.be
-      .true;
-    expect(isValid({ firstName: 'Jane', lastName: 'Doe' }, new PropsOf(Person)))
-      .to.be.true;
+    it('validates propsOf', () => {
+      expect(is<$PropsOf<Person>>({ firstName: 'Jane', lastName: 'Doe' })).toBe(
+        true
+      );
+      expect(
+        isValid({ firstName: 'Jane', lastName: 'Doe' }, new PropsOf(Person))
+      ).toBe(true);
+    });
   });
 });

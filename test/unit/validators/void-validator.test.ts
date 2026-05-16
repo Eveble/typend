@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { VoidValidator } from '../../../src/validators/void-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -30,28 +39,28 @@ describe(`VoidValidator`, () => {
   class MyError extends Error {}
 
   it(`extends PatternValidator`, () => {
-    expect(VoidValidator.prototype).to.instanceof(PatternValidator);
+    expect(VoidValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
     it('returns true for pattern instance of Void', () => {
       const voidValidator = new VoidValidator();
-      expect(voidValidator.canValidate(new Void())).to.be.true;
+      expect(voidValidator.canValidate(new Void())).toBe(true);
     });
 
     it('returns false for any other implicit expectation', () => {
       const voidValidator = new VoidValidator();
-      expect(voidValidator.canValidate(true)).to.be.false;
-      expect(voidValidator.canValidate(false)).to.be.false;
-      expect(voidValidator.canValidate(undefined)).to.be.false;
-      expect(voidValidator.canValidate(null)).to.be.false;
+      expect(voidValidator.canValidate(true)).toBe(false);
+      expect(voidValidator.canValidate(false)).toBe(false);
+      expect(voidValidator.canValidate(undefined)).toBe(false);
+      expect(voidValidator.canValidate(null)).toBe(false);
     });
   });
 
   describe('validation', () => {
     it('returns true for undefined value', () => {
       const voidValidator = new VoidValidator();
-      expect(voidValidator.validate(undefined)).to.be.true;
+      expect(voidValidator.validate(undefined)).toBe(true);
     });
 
     it('returns false for any other value', () => {
@@ -155,7 +164,7 @@ describe(`VoidValidator`, () => {
         const valStr = inspect(val);
         describer.describe.withArgs(val).returns(valStr);
 
-        expect(() => voidValidator.validate(val)).to.throw(
+        expect(() => voidValidator.validate(val)).toThrow(
           ValidationError,
           `Expected no value, got ${valStr}`
         );

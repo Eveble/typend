@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { ESSymbolConverter } from '../../../src/converters/tsruntime/type-converters/essymbol.converter';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 
@@ -12,7 +21,7 @@ describe(`ESSymbolConverter`, () => {
   describe('evaluation', () => {
     it('returns true for symbol type', () => {
       const symbolType = { kind: 10 }; // TypeKind.ESSymbol
-      expect(typeConverter.isConvertible(symbolType)).to.be.true;
+      expect(typeConverter.isConvertible(symbolType)).toBe(true);
     });
 
     it('returns false for non-symbol types', () => {
@@ -22,7 +31,7 @@ describe(`ESSymbolConverter`, () => {
         { kind: 4 }, // Boolean
       ];
       for (const type of examples) {
-        expect(typeConverter.isConvertible(type)).to.be.false;
+        expect(typeConverter.isConvertible(type)).toBe(false);
       }
     });
   });
@@ -30,7 +39,7 @@ describe(`ESSymbolConverter`, () => {
   describe('reflection', () => {
     it('reflects symbol type as Symbol constructor', () => {
       const symbolType = { kind: 10 };
-      expect(typeConverter.reflect(symbolType)).to.equal(Symbol);
+      expect(typeConverter.reflect(symbolType)).toBe(Symbol);
     });
   });
 
@@ -38,8 +47,8 @@ describe(`ESSymbolConverter`, () => {
     it('converts symbol type to InstanceOf pattern with Symbol', () => {
       const symbolType = { kind: 10 };
       const result = typeConverter.convert(symbolType);
-      expect(result).to.be.instanceof(InstanceOf);
-      expect(result).to.be.eql(new InstanceOf(Symbol));
+      expect(result).toBeInstanceOf(InstanceOf);
+      expect(result).toEqual(new InstanceOf(Symbol));
     });
 
     it('converts symbol type with initializer', () => {
@@ -49,9 +58,9 @@ describe(`ESSymbolConverter`, () => {
         initializer: () => testSymbol,
       };
       const result = typeConverter.convert(symbolType);
-      expect(result).to.be.instanceof(InstanceOf);
-      expect(result.hasInitializer()).to.be.true;
-      expect(result.getInitializer()).to.equal(testSymbol);
+      expect(result).toBeInstanceOf(InstanceOf);
+      expect(result.hasInitializer()).toBe(true);
+      expect(result.getInitializer()).toBe(testSymbol);
     });
   });
 });

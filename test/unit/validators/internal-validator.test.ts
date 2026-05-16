@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { InternalValidator } from '../../../src/validators/internal-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -26,13 +35,13 @@ describe(`InternalValidator`, () => {
   class MyError extends Error {}
 
   it(`extends PatternValidator`, () => {
-    expect(InternalValidator.prototype).to.instanceof(PatternValidator);
+    expect(InternalValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
     it('returns true for pattern instance of Internal', () => {
       const internalValidator = new InternalValidator();
-      expect(internalValidator.canValidate(new Internal())).to.be.true;
+      expect(internalValidator.canValidate(new Internal())).toBe(true);
     });
 
     it('returns false for any other implicit expectation', () => {
@@ -140,7 +149,7 @@ describe(`InternalValidator`, () => {
         expect(
           internalValidator.canValidate(expectation),
           `Expected implicit expectation ${expectationStr} to be not applicable`
-        ).to.false;
+        ).toBe(false);
       }
     });
   });
@@ -151,7 +160,7 @@ describe(`InternalValidator`, () => {
       expect(
         internalValidator.validate(),
         `Expected validation of internal value to always be true`
-      ).to.true;
+      ).toBe(true);
     });
   });
 });

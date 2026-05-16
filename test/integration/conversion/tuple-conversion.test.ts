@@ -1,4 +1,14 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { reflect } from 'tsruntime';
 import { converter } from './setup';
 import { InstanceOf } from '../../../src/patterns/instance-of';
@@ -56,7 +66,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.reflect(type),
           `Expected ${desc} to match reflected definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -76,7 +86,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.reflect(type),
           `Expected ${desc} to match reflected definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -90,7 +100,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.reflect(type),
           `Expected ${desc} to match reflected definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -113,7 +123,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.reflect(type),
           `Expected ${desc} to match reflected definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -136,7 +146,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.reflect(type),
           `Expected ${desc} to match reflected definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -152,7 +162,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.reflect(type),
           `Expected ${desc} to match reflected definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
   });
@@ -185,7 +195,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.convert(type),
           `Expected ${desc} to match converted definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -214,7 +224,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.convert(type),
           `Expected ${desc} to match converted definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -228,7 +238,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.convert(type),
           `Expected ${desc} to match converted definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -251,7 +261,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.convert(type),
           `Expected ${desc} to match converted definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -274,7 +284,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.convert(type),
           `Expected ${desc} to match converted definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
 
@@ -290,7 +300,7 @@ describe(`Tuple conversion`, () => {
         expect(
           converter.convert(type),
           `Expected ${desc} to match converted definition`
-        ).to.be.eql(result);
+        ).toEqual(result);
       }
     });
   });

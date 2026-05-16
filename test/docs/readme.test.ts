@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   Type,
@@ -61,7 +70,7 @@ describe('README.md', () => {
       }
     }
 
-    expect(() => new Unicorn('🦄🦄 Charrlieee! 🍌👑' as any)).to.throw(
+    expect(() => new Unicorn('🦄🦄 Charrlieee! 🍌👑' as any)).toThrow(
       UnequalValueError
     );
   });
@@ -77,8 +86,8 @@ describe('README.md', () => {
     }
     const myClass = new MyClass('my-string');
 
-    expect(check<MyClass>(myClass)).to.be.true;
-    expect(check<$TypeOf<MyClass>>(myClass)).to.be.true;
+    expect(check<MyClass>(myClass)).toBe(true);
+    expect(check<$TypeOf<MyClass>>(myClass)).toBe(true);
   });
 
   it('custom-types', () => {
@@ -94,8 +103,8 @@ describe('README.md', () => {
     }
 
     const PersonInterface = reflect<Person>();
-    expect(PersonInterface).to.be.instanceof(Object);
-    expect(PersonInterface).to.be.eql({
+    expect(PersonInterface).toBeInstanceOf(Object);
+    expect(PersonInterface).toEqual({
       firstName: String,
       lastName: String,
       height: Number,
@@ -112,8 +121,8 @@ describe('README.md', () => {
     }
 
     const PersonInterface = convert<Person>();
-    expect(PersonInterface).to.be.instanceof(Interface);
-    expect(PersonInterface).to.be.eql({
+    expect(PersonInterface).toBeInstanceOf(Interface);
+    expect(PersonInterface).toEqual({
       firstName: PropTypes.instanceOf(String),
       lastName: PropTypes.instanceOf(String),
       height: PropTypes.instanceOf(Number),

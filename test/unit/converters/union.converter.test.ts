@@ -1,6 +1,15 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { reflect } from 'tsruntime';
-import { stubInterface } from 'ts-sinon';
+import { stubInterface } from '../../vitest-helper';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { UnionConverter } from '../../../src/converters/tsruntime/type-converters/union.converter';
 import { types } from '../../../src/types';
@@ -80,7 +89,7 @@ describe(`UnionConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -98,7 +107,7 @@ describe(`UnionConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -106,28 +115,28 @@ describe(`UnionConverter`, () => {
       expect(
         typeConverter.isConvertible(reflect<string[] | number[]>()),
         `Expected string[] | number[] to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns true for objects as a types choices', () => {
       expect(
         typeConverter.isConvertible(reflect<MyType | MyOtherType>()),
         `Expected MyType | MyOtherType to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns true for objects as a interfaces choices', () => {
       expect(
         typeConverter.isConvertible(reflect<MyInterface | MyOtherInterface>()),
         `Expected MyInterface | MyOtherInterface to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns true for classes choices', () => {
       expect(
         typeConverter.isConvertible(reflect<MyClass | MyOtherClass>()),
         `Expected MyClass | MyOtherClass to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns true for enum choices', () => {
@@ -141,7 +150,7 @@ describe(`UnionConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -157,20 +166,20 @@ describe(`UnionConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to not be convertible`
-        ).to.be.false;
+        ).toBe(false);
       }
     });
   });
 
   describe('reflection', () => {
-    context('one of', () => {
+    describe('one of', () => {
       it('reflects one of type(two or more types) as an array', () => {
         converter.reflect.withArgs({ kind: 2 }).returns(String);
         converter.reflect.withArgs({ kind: 3 }).returns(Number);
         converter.reflect.withArgs({ kind: 4 }).returns(Boolean);
         expect(
           typeConverter.reflect(reflect<string | number | boolean>(), converter)
-        ).to.be.eql([Boolean, Number, String]);
+        ).toEqual([Boolean, Number, String]);
       });
 
       it('reflects one of reference types as type constructors', () => {
@@ -182,7 +191,7 @@ describe(`UnionConverter`, () => {
           ],
         };
 
-        expect(typeConverter.reflect(unionType, converter)).to.be.eql([
+        expect(typeConverter.reflect(unionType, converter)).toEqual([
           MyClass,
           MyOtherClass,
         ]);
@@ -201,7 +210,7 @@ describe(`UnionConverter`, () => {
         converter.reflect.withArgs({ kind: TypeKind.String }).returns(String);
         converter.reflect.withArgs({ kind: TypeKind.Number }).returns(Number);
 
-        expect(typeConverter.reflect(unionType, converter)).to.be.eql([
+        expect(typeConverter.reflect(unionType, converter)).toEqual([
           MyClass,
           Number,
           String,
@@ -209,13 +218,13 @@ describe(`UnionConverter`, () => {
       });
     });
 
-    context('optional', () => {
+    describe('optional', () => {
       it('reflects optional type(type|undefined) as array', () => {
         converter.reflect.withArgs({ kind: 8 }).returns(true);
         converter.reflect.withArgs({ kind: 12 }).returns(undefined);
         expect(
           typeConverter.reflect(reflect<true | undefined>(), converter)
-        ).to.be.eql([true, undefined]);
+        ).toEqual([true, undefined]);
       });
 
       it('reflects optional reference type(class|undefined) as array', () => {
@@ -231,7 +240,7 @@ describe(`UnionConverter`, () => {
           .withArgs({ kind: TypeKind.Undefined })
           .returns(undefined);
 
-        expect(typeConverter.reflect(unionType, converter)).to.be.eql([
+        expect(typeConverter.reflect(unionType, converter)).toEqual([
           MyClass,
           undefined,
         ]);
@@ -240,7 +249,7 @@ describe(`UnionConverter`, () => {
   });
 
   describe('conversion', () => {
-    context('one of', () => {
+    describe('one of', () => {
       it('converts one of type(two or more types) as instance of OneOf pattern', () => {
         converter.convert.withArgs({ kind: 2 }).returns(String);
         converter.convert.withArgs({ kind: 3 }).returns(Number);
@@ -249,8 +258,8 @@ describe(`UnionConverter`, () => {
           reflect<string | number | boolean>(),
           converter
         );
-        expect(result).to.be.instanceof(OneOf);
-        expect(result).to.be.eql([String, Number, Boolean]);
+        expect(result).toBeInstanceOf(OneOf);
+        expect(result).toEqual([String, Number, Boolean]);
       });
 
       it('converts one of type(two or more types) as instance of OneOf pattern with property initializer', () => {
@@ -264,9 +273,9 @@ describe(`UnionConverter`, () => {
         converter.convert.withArgs({ kind: 3 }).returns(Number);
         converter.convert.withArgs({ kind: 4 }).returns(Boolean);
         const result = typeConverter.convert(reflectedType, converter);
-        expect(result).to.be.instanceof(OneOf);
-        expect(result).to.be.eql([String, Number, Boolean]);
-        expect(result.hasInitializer()).to.be.true;
+        expect(result).toBeInstanceOf(OneOf);
+        expect(result).toEqual([String, Number, Boolean]);
+        expect(result.hasInitializer()).toBe(true);
         expect(result.getInitializer()).to.be.equal('my-value');
       });
 
@@ -280,8 +289,8 @@ describe(`UnionConverter`, () => {
         };
 
         const result = typeConverter.convert(unionType, converter);
-        expect(result).to.be.instanceof(OneOf);
-        expect(result).to.be.eql([
+        expect(result).toBeInstanceOf(OneOf);
+        expect(result).toEqual([
           new InstanceOf(MyClass),
           new InstanceOf(MyOtherClass),
         ]);
@@ -304,10 +313,10 @@ describe(`UnionConverter`, () => {
         converter.convert.withArgs({ kind: TypeKind.Number }).returns(Number);
 
         const result = typeConverter.convert(unionType, converter);
-        expect(result).to.be.instanceof(OneOf);
-        expect(result[0]).to.be.instanceof(List);
-        expect(result[0]).to.be.eql([String]);
-        expect(result[1]).to.equal(Number);
+        expect(result).toBeInstanceOf(OneOf);
+        expect(result[0]).toBeInstanceOf(List);
+        expect(result[0]).toEqual([String]);
+        expect(result[1]).toBe(Number);
       });
 
       it('converts mixed union with primitives and references', () => {
@@ -324,12 +333,12 @@ describe(`UnionConverter`, () => {
         converter.convert.withArgs({ kind: TypeKind.Number }).returns(Number);
 
         const result = typeConverter.convert(unionType, converter);
-        expect(result).to.be.instanceof(OneOf);
-        expect(result).to.be.eql([String, new InstanceOf(MyClass), Number]);
+        expect(result).toBeInstanceOf(OneOf);
+        expect(result).toEqual([String, new InstanceOf(MyClass), Number]);
       });
     });
 
-    context('optional', () => {
+    describe('optional', () => {
       it('converts optional type(type|undefined) as instance of Optional pattern', () => {
         converter.convert.withArgs({ kind: 8 }).returns(true);
         converter.convert.withArgs({ kind: 12 }).returns(undefined);
@@ -337,8 +346,8 @@ describe(`UnionConverter`, () => {
           reflect<true | undefined>(),
           converter
         );
-        expect(result).to.be.instanceof(Optional);
-        expect(result).to.be.eql([true]);
+        expect(result).toBeInstanceOf(Optional);
+        expect(result).toEqual([true]);
       });
 
       it('converts optional type(type|undefined) as instance of Optional pattern with property initializer', () => {
@@ -350,9 +359,9 @@ describe(`UnionConverter`, () => {
         converter.convert.withArgs({ kind: 8 }).returns(true);
         converter.convert.withArgs({ kind: 12 }).returns(undefined);
         const result = typeConverter.convert(reflectedType, converter);
-        expect(result).to.be.instanceof(Optional);
-        expect(result).to.be.eql([true]);
-        expect(result.hasInitializer()).to.be.true;
+        expect(result).toBeInstanceOf(Optional);
+        expect(result).toEqual([true]);
+        expect(result.hasInitializer()).toBe(true);
         expect(result.getInitializer()).to.be.equal(true);
       });
 
@@ -370,8 +379,8 @@ describe(`UnionConverter`, () => {
           .returns(undefined);
 
         const result = typeConverter.convert(unionType, converter);
-        expect(result).to.be.instanceof(Optional);
-        expect(result).to.be.eql([new InstanceOf(MyClass)]);
+        expect(result).toBeInstanceOf(Optional);
+        expect(result).toEqual([new InstanceOf(MyClass)]);
       });
 
       it('converts optional Array reference type as Optional with List pattern', () => {
@@ -393,9 +402,9 @@ describe(`UnionConverter`, () => {
           .returns(undefined);
 
         const result = typeConverter.convert(unionType, converter);
-        expect(result).to.be.instanceof(Optional);
-        expect(result[0]).to.be.instanceof(List);
-        expect(result[0]).to.be.eql([String]);
+        expect(result).toBeInstanceOf(Optional);
+        expect(result[0]).toBeInstanceOf(List);
+        expect(result[0]).toEqual([String]);
       });
 
       it('converts union with initializer containing reference types', () => {
@@ -413,10 +422,10 @@ describe(`UnionConverter`, () => {
           .returns(undefined);
 
         const result = typeConverter.convert(unionType, converter);
-        expect(result).to.be.instanceof(Optional);
-        expect(result).to.be.eql([new InstanceOf(MyClass)]);
-        expect(result.hasInitializer()).to.be.true;
-        expect(result.getInitializer()).to.be.instanceOf(MyClass);
+        expect(result).toBeInstanceOf(Optional);
+        expect(result).toEqual([new InstanceOf(MyClass)]);
+        expect(result.hasInitializer()).toBe(true);
+        expect(result.getInitializer()).toBeInstanceOf(MyClass);
       });
     });
   });

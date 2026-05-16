@@ -1,4 +1,14 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { reflect } from 'tsruntime';
 import { converter } from './setup';
 import { Any } from '../../../src/patterns/any';
@@ -265,24 +275,24 @@ describe(`Mixed conversion`, () => {
 
     it('returns reflected type', () => {
       const properties = converter.reflect(MyType);
-      expect(properties).to.be.instanceof(Object);
+      expect(properties).toBeInstanceOf(Object);
 
       for (const [key, value] of Object.entries(properties)) {
         expect(
           expectedProps[key as any],
           `Expected ${key} to match properties`
-        ).to.be.eql(value);
+        ).toEqual(value);
       }
     });
 
     it(`returns reflected type properties by use of '$PropsOf'`, () => {
       const properties = converter.reflect(reflect<$PropsOf<MyType>>());
-      expect(properties).to.be.instanceof(Object);
+      expect(properties).toBeInstanceOf(Object);
       for (const [key, value] of Object.entries(properties)) {
         expect(
           expectedProps[key as any],
           `Expected ${key} to match properties`
-        ).to.be.eql(value);
+        ).toEqual(value);
       }
     });
   });
@@ -407,14 +417,14 @@ describe(`Mixed conversion`, () => {
     it('returns converted type', () => {
       const classType = converter.convert(MyType);
       const { properties } = classType;
-      expect(classType).to.be.instanceof(Class);
-      expect(classType.type).to.be.equal(MyType);
+      expect(classType).toBeInstanceOf(Class);
+      expect(classType.type).toBe(MyType);
 
       for (const [key, value] of Object.entries(properties)) {
         expect(
           expectedProps[key as any],
           `Expected ${key} to match properties`
-        ).to.be.eql(value);
+        ).toEqual(value);
       }
     });
 
@@ -424,7 +434,7 @@ describe(`Mixed conversion`, () => {
         expect(
           expectedProps[key as any],
           `Expected ${key} to match properties`
-        ).to.be.eql(value);
+        ).toEqual(value);
       }
     });
   });

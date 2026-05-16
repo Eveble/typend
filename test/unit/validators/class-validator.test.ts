@@ -1,6 +1,14 @@
-import { expect, use } from 'chai';
-import sinonChai from 'sinon-chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { Class } from '../../../src/patterns/class';
 import { types } from '../../../src/types';
@@ -13,8 +21,6 @@ import {
   ValidationError,
   UnmatchedTypeError,
 } from '../../../src/errors';
-
-use(sinonChai);
 
 describe(`ClassValidator`, () => {
   let describer: any;
@@ -35,26 +41,27 @@ describe(`ClassValidator`, () => {
   }
 
   it(`extends PatternValidator`, () => {
-    expect(ClassValidator.prototype).to.instanceof(PatternValidator);
+    expect(ClassValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
-    context('explicit expectation', () => {
+    describe('explicit expectation', () => {
       it('returns true for pattern instance of Class', () => {
         const classValidator = new ClassValidator();
-        expect(classValidator.canValidate(new Class(MyClass, { key: String })))
-          .to.be.true;
+        expect(
+          classValidator.canValidate(new Class(MyClass, { key: String }))
+        ).toBe(true);
       });
     });
 
-    context('implicit expectation', () => {
+    describe('implicit expectation', () => {
       it('does not support implicit expectations', () => {
         const classValidator = new ClassValidator();
-        expect(classValidator.canValidate(undefined)).to.be.false;
-        expect(classValidator.canValidate(null)).to.be.false;
-        expect(classValidator.canValidate(true)).to.be.false;
-        expect(classValidator.canValidate(false)).to.be.false;
-        expect(classValidator.canValidate({})).to.be.false;
+        expect(classValidator.canValidate(undefined)).toBe(false);
+        expect(classValidator.canValidate(null)).toBe(false);
+        expect(classValidator.canValidate(true)).toBe(false);
+        expect(classValidator.canValidate(false)).toBe(false);
+        expect(classValidator.canValidate({})).toBe(false);
       });
     });
   });
@@ -74,12 +81,12 @@ describe(`ClassValidator`, () => {
 
       expect(() =>
         classValidator.validate(val, expectation, validator)
-      ).to.throw(
+      ).toThrow(
         InvalidTypeError,
         `Expected ${valStr} to be an instance of MyClass`
       );
-      expect(describer.describe).to.be.called;
-      expect(describer.describe).to.be.calledWith(val);
+      expect(describer.describe).toHaveBeenCalled();
+      expect(describer.describe).toHaveBeenCalledWith(val);
     });
 
     it('ensures that properties are pulled from Class pattern instance correctly', () => {
@@ -87,10 +94,10 @@ describe(`ClassValidator`, () => {
       const value = new MyClass({ key: 'value' });
       const expectation = new Class(MyClass, { key: String });
 
-      expect(classValidator.validate(value, expectation, validator)).to.be.true;
+      expect(classValidator.validate(value, expectation, validator)).toBe(true);
     });
 
-    context('valid values', () => {
+    describe('valid values', () => {
       it(`iterates through each expected properties entries and validates them against validator`, () => {
         const classValidator = new ClassValidator();
 
@@ -115,14 +122,14 @@ describe(`ClassValidator`, () => {
         validator.validate.withArgs('value', String).returns(true);
         validator.validate.withArgs(2, Number).returns(true);
 
-        expect(classValidator.validate(val, expectation, validator)).to.be.true;
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWith('value', String);
-        expect(validator.validate).to.be.calledWith(2, Number);
+        expect(classValidator.validate(val, expectation, validator)).toBe(true);
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('value', String);
+        expect(validator.validate).toHaveBeenCalledWith(2, Number);
       });
     });
 
-    context('invalid values', () => {
+    describe('invalid values', () => {
       it(`throws UnexpectedKeyError if provided value contain keys not listed on expected properties`, () => {
         const classValidator = new ClassValidator();
 
@@ -144,9 +151,9 @@ describe(`ClassValidator`, () => {
 
         expect(() =>
           classValidator.validate(val, expectation, validator)
-        ).to.throw(UnexpectedKeyError, `Unexpected key 'second' in ${valStr}`);
-        expect(validator.validate).to.be.calledOnce;
-        expect(validator.validate).to.be.calledWith('value', String);
+        ).toThrow(UnexpectedKeyError, `Unexpected key 'second' in ${valStr}`);
+        expect(validator.validate).toHaveBeenCalledTimes(1);
+        expect(validator.validate).toHaveBeenCalledWith('value', String);
       });
 
       it(`pass-through errors from type validator validation if provided instance contain nested properties that does not match expected ones`, () => {
@@ -205,13 +212,13 @@ describe(`ClassValidator`, () => {
 
         expect(() =>
           classValidator.validate(val, expectation, validator)
-        ).to.throw(
+        ).toThrow(
           UnequalValueError,
           `(Key 'foo.bar.b': Expected Number, got String("invalid-should-be-number") in {"foo":{"bar":{"a":"a-value","b":"b-invalid-not-a-number"},"baz":{"c":"c-value"}}})`
         );
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWith('a-value', String);
-        expect(validator.validate).to.be.calledWith(
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('a-value', String);
+        expect(validator.validate).toHaveBeenCalledWith(
           'b-invalid-not-a-number',
           Number
         );
@@ -284,14 +291,14 @@ describe(`ClassValidator`, () => {
             )
           );
 
-        expect(() => classValidator.validate(val, props, validator)).to.throw(
+        expect(() => classValidator.validate(val, props, validator)).toThrow(
           ValidationError,
           `(Key 'foo.baz': Unexpected key unknown in {"c":"value","unknown":"unknown"} in {"foo":{"bar":{"a":"a-value","b":2},"baz":{"c":"c-value","unknown":"unknown"}}})`
         );
-        expect(validator.validate).to.be.calledThrice;
-        expect(validator.validate).to.be.calledWith('a-value', String);
-        expect(validator.validate).to.be.calledWith(2, Number);
-        expect(validator.validate).to.be.calledWith(
+        expect(validator.validate).toHaveBeenCalledTimes(3);
+        expect(validator.validate).toHaveBeenCalledWith('a-value', String);
+        expect(validator.validate).toHaveBeenCalledWith(2, Number);
+        expect(validator.validate).toHaveBeenCalledWith(
           {
             c: 'c-value',
             unknown: 'unknown',
@@ -321,12 +328,12 @@ describe(`ClassValidator`, () => {
 
         expect(() =>
           classValidator.validate(val, expectation, validator)
-        ).to.throw(
+        ).toThrow(
           UnmatchedTypeError,
           `Expected ${valStr} to be a instance of MyOtherClass`
         );
-        expect(validator.validate).to.be.calledOnce;
-        expect(validator.validate).to.be.calledWith('value', String);
+        expect(validator.validate).toHaveBeenCalledTimes(1);
+        expect(validator.validate).toHaveBeenCalledWith('value', String);
       });
     });
   });

@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { reflect } from 'tsruntime';
 import { FunctionConverter } from '../../../src/converters/tsruntime/type-converters/function.converter';
 import { InstanceOf } from '../../../src/patterns/instance-of';
@@ -27,7 +36,7 @@ describe(`FunctionConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -45,40 +54,40 @@ describe(`FunctionConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to not be convertible`
-        ).to.be.false;
+        ).toBe(false);
       }
     });
   });
 
   describe('reflection', () => {
     it('reflects function types to Function constructor', () => {
-      expect(typeConverter.reflect(reflect<() => void>())).to.be.eql(Function);
-      expect(typeConverter.reflect(reflect<(x: number) => string>())).to.be.eql(
+      expect(typeConverter.reflect(reflect<() => void>())).toEqual(Function);
+      expect(typeConverter.reflect(reflect<(x: number) => string>())).toEqual(
         Function
       );
-      expect(typeConverter.reflect(reflect<Function>())).to.be.eql(Function);
+      expect(typeConverter.reflect(reflect<Function>())).toEqual(Function);
     });
   });
 
   describe('conversion', () => {
     it('converts function types to instance of InstanceOf pattern', () => {
       const result: any = typeConverter.convert(reflect<() => void>());
-      expect(result).to.be.instanceof(InstanceOf);
-      expect(result[0]).to.be.eql(Function);
+      expect(result).toBeInstanceOf(InstanceOf);
+      expect(result[0]).toEqual(Function);
     });
 
     it('converts complex function types to instance of InstanceOf pattern', () => {
       const result: any = typeConverter.convert(
         reflect<(x: number, y: string) => boolean>()
       );
-      expect(result).to.be.instanceof(InstanceOf);
-      expect(result[0]).to.be.eql(Function);
+      expect(result).toBeInstanceOf(InstanceOf);
+      expect(result[0]).toEqual(Function);
     });
 
     it('converts Function constructor to instance of InstanceOf pattern', () => {
       const result: any = typeConverter.convert(reflect<Function>());
-      expect(result).to.be.instanceof(InstanceOf);
-      expect(result[0]).to.be.eql(Function);
+      expect(result).toBeInstanceOf(InstanceOf);
+      expect(result[0]).toEqual(Function);
     });
   });
 });

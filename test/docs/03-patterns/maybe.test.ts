@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   maybe,
   Maybe,
@@ -13,6 +22,6 @@ describe('maybe', () => {
     validate(null, PropTypes.maybe(String));
     validate('foo', PropTypes.maybe(String));
     validate('foo', new Maybe(String));
-    expect(() => validate('foo', maybe('baz'))).to.throw(ValidationError);
+    expect(() => validate('foo', maybe('baz'))).toThrow(ValidationError);
   });
 });

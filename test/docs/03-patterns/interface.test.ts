@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { check, ValidationError } from '../../../src';
 
 describe('interface', () => {
@@ -30,6 +39,6 @@ describe('interface', () => {
     check<PersonInterface>(new Person('Jane', 'Doe', 175));
     expect(
       () => check<PersonInterface>({ firstName: 'Jane', lastName: 'Don' }) // Missing getFullName method
-    ).to.throw(ValidationError);
+    ).toThrow(ValidationError);
   });
 });

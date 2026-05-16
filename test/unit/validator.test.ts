@@ -1,7 +1,14 @@
-import { expect, use } from 'chai';
-import sinon from 'sinon';
-import { stubInterface } from 'ts-sinon';
-import sinonChai from 'sinon-chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../vitest-helper';
 import { Validator } from '../../src/validator';
 import { types } from '../../src/types';
 import {
@@ -10,8 +17,6 @@ import {
   PatternValidatorNotFoundError,
 } from '../../src/errors';
 import { Pattern } from '../../src/pattern';
-
-use(sinonChai);
 
 describe(`Validator`, () => {
   class MyPattern extends Pattern implements types.Pattern {
@@ -33,7 +38,7 @@ describe(`Validator`, () => {
     it('takes validators map on construction', () => {
       const validators = new Map();
       const validator = new Validator(validators);
-      expect(validator.getAllValidators()).to.be.equal(validators);
+      expect(validator.getAllValidators()).toBe(validators);
     });
   });
 
@@ -44,7 +49,7 @@ describe(`Validator`, () => {
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
-      expect(validator.hasValidator(kind)).to.be.true;
+      expect(validator.hasValidator(kind)).toBe(true);
     });
 
     it(`throws PatternValidatorExistError when overriding existing validator`, () => {
@@ -53,9 +58,7 @@ describe(`Validator`, () => {
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
-      expect(() =>
-        validator.registerValidator(kind, patternValidator)
-      ).to.throw(
+      expect(() => validator.registerValidator(kind, patternValidator)).toThrow(
         PatternValidatorExistError,
         `Validator for type '${kind}' would be overwritten. To
     override existing validator use 'Validator::overrideValidator'`
@@ -70,7 +73,7 @@ describe(`Validator`, () => {
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
       validator.overrideValidator(kind, otherValidator);
-      expect(validator.getValidator(kind)).to.be.equal(otherValidator);
+      expect(validator.getValidator(kind)).toBe(otherValidator);
     });
 
     it(`returns registered validator `, () => {
@@ -79,13 +82,13 @@ describe(`Validator`, () => {
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
-      expect(validator.getValidator(kind)).to.be.equal(patternValidator);
+      expect(validator.getValidator(kind)).toBe(patternValidator);
     });
 
     it(`throws PatternValidatorNotFoundError if validator for id can't be found`, () => {
       const kind = 'my-type';
       const validator = new Validator();
-      expect(() => validator.getValidatorOrThrow(kind)).to.throw(
+      expect(() => validator.getValidatorOrThrow(kind)).toThrow(
         PatternValidatorNotFoundError,
         `Validator for type '${kind}' can't be found`
       );
@@ -97,12 +100,12 @@ describe(`Validator`, () => {
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
-      expect(validator.hasValidator(kind)).to.be.true;
+      expect(validator.hasValidator(kind)).toBe(true);
     });
 
     it(`returns false if validator is not registered`, () => {
       const validator = new Validator();
-      expect(validator.hasValidator('my-not-registered-validator')).to.be.false;
+      expect(validator.hasValidator('my-not-registered-validator')).toBe(false);
     });
 
     it(`returns all validators in not-sorted order`, () => {
@@ -116,13 +119,15 @@ describe(`Validator`, () => {
       validator.registerValidator('third', thirdPatternValidator);
 
       const validators = validator.getValidators();
-      expect(validators).to.be.instanceof(Array);
-      expect(validators).to.have.length(3);
-      expect(validators).to.include.members([
-        firstPatternValidator,
-        secondPatternValidator,
-        thirdPatternValidator,
-      ]);
+      expect(validators).toBeInstanceOf(Array);
+      expect(validators).toHaveLength(3);
+      expect(validators).toEqual(
+        expect.arrayContaining([
+          firstPatternValidator,
+          secondPatternValidator,
+          thirdPatternValidator,
+        ])
+      );
     });
 
     it(`returns all registered validator mappings`, () => {
@@ -136,9 +141,9 @@ describe(`Validator`, () => {
       validator.registerValidator('third', thirdPatternValidator);
 
       const validators = validator.getAllValidators();
-      expect(validators).to.be.instanceof(Map);
-      expect(validators).to.have.length(3);
-      expect(validators).to.be.eql(
+      expect(validators).toBeInstanceOf(Map);
+      expect(validators).toHaveLength(3);
+      expect(validators).toEqual(
         new Map([
           ['first', firstPatternValidator],
           ['second', secondPatternValidator],
@@ -153,9 +158,9 @@ describe(`Validator`, () => {
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
-      expect(validator.hasValidator(kind)).to.be.true;
+      expect(validator.hasValidator(kind)).toBe(true);
       validator.removeValidator(kind);
-      expect(validator.hasValidator(kind)).to.be.false;
+      expect(validator.hasValidator(kind)).toBe(false);
     });
   });
 
@@ -166,7 +171,7 @@ describe(`Validator`, () => {
 
       const validator = new Validator();
       validator.setOrder(order);
-      expect(validator.getOrder()).to.be.equal(order);
+      expect(validator.getOrder()).toBe(order);
     });
 
     it(`returns sorted patterns`, () => {
@@ -183,10 +188,10 @@ describe(`Validator`, () => {
       validator.setOrder(order);
 
       const sortedOrder = validator.getValidators();
-      expect(sortedOrder.length).to.be.equal(3);
-      expect(sortedOrder[0]).to.be.equal(stubs[2][1]);
-      expect(sortedOrder[1]).to.be.equal(stubs[0][1]);
-      expect(sortedOrder[2]).to.be.equal(stubs[1][1]);
+      expect(sortedOrder.length).toBe(3);
+      expect(sortedOrder[0]).toBe(stubs[2][1]);
+      expect(sortedOrder[1]).toBe(stubs[0][1]);
+      expect(sortedOrder[2]).toBe(stubs[1][1]);
     });
   });
 
@@ -198,13 +203,13 @@ describe(`Validator`, () => {
 
       const validator = new Validator();
 
-      expect(() => validator.validate(val, pattern)).to.throw(
+      expect(() => validator.validate(val, pattern)).toThrow(
         PatternValidatorNotFoundError,
         `Validator for type 'MyValidator' can't be found`
       );
     });
 
-    context('explicit patterns', () => {
+    describe('explicit patterns', () => {
       it('delegates validation for explicit pattern', () => {
         const val = 'my-value';
         const expectation = 'my-expectation';
@@ -217,9 +222,9 @@ describe(`Validator`, () => {
           .withArgs(val, pattern, validator)
           .returns(true);
 
-        expect(validator.validate(val, pattern)).to.be.true;
-        expect(patternValidator.validate).to.be.calledOnce;
-        expect(patternValidator.validate).to.be.calledWithExactly(
+        expect(validator.validate(val, pattern)).toBe(true);
+        expect(patternValidator.validate).toHaveBeenCalledTimes(1);
+        expect(patternValidator.validate).toHaveBeenCalledWith(
           val,
           pattern,
           validator
@@ -243,9 +248,9 @@ describe(`Validator`, () => {
           .withArgs(val, new MyOtherPattern(), validator)
           .returns(true);
 
-        expect(validator.validate(val, pattern)).to.be.true;
-        expect(patternValidator.validate).to.be.calledOnce;
-        expect(patternValidator.validate).to.be.calledWithMatch(
+        expect(validator.validate(val, pattern)).toBe(true);
+        expect(patternValidator.validate).toHaveBeenCalledTimes(1);
+        expect(patternValidator.validate).toHaveBeenCalledWith(
           val,
           new MyOtherPattern(),
           validator
@@ -253,7 +258,7 @@ describe(`Validator`, () => {
       });
     });
 
-    context('implicit expectations', () => {
+    describe('implicit expectations', () => {
       it('iterates over validators to evaluate applicable one for implicit expectation ', () => {
         const val = 'my-value';
         const expectation = 'my-expectation';
@@ -279,9 +284,9 @@ describe(`Validator`, () => {
           .withArgs(val, expectation, validator)
           .returns(true);
 
-        expect(validator.validate(val, expectation, isStrict)).to.be.true;
-        expect(myValidator.validate).to.be.calledOnce;
-        expect(myValidator.validate).to.be.calledWithExactly(
+        expect(validator.validate(val, expectation, isStrict)).toBe(true);
+        expect(myValidator.validate).toHaveBeenCalledTimes(1);
+        expect(myValidator.validate).toHaveBeenCalledWith(
           val,
           expectation,
           validator
@@ -295,7 +300,7 @@ describe(`Validator`, () => {
       const isStrict = true;
       const validator = new Validator();
 
-      expect(() => validator.validate(val, expectation, isStrict)).to.throw(
+      expect(() => validator.validate(val, expectation, isStrict)).toThrow(
         UnknownError,
         `Unknown expectation that can't be handled`
       );
@@ -311,10 +316,19 @@ describe(`Validator`, () => {
         const isStrict = true;
 
         const validator = new Validator();
-        const validate = sinon.stub(validator, 'validate');
-        validate.withArgs(val, pattern, isStrict).returns(true);
+        const validate = vi.spyOn(validator, 'validate');
+        validate.mockImplementation((...args: any[]) => {
+          const callArgs = [val, pattern, isStrict];
+          if (
+            args.length === callArgs.length &&
+            args.every((arg: any, i: number) => arg === callArgs[i])
+          ) {
+            return true;
+          }
+          return undefined;
+        });
 
-        expect(validator.isValid(val, pattern, isStrict)).to.be.true;
+        expect(validator.isValid(val, pattern, isStrict)).toBe(true);
       });
 
       it('returns false if value does not match expectation', () => {
@@ -324,10 +338,19 @@ describe(`Validator`, () => {
         const isStrict = true;
 
         const validator = new Validator();
-        const validate = sinon.stub(validator, 'validate');
-        validate.withArgs(val, pattern, isStrict).throws(new Error('my-error'));
+        const validate = vi.spyOn(validator, 'validate');
+        validate.mockImplementation((...args: any[]) => {
+          const callArgs = [val, pattern, isStrict];
+          if (
+            args.length === callArgs.length &&
+            args.every((arg: any, i: number) => arg === callArgs[i])
+          ) {
+            throw new Error('my-error');
+          }
+          return undefined;
+        });
 
-        expect(validator.isValid(val, pattern, isStrict)).to.be.false;
+        expect(validator.isValid(val, pattern, isStrict)).toBe(false);
       });
     });
 
@@ -338,10 +361,19 @@ describe(`Validator`, () => {
         const pattern = new MyPattern(expectation);
 
         const validator = new Validator();
-        const validate = sinon.stub(validator, 'validate');
-        validate.withArgs(val, pattern).returns(true);
+        const validate = vi.spyOn(validator, 'validate');
+        validate.mockImplementation((...args: any[]) => {
+          const callArgs = [val, pattern];
+          if (
+            args.length === callArgs.length &&
+            args.every((arg: any, i: number) => arg === callArgs[i])
+          ) {
+            return true;
+          }
+          return undefined;
+        });
 
-        expect(validator.isInstanceOf(val, pattern)).to.be.true;
+        expect(validator.isInstanceOf(val, pattern)).toBe(true);
       });
 
       it('returns false if value is not instance of expectation', () => {
@@ -350,10 +382,19 @@ describe(`Validator`, () => {
         const pattern = new MyPattern(expectation);
 
         const validator = new Validator();
-        const validate = sinon.stub(validator, 'validate');
-        validate.withArgs(val, pattern).throws(new Error('my-error'));
+        const validate = vi.spyOn(validator, 'validate');
+        validate.mockImplementation((...args: any[]) => {
+          const callArgs = [val, pattern];
+          if (
+            args.length === callArgs.length &&
+            args.every((arg: any, i: number) => arg === callArgs[i])
+          ) {
+            throw new Error('my-error');
+          }
+          return undefined;
+        });
 
-        expect(validator.isInstanceOf(val, pattern)).to.be.false;
+        expect(validator.isInstanceOf(val, pattern)).toBe(false);
       });
     });
   });

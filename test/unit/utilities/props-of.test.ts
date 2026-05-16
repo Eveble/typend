@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { InvalidTypeError } from '../../../src/errors';
 import { Utility } from '../../../src/utility';
@@ -125,18 +134,18 @@ describe(`PropsOf`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(PropsOf.prototype).to.instanceof(WrapperPattern);
+    expect(PropsOf.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
     it('takes valid type as a class constructor', () => {
       const propsOf = new PropsOf(ParentClass);
-      expect(propsOf).to.eql([ParentClass]);
+      expect(propsOf).toEqual([ParentClass]);
     });
 
     it('takes valid type as a error constructor', () => {
       const propsOf = new PropsOf(MyError);
-      expect(propsOf).to.eql([MyError]);
+      expect(propsOf).toEqual([MyError]);
     });
 
     it('throws InvalidTypeError for invalid type on construction', () => {
@@ -146,7 +155,7 @@ describe(`PropsOf`, () => {
         expect(
           () => new PropsOf(type),
           `Expected type ${typeStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidTypeError,
           `PropsOf type is invalid. Expected type to be class, got ${typeStr}`
         );
@@ -167,8 +176,8 @@ describe(`PropsOf`, () => {
       const type = new Class(MyClass, definition);
       library.converter.convert.withArgs(MyClass).returns(type);
       const generatedResult = propsOf.generate(library);
-      expect(generatedResult).to.be.instanceOf(Collection);
-      expect(generatedResult).to.be.eql(definition);
+      expect(generatedResult).toBeInstanceOf(Collection);
+      expect(generatedResult).toEqual(definition);
     });
   });
 });

@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { InvalidDefinitionError, InvalidTypeError } from '../../../src/errors';
 import { Pattern } from '../../../src/pattern';
@@ -205,27 +205,27 @@ describe(`Class`, () => {
   ];
 
   it(`extends Pattern`, () => {
-    expect(Class.prototype).to.instanceof(Pattern);
+    expect(Class.prototype).toBeInstanceOf(Pattern);
   });
 
   describe('construction', () => {
     it('takes valid type as a class constructor and its properties', () => {
       const properties = { value: String };
       const result = new Class(ParentClass, properties);
-      expect(result.type).to.equal(ParentClass);
-      expect(result.properties).to.equal(properties);
+      expect(result.type).toBe(ParentClass);
+      expect(result.properties).toBe(properties);
     });
 
     it('takes valid type as a error constructor and its properties', () => {
       const properties = { message: String };
       const result = new Class(MyError, properties);
-      expect(result.type).to.equal(MyError);
-      expect(result.properties).to.equal(properties);
+      expect(result.type).toBe(MyError);
+      expect(result.properties).toBe(properties);
     });
 
     it(`has assigned 'CLASS' as type kind`, () => {
       const pattern = new Class(ParentClass, { value: String });
-      expect(pattern.getKind()).to.be.equal(KINDS.CLASS);
+      expect(pattern.getKind()).toBe(KINDS.CLASS);
     });
 
     it('throws InvalidTypeError for invalid type on construction', () => {
@@ -235,7 +235,7 @@ describe(`Class`, () => {
         expect(
           () => new Class(type, {}),
           `Expected type ${typeStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidTypeError,
           `Class type is invalid. Expected type to be a class constructor, got ${typeStr}`
         );
@@ -249,7 +249,7 @@ describe(`Class`, () => {
         expect(
           () => new Class(ParentClass, description),
           `Expected definition ${descriptionStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidDefinitionError,
           `Class properties are invalid. Expected properties to be a plain object or Collection instance describing class properties, got ${descriptionStr}`
         );

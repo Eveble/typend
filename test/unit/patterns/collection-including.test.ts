@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { CollectionIncluding } from '../../../src/patterns/collection-including';
 import { InvalidTypeError } from '../../../src/errors';
@@ -116,18 +116,18 @@ describe(`CollectionIncluding`, () => {
   ];
 
   it(`extends Pattern`, () => {
-    expect(CollectionIncluding.prototype).to.instanceof(Pattern);
+    expect(CollectionIncluding.prototype).toBeInstanceOf(Pattern);
   });
 
   describe('construction', () => {
     it('takes valid definition as properties of object literal for construction', () => {
       const props = { key: 'value' };
-      expect(new CollectionIncluding(props)).to.eql(props);
+      expect(new CollectionIncluding(props)).toEqual(props);
     });
 
     it(`has assigned 'OBJECT_INCLUDING' as type kind`, () => {
       const collInc = new CollectionIncluding({});
-      expect(collInc.getKind()).to.be.equal(KINDS.OBJECT_INCLUDING);
+      expect(collInc.getKind()).toBe(KINDS.OBJECT_INCLUDING);
     });
 
     it('throws InvalidTypeError for invalid definition on construction', () => {
@@ -137,7 +137,7 @@ describe(`CollectionIncluding`, () => {
         expect(
           () => new CollectionIncluding(props),
           `Expected properties ${propsStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidTypeError,
           `CollectionIncluding properties are invalid. Expected properties to be a plain object, got ${propsStr}`
         );

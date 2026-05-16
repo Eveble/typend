@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   validate,
@@ -31,7 +40,7 @@ describe('Collection', () => {
     );
     expect(() =>
       validate({ foo: 'foo', bar: 'bar' }, PropTypes.shape({ foo: 'foo' }))
-    ).to.throw(UnexpectedKeyError);
+    ).toThrow(UnexpectedKeyError);
   });
 
   it('validate implicit', () => {

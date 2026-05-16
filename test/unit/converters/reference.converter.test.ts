@@ -1,14 +1,20 @@
-import { expect, use } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { reflect, Types as tsruntimeTypes } from 'tsruntime';
-import { stubInterface } from 'ts-sinon';
-import sinonChai from 'sinon-chai';
+import { stubInterface } from '../../vitest-helper';
 import { ReferenceConverter } from '../../../src/converters/tsruntime/type-converters/reference.converter';
 import { types } from '../../../src/types';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 import { TypeKind } from '../../../src/enums/type-kind.enum';
 import { Type } from '../../../src/decorators/type.decorator';
-
-use(sinonChai);
 
 describe(`ReferenceConverter`, () => {
   let converter: any;
@@ -31,7 +37,7 @@ describe(`ReferenceConverter`, () => {
   describe('evaluation', () => {
     it('returns true for Reference type (TypeKind.Reference = 18)', () => {
       const referenceType = { kind: 18 };
-      expect(typeConverter.isConvertible(referenceType)).to.be.true;
+      expect(typeConverter.isConvertible(referenceType)).toBe(true);
     });
 
     it('returns true for Array with generic type declaration', () => {
@@ -49,21 +55,21 @@ describe(`ReferenceConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
     it('returns false for non-reference types', () => {
-      expect(typeConverter.isConvertible(reflect<string>())).to.be.false;
-      expect(typeConverter.isConvertible(reflect<number>())).to.be.false;
-      expect(typeConverter.isConvertible({ kind: 15 } as any)).to.be.false; // Object
-      expect(typeConverter.isConvertible({ kind: 16 } as any)).to.be.false; // Tuple
-      expect(typeConverter.isConvertible({ kind: 17 } as any)).to.be.false; // Union
+      expect(typeConverter.isConvertible(reflect<string>())).toBe(false);
+      expect(typeConverter.isConvertible(reflect<number>())).toBe(false);
+      expect(typeConverter.isConvertible({ kind: 15 } as any)).toBe(false); // Object
+      expect(typeConverter.isConvertible({ kind: 16 } as any)).toBe(false); // Tuple
+      expect(typeConverter.isConvertible({ kind: 17 } as any)).toBe(false); // Union
     });
   });
 
   describe('conversion', () => {
-    context('type', () => {
+    describe('type', () => {
       it('converts references type as instance of InstanceOf pattern', () => {
         const reflectedType: tsruntimeTypes.ReferenceType = {
           kind: 18,
@@ -83,19 +89,19 @@ describe(`ReferenceConverter`, () => {
           .returns(new InstanceOf(MyClass));
 
         const result = typeConverter.convert(reflectedType, converter);
-        expect(result).to.be.instanceof(InstanceOf);
-        expect(result).to.be.eql(new InstanceOf(MyClass));
+        expect(result).toBeInstanceOf(InstanceOf);
+        expect(result).toEqual(new InstanceOf(MyClass));
 
         // Verify converter interactions
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Array);
+        expect(arrayConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Class);
+        expect(classConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(classConverter.convert).to.have.been.calledWith(
+        expect(classConverter.convert).toHaveBeenCalledWith(
           reflectedType,
           converter
         );
@@ -124,20 +130,20 @@ describe(`ReferenceConverter`, () => {
           .returns(convertedInstance);
 
         const result = typeConverter.convert(reflectedType, converter);
-        expect(result).to.be.instanceof(InstanceOf);
-        expect(result.hasInitializer()).to.be.true;
-        expect(result.getInitializer()).to.be.equal(initializer);
+        expect(result).toBeInstanceOf(InstanceOf);
+        expect(result.hasInitializer()).toBe(true);
+        expect(result.getInitializer()).toBe(initializer);
 
         // Verify converter interactions
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Array);
+        expect(arrayConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Class);
+        expect(classConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(classConverter.convert).to.have.been.calledWith(
+        expect(classConverter.convert).toHaveBeenCalledWith(
           reflectedType,
           converter
         );
@@ -157,24 +163,24 @@ describe(`ReferenceConverter`, () => {
         classConverter.isConvertible.withArgs(reflectedType).returns(false);
 
         const result = typeConverter.convert(reflectedType, converter);
-        expect(result).to.be.instanceof(InstanceOf);
-        expect(result).to.be.eql(new InstanceOf(MyClass));
+        expect(result).toBeInstanceOf(InstanceOf);
+        expect(result).toEqual(new InstanceOf(MyClass));
 
         // Verify converter interactions but no convert calls
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Array);
+        expect(arrayConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Class);
+        expect(classConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(arrayConverter.convert).to.not.have.been.called;
-        expect(classConverter.convert).to.not.have.been.called;
+        expect(arrayConverter.convert).not.toHaveBeenCalled();
+        expect(classConverter.convert).not.toHaveBeenCalled();
       });
     });
 
-    context('array', () => {
+    describe('array', () => {
       it('converts referenced array with array converter', () => {
         const reflectedType: tsruntimeTypes.ReferenceType = {
           kind: 18,
@@ -191,27 +197,25 @@ describe(`ReferenceConverter`, () => {
           .returns(convertedArray);
 
         const arrayType = typeConverter.convert(reflectedType, converter);
-        expect(arrayType).to.be.equal(convertedArray);
+        expect(arrayType).toBe(convertedArray);
 
         // Verify converter interactions
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Array);
+        expect(arrayConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(arrayConverter.convert).to.have.been.calledWith(
+        expect(arrayConverter.convert).toHaveBeenCalledWith(
           reflectedType,
           converter
         );
         // Class converter should not be called since array converter handled it
-        expect(converter.getConverter).to.not.have.been.calledWith(
-          TypeKind.Class
-        );
+        expect(converter.getConverter).not.toHaveBeenCalledWith(TypeKind.Class);
       });
     });
   });
 
   describe('reflection', () => {
-    context('type', () => {
+    describe('type', () => {
       it('returns references type', () => {
         const reflectedType: tsruntimeTypes.ReferenceType = {
           kind: 18,
@@ -231,18 +235,18 @@ describe(`ReferenceConverter`, () => {
           .returns(MyClass);
 
         const result = typeConverter.reflect(reflectedType, converter);
-        expect(result).to.be.equal(MyClass);
+        expect(result).toBe(MyClass);
 
         // Verify converter interactions
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Array);
+        expect(arrayConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Class);
+        expect(classConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(classConverter.reflect).to.have.been.calledWith(
+        expect(classConverter.reflect).toHaveBeenCalledWith(
           reflectedType,
           converter
         );
@@ -262,23 +266,23 @@ describe(`ReferenceConverter`, () => {
         classConverter.isConvertible.withArgs(reflectedType).returns(false);
 
         const result = typeConverter.reflect(reflectedType, converter);
-        expect(result).to.be.equal(MyClass);
+        expect(result).toBe(MyClass);
 
         // Verify converter interactions but no reflect calls
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Array);
+        expect(arrayConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Class);
-        expect(classConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Class);
+        expect(classConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(arrayConverter.reflect).to.not.have.been.called;
-        expect(classConverter.reflect).to.not.have.been.called;
+        expect(arrayConverter.reflect).not.toHaveBeenCalled();
+        expect(classConverter.reflect).not.toHaveBeenCalled();
       });
     });
 
-    context('array', () => {
+    describe('array', () => {
       it('reflects referenced array with array converter', () => {
         const reflectedType: tsruntimeTypes.ReferenceType = {
           kind: 18,
@@ -295,21 +299,19 @@ describe(`ReferenceConverter`, () => {
           .returns(reflectedArray);
 
         const arrayType = typeConverter.reflect(reflectedType, converter);
-        expect(arrayType).to.be.equal(reflectedArray);
+        expect(arrayType).toBe(reflectedArray);
 
         // Verify converter interactions
-        expect(converter.getConverter).to.have.been.calledWith(TypeKind.Array);
-        expect(arrayConverter.isConvertible).to.have.been.calledWith(
+        expect(converter.getConverter).toHaveBeenCalledWith(TypeKind.Array);
+        expect(arrayConverter.isConvertible).toHaveBeenCalledWith(
           reflectedType
         );
-        expect(arrayConverter.reflect).to.have.been.calledWith(
+        expect(arrayConverter.reflect).toHaveBeenCalledWith(
           reflectedType,
           converter
         );
         // Class converter should not be called since array converter handled it
-        expect(converter.getConverter).to.not.have.been.calledWith(
-          TypeKind.Class
-        );
+        expect(converter.getConverter).not.toHaveBeenCalledWith(TypeKind.Class);
       });
     });
   });

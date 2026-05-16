@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   Pattern,
   types,
@@ -51,11 +60,11 @@ describe('03-create-pattern', () => {
 
     check<PositiveNumber>(1);
 
-    expect(() => check<PositiveNumber>(-1)).to.throw(InvalidValueError);
+    expect(() => check<PositiveNumber>(-1)).toThrow(InvalidValueError);
 
     validate(1, PositiveNumber);
 
-    expect(() => validate(-1, PositiveNumber)).to.throw(InvalidValueError);
+    expect(() => validate(-1, PositiveNumber)).toThrow(InvalidValueError);
   });
 
   it('container', () => {
@@ -86,7 +95,7 @@ describe('03-create-pattern', () => {
 
     validate(undefined, new Optional(String));
     validate('foo', new Optional(String));
-    expect(() => validate(1234, new Optional(String))).to.throw(
+    expect(() => validate(1234, new Optional(String))).toThrow(
       UnmatchedTypeError
     );
   });

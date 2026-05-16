@@ -1,10 +1,16 @@
-import { expect, use } from 'chai';
-import { stubInterface } from 'ts-sinon';
-import sinonChai from 'sinon-chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../vitest-helper';
 import { types } from '../../src/types';
 import { Pattern } from '../../src/pattern';
-
-use(sinonChai);
 
 describe(`Pattern`, () => {
   let describer: any;
@@ -17,12 +23,12 @@ describe(`Pattern`, () => {
     class MyPattern extends Pattern {
       static kind = 'my-kind';
     }
-    expect(new MyPattern().getKind()).to.be.equal('my-kind');
+    expect(new MyPattern().getKind()).toBe('my-kind');
   });
 
   it('allows to set describer on Pattern', () => {
     Pattern.setDescriber(describer);
-    expect(Pattern.getDescriber()).to.be.equal(describer);
+    expect(Pattern.getDescriber()).toBe(describer);
   });
 
   it('describes provided value to string', () => {
@@ -34,9 +40,9 @@ describe(`Pattern`, () => {
     const valStr = `String('my-value'`;
     describer.describe.withArgs(val).returns(valStr);
 
-    expect(pattern.describe(val)).to.be.equal(valStr);
-    expect(describer.describe).to.be.calledOnce;
-    expect(describer.describe).to.be.calledWithExactly(val);
+    expect(pattern.describe(val)).toBe(valStr);
+    expect(describer.describe).toHaveBeenCalledTimes(1);
+    expect(describer.describe).toHaveBeenCalledWith(val);
   });
 
   describe('property initializers', () => {
@@ -46,18 +52,18 @@ describe(`Pattern`, () => {
       it('returns true if property initializer is set on pattern', () => {
         const pattern = new MyPattern();
         pattern.setInitializer('my-initializer-value');
-        expect(pattern.hasInitializer()).to.be.true;
+        expect(pattern.hasInitializer()).toBe(true);
       });
       it('returns false if property initializer is missing from pattern', () => {
         const pattern = new MyPattern();
-        expect(pattern.hasInitializer()).to.be.false;
+        expect(pattern.hasInitializer()).toBe(false);
       });
     });
     it('sets the property initializer on pattern', () => {
       const pattern = new MyPattern();
       const initializer = 'my-initializer-value';
       pattern.setInitializer(initializer);
-      expect(pattern.getInitializer()).to.be.equal(initializer);
+      expect(pattern.getInitializer()).toBe(initializer);
     });
   });
 });

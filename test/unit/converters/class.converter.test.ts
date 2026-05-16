@@ -1,7 +1,15 @@
-import { expect, use } from 'chai';
-import sinonChai from 'sinon-chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { getClassType, reflect, Types as tsrTypes } from 'tsruntime';
-import { stubInterface } from 'ts-sinon';
+import { stubInterface } from '../../vitest-helper';
 import { ClassConverter } from '../../../src/converters/tsruntime/type-converters/class.converter';
 import { Class, Collection, InstanceOf, types } from '../../../src';
 import { Type } from '../../../src/decorators/type.decorator';
@@ -10,8 +18,6 @@ import {
   PROPERTIES_KEY,
   REFLECTION_KEY,
 } from '../../../src/constants/metadata-keys';
-
-use(sinonChai);
 
 describe(`ClassConverter`, () => {
   let converter: any;
@@ -35,21 +41,21 @@ describe(`ClassConverter`, () => {
       expect(
         typeConverter.isConvertible(reflect<MyClass>()),
         `Expected MyClass reference to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it(`returns true for class type resolved with tsruntime's 'getClassType'`, () => {
       expect(
         typeConverter.isConvertible(getClassType(MyClass)),
         `Expected MyClass type to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it(`returns true for class type`, () => {
       expect(
         typeConverter.isConvertible(MyClass),
         `Expected MyClass type to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
   });
 
@@ -76,8 +82,8 @@ describe(`ClassConverter`, () => {
         });
 
       const classType = typeConverter.reflect(MyExample, converter);
-      expect(classType).to.be.instanceof(Object);
-      expect(classType).to.be.eql({ key: String });
+      expect(classType).toBeInstanceOf(Object);
+      expect(classType).toEqual({ key: String });
     });
 
     it('returns reflected class properties from passed reflection', () => {
@@ -101,8 +107,8 @@ describe(`ClassConverter`, () => {
         reflect<MyExample>() as tsrTypes.ReferenceType,
         converter
       );
-      expect(classType).to.be.instanceof(Object);
-      expect(classType).to.be.eql({ key: Number });
+      expect(classType).toBeInstanceOf(Object);
+      expect(classType).toEqual({ key: Number });
     });
 
     it(`returns reflected class properties from whole type's inheritance tree`, () => {
@@ -155,8 +161,8 @@ describe(`ClassConverter`, () => {
         reflect<Child>() as tsrTypes.ReferenceType,
         converter
       );
-      expect(classType).to.be.instanceof(Object);
-      expect(classType).to.be.eql({
+      expect(classType).toBeInstanceOf(Object);
+      expect(classType).toEqual({
         firstParent: String,
         secondParent: Number,
         firstChild: Boolean,
@@ -199,10 +205,8 @@ describe(`ClassConverter`, () => {
         MyExample,
         converter
       );
-      expect(reflectedAndTransformedClassProps).to.be.instanceof(Object);
-      expect(reflectedAndTransformedClassProps).to.be.eql(
-        transformedProperties
-      );
+      expect(reflectedAndTransformedClassProps).toBeInstanceOf(Object);
+      expect(reflectedAndTransformedClassProps).toEqual(transformedProperties);
     });
 
     describe('caching', () => {
@@ -225,9 +229,9 @@ describe(`ClassConverter`, () => {
 
         const properties = { key: String };
         const firstResult = typeConverter.reflect(MyExample, converter);
-        expect(firstResult).to.be.instanceof(Object);
-        expect(firstResult).to.be.eql(properties);
-        expect(Reflect.getOwnMetadata(REFLECTION_KEY, MyExample)).to.be.eql(
+        expect(firstResult).toBeInstanceOf(Object);
+        expect(firstResult).toEqual(properties);
+        expect(Reflect.getOwnMetadata(REFLECTION_KEY, MyExample)).toEqual(
           properties
         );
       });
@@ -250,12 +254,12 @@ describe(`ClassConverter`, () => {
           });
 
         const firstResult = typeConverter.reflect(MyExample, converter);
-        expect(firstResult).to.be.instanceof(Object);
-        expect(firstResult).to.be.eql({ key: String });
+        expect(firstResult).toBeInstanceOf(Object);
+        expect(firstResult).toEqual({ key: String });
         const secondResult = typeConverter.reflect(MyExample, converter);
-        expect(secondResult).to.be.instanceof(Object);
-        expect(secondResult).to.be.eql({ key: String });
-        expect(objConverter.reflect).to.be.calledOnce;
+        expect(secondResult).toBeInstanceOf(Object);
+        expect(secondResult).toEqual({ key: String });
+        expect(objConverter.reflect).toHaveBeenCalledTimes(1);
       });
     });
   });
@@ -285,8 +289,8 @@ describe(`ClassConverter`, () => {
         );
 
       const classType = typeConverter.convert(MyExample, converter);
-      expect(classType).to.be.instanceof(Class);
-      expect(classType).to.be.eql(
+      expect(classType).toBeInstanceOf(Class);
+      expect(classType).toEqual(
         new Class(MyExample, { key: new InstanceOf(String) })
       );
     });
@@ -314,8 +318,8 @@ describe(`ClassConverter`, () => {
         reflect<MyExample>() as tsrTypes.ReferenceType,
         converter
       );
-      expect(classType).to.be.instanceof(Class);
-      expect(classType).to.be.eql(
+      expect(classType).toBeInstanceOf(Class);
+      expect(classType).toEqual(
         new Class(MyExample, { key: new InstanceOf(Number) })
       );
     });
@@ -375,8 +379,8 @@ describe(`ClassConverter`, () => {
         converter
       );
 
-      expect(classType).to.be.instanceof(Class);
-      expect(classType).to.be.eql(
+      expect(classType).toBeInstanceOf(Class);
+      expect(classType).toEqual(
         new Class(Child, {
           firstParent: new InstanceOf(String),
           secondParent: new InstanceOf(Number),
@@ -421,8 +425,8 @@ describe(`ClassConverter`, () => {
         MyExample,
         converter
       );
-      expect(convertedAndTransformedClassType).to.be.instanceof(Class);
-      expect(convertedAndTransformedClassType).to.be.eql(transformedClassType);
+      expect(convertedAndTransformedClassType).toBeInstanceOf(Class);
+      expect(convertedAndTransformedClassType).toEqual(transformedClassType);
     });
 
     describe('caching', () => {
@@ -447,9 +451,9 @@ describe(`ClassConverter`, () => {
 
         const properties = { key: new InstanceOf(String) };
         const firstResult = typeConverter.convert(MyExample, converter);
-        expect(firstResult).to.be.instanceof(Class);
-        expect(firstResult).to.be.eql(new Class(MyExample, properties));
-        expect(Reflect.getOwnMetadata(PROPERTIES_KEY, MyExample)).to.be.eql(
+        expect(firstResult).toBeInstanceOf(Class);
+        expect(firstResult).toEqual(new Class(MyExample, properties));
+        expect(Reflect.getOwnMetadata(PROPERTIES_KEY, MyExample)).toEqual(
           properties
         );
       });
@@ -474,17 +478,17 @@ describe(`ClassConverter`, () => {
           );
 
         const firstResult = typeConverter.convert(MyExample, converter);
-        expect(firstResult).to.be.instanceof(Class);
-        expect(firstResult).to.be.eql(
+        expect(firstResult).toBeInstanceOf(Class);
+        expect(firstResult).toEqual(
           new Class(MyExample, { key: new InstanceOf(String) })
         );
 
         const secondResult = typeConverter.convert(MyExample, converter);
-        expect(secondResult).to.be.instanceof(Class);
-        expect(secondResult).to.be.eql(
+        expect(secondResult).toBeInstanceOf(Class);
+        expect(secondResult).toEqual(
           new Class(MyExample, { key: new InstanceOf(String) })
         );
-        expect(objConverter.convert).to.be.calledOnce;
+        expect(objConverter.convert).toHaveBeenCalledTimes(1);
       });
     });
   });

@@ -1,4 +1,14 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../vitest-helper';
 // Annotations
 import { Internal } from '../../src/annotations/internal';
 import { Validable } from '../../src/annotations/validable';
@@ -306,626 +316,604 @@ import {
 describe('exports', () => {
   describe('annotations', () => {
     it('internal', () => {
-      expect(Internal).to.be.equal(InternalExported);
+      expect(Internal).toBe(InternalExported);
     });
     it('Validable', () => {
-      expect(Validable).to.be.equal(ValidableExported);
+      expect(Validable).toBe(ValidableExported);
     });
   });
 
   describe('decorators', () => {
     it('Type', () => {
-      expect(Type).to.be.equal(TypeExported);
+      expect(Type).toBe(TypeExported);
     });
   });
 
   describe('errors', () => {
     it('ValidationError', () => {
-      expect(ValidationError).to.be.equal(ValidationErrorExported);
+      expect(ValidationError).toBe(ValidationErrorExported);
     });
     it('InvalidDefinitionError', () => {
-      expect(InvalidDefinitionError).to.be.equal(
-        InvalidDefinitionErrorExported
-      );
+      expect(InvalidDefinitionError).toBe(InvalidDefinitionErrorExported);
     });
     it('InvalidTypeError', () => {
-      expect(InvalidTypeError).to.be.equal(InvalidTypeErrorExported);
+      expect(InvalidTypeError).toBe(InvalidTypeErrorExported);
     });
     it('InvalidValueError', () => {
-      expect(InvalidValueError).to.be.equal(InvalidValueErrorExported);
+      expect(InvalidValueError).toBe(InvalidValueErrorExported);
     });
     it('UnequalValueError', () => {
-      expect(UnequalValueError).to.be.equal(UnequalValueErrorExported);
+      expect(UnequalValueError).toBe(UnequalValueErrorExported);
     });
     it('UnmatchedTypeError', () => {
-      expect(UnmatchedTypeError).to.be.equal(UnmatchedTypeErrorExported);
+      expect(UnmatchedTypeError).toBe(UnmatchedTypeErrorExported);
     });
     it('NotAMemberError', () => {
-      expect(NotAMemberError).to.be.equal(NotAMemberErrorExported);
+      expect(NotAMemberError).toBe(NotAMemberErrorExported);
     });
     it('UnexpectedKeyError', () => {
-      expect(UnexpectedKeyError).to.be.equal(UnexpectedKeyErrorExported);
+      expect(UnexpectedKeyError).toBe(UnexpectedKeyErrorExported);
     });
     it('UnknownError', () => {
-      expect(UnknownError).to.be.equal(UnknownErrorExported);
+      expect(UnknownError).toBe(UnknownErrorExported);
     });
     it('TypeDescriberExistsError', () => {
-      expect(TypeDescriberExistsError).to.be.equal(
-        TypeDescriberExistsErrorExported
-      );
+      expect(TypeDescriberExistsError).toBe(TypeDescriberExistsErrorExported);
     });
     it('TypeDescriberNotFoundError', () => {
-      expect(TypeDescriberNotFoundError).to.be.equal(
+      expect(TypeDescriberNotFoundError).toBe(
         TypeDescriberNotFoundErrorExported
       );
     });
     it('PatternValidatorExistError', () => {
-      expect(PatternValidatorExistError).to.be.equal(
+      expect(PatternValidatorExistError).toBe(
         PatternValidatorExistErrorExported
       );
     });
     it('PatternValidatorNotFoundError', () => {
-      expect(PatternValidatorNotFoundError).to.be.equal(
+      expect(PatternValidatorNotFoundError).toBe(
         PatternValidatorNotFoundErrorExported
       );
     });
     it('UndefinableClassError', () => {
-      expect(UndefinableClassError).to.be.equal(UndefinableClassErrorExported);
+      expect(UndefinableClassError).toBe(UndefinableClassErrorExported);
     });
     it('TypeConverterExists', () => {
-      expect(TypeConverterExists).to.be.equal(TypeConverterExistsExported);
+      expect(TypeConverterExists).toBe(TypeConverterExistsExported);
     });
   });
 
   describe('patterns', () => {
     it('Any', () => {
-      expect(Any).to.be.equal(AnyExported);
+      expect(Any).toBe(AnyExported);
     });
     it('Class', () => {
-      expect(Class).to.be.equal(ClassExported);
+      expect(Class).toBe(ClassExported);
     });
     it('Collection', () => {
-      expect(Collection).to.be.equal(CollectionExported);
+      expect(Collection).toBe(CollectionExported);
     });
     it('CollectionIncluding', () => {
-      expect(CollectionIncluding).to.be.equal(CollectionIncludingExported);
+      expect(CollectionIncluding).toBe(CollectionIncludingExported);
     });
     it('CollectionWithin', () => {
-      expect(CollectionWithin).to.be.equal(CollectionWithinExported);
+      expect(CollectionWithin).toBe(CollectionWithinExported);
     });
     it('Equals', () => {
-      expect(Equals).to.be.equal(EqualsExported);
+      expect(Equals).toBe(EqualsExported);
     });
     it('InstanceOf', () => {
-      expect(InstanceOf).to.be.equal(InstanceOfExported);
+      expect(InstanceOf).toBe(InstanceOfExported);
     });
     it('Integer', () => {
-      expect(Integer).to.be.equal(IntegerExported);
+      expect(Integer).toBe(IntegerExported);
     });
     it('Interface', () => {
-      expect(Interface).to.be.equal(InterfaceExported);
+      expect(Interface).toBe(InterfaceExported);
     });
     it('InternalPattern', () => {
-      expect(InternalPattern).to.be.equal(InternalPatternExported);
+      expect(InternalPattern).toBe(InternalPatternExported);
     });
     it('List', () => {
-      expect(List).to.be.equal(ListExported);
+      expect(List).toBe(ListExported);
     });
     it('LocaleString', () => {
-      expect(LocaleString).to.be.equal(LocaleStringExported);
+      expect(LocaleString).toBe(LocaleStringExported);
     });
     it('Maybe', () => {
-      expect(Maybe).to.be.equal(MaybeExported);
+      expect(Maybe).toBe(MaybeExported);
     });
     it('Never', () => {
-      expect(Never).to.be.equal(NeverExported);
+      expect(Never).toBe(NeverExported);
     });
     it('OneOf', () => {
-      expect(OneOf).to.be.equal(OneOfExported);
+      expect(OneOf).toBe(OneOfExported);
     });
     it('Optional', () => {
-      expect(Optional).to.be.equal(OptionalExported);
+      expect(Optional).toBe(OptionalExported);
     });
     it('Tuple', () => {
-      expect(Tuple).to.be.equal(TupleExported);
+      expect(Tuple).toBe(TupleExported);
     });
     it('Unknown', () => {
-      expect(Unknown).to.be.equal(UnknownExported);
+      expect(Unknown).toBe(UnknownExported);
     });
     it('Unrecognized', () => {
-      expect(Unrecognized).to.be.equal(UnrecognizedExported);
+      expect(Unrecognized).toBe(UnrecognizedExported);
     });
     it('Void', () => {
-      expect(Void).to.be.equal(VoidExported);
+      expect(Void).toBe(VoidExported);
     });
     it('Where', () => {
-      expect(Where).to.be.equal(WhereExported);
+      expect(Where).toBe(WhereExported);
     });
     it('WrapperPattern', () => {
-      expect(WrapperPattern).to.be.equal(WrapperPatternExported);
+      expect(WrapperPattern).toBe(WrapperPatternExported);
     });
   });
 
   describe('', () => {
     it('PropsOf', () => {
-      expect(PropsOf).to.be.equal(PropsOfExported);
+      expect(PropsOf).toBe(PropsOfExported);
     });
     it('TypeOf', () => {
-      expect(TypeOf).to.be.equal(TypeOfExported);
+      expect(TypeOf).toBe(TypeOfExported);
     });
   });
 
   describe('validators', () => {
     it('AnyValidator', () => {
-      expect(AnyValidator).to.be.equal(AnyValidatorExported);
+      expect(AnyValidator).toBe(AnyValidatorExported);
     });
     it('ClassValidator', () => {
-      expect(ClassValidator).to.be.equal(ClassValidatorExported);
+      expect(ClassValidator).toBe(ClassValidatorExported);
     });
     it('CollectionIncludingValidator', () => {
-      expect(CollectionIncludingValidator).to.be.equal(
+      expect(CollectionIncludingValidator).toBe(
         CollectionIncludingValidatorExported
       );
     });
     it('CollectionWithinValidator', () => {
-      expect(CollectionWithinValidator).to.be.equal(
-        CollectionWithinValidatorExported
-      );
+      expect(CollectionWithinValidator).toBe(CollectionWithinValidatorExported);
     });
     it('CollectionValidator', () => {
-      expect(CollectionValidator).to.be.equal(CollectionValidatorExported);
+      expect(CollectionValidator).toBe(CollectionValidatorExported);
     });
     it('EqualsValidator', () => {
-      expect(EqualsValidator).to.be.equal(EqualsValidatorExported);
+      expect(EqualsValidator).toBe(EqualsValidatorExported);
     });
     it('InstanceOfValidator', () => {
-      expect(InstanceOfValidator).to.be.equal(InstanceOfValidatorExported);
+      expect(InstanceOfValidator).toBe(InstanceOfValidatorExported);
     });
     it('IntegerValidator', () => {
-      expect(IntegerValidator).to.be.equal(IntegerValidatorExported);
+      expect(IntegerValidator).toBe(IntegerValidatorExported);
     });
     it('InterfaceValidator', () => {
-      expect(InterfaceValidator).to.be.equal(InterfaceValidatorExported);
+      expect(InterfaceValidator).toBe(InterfaceValidatorExported);
     });
     it('InternalValidator', () => {
-      expect(InternalValidator).to.be.equal(InternalValidatorExported);
+      expect(InternalValidator).toBe(InternalValidatorExported);
     });
     it('ListValidator', () => {
-      expect(ListValidator).to.be.equal(ListValidatorExported);
+      expect(ListValidator).toBe(ListValidatorExported);
     });
     it('LocaleStringValidator', () => {
-      expect(LocaleStringValidator).to.be.equal(LocaleStringValidatorExported);
+      expect(LocaleStringValidator).toBe(LocaleStringValidatorExported);
     });
     it('MaybeValidator', () => {
-      expect(MaybeValidator).to.be.equal(MaybeValidatorExported);
+      expect(MaybeValidator).toBe(MaybeValidatorExported);
     });
     it('NeverValidator', () => {
-      expect(NeverValidator).to.be.equal(NeverValidatorExported);
+      expect(NeverValidator).toBe(NeverValidatorExported);
     });
     it('OneOfValidator', () => {
-      expect(OneOfValidator).to.be.equal(OneOfValidatorExported);
+      expect(OneOfValidator).toBe(OneOfValidatorExported);
     });
     it('OptionalValidator', () => {
-      expect(OptionalValidator).to.be.equal(OptionalValidatorExported);
+      expect(OptionalValidator).toBe(OptionalValidatorExported);
     });
     it('TupleValidator', () => {
-      expect(TupleValidator).to.be.equal(TupleValidatorExported);
+      expect(TupleValidator).toBe(TupleValidatorExported);
     });
     it('UnknownValidator', () => {
-      expect(UnknownValidator).to.be.equal(UnknownValidatorExported);
+      expect(UnknownValidator).toBe(UnknownValidatorExported);
     });
     it('UnrecognizedValidator', () => {
-      expect(UnrecognizedValidator).to.be.equal(UnrecognizedValidatorExported);
+      expect(UnrecognizedValidator).toBe(UnrecognizedValidatorExported);
     });
     it('VoidValidator', () => {
-      expect(VoidValidator).to.be.equal(VoidValidatorExported);
+      expect(VoidValidator).toBe(VoidValidatorExported);
     });
     it('WhereValidator', () => {
-      expect(WhereValidator).to.be.equal(WhereValidatorExported);
+      expect(WhereValidator).toBe(WhereValidatorExported);
     });
   });
 
   describe('describers', () => {
     it('ArrayDescriber', () => {
-      expect(ArrayDescriber).to.be.equal(ArrayDescriberExported);
+      expect(ArrayDescriber).toBe(ArrayDescriberExported);
     });
     it('ErrorDescriber', () => {
-      expect(ErrorDescriber).to.be.equal(ErrorDescriberExported);
+      expect(ErrorDescriber).toBe(ErrorDescriberExported);
     });
     it('NativeTypeDescriber', () => {
-      expect(NativeTypeDescriber).to.be.equal(NativeTypeDescriberExported);
+      expect(NativeTypeDescriber).toBe(NativeTypeDescriberExported);
     });
     it('ObjectDescriber', () => {
-      expect(ObjectDescriber).to.be.equal(ObjectDescriberExported);
+      expect(ObjectDescriber).toBe(ObjectDescriberExported);
     });
     it('CompactDescriber', () => {
-      expect(CompactDescriber).to.be.equal(CompactDescriberExported);
+      expect(CompactDescriber).toBe(CompactDescriberExported);
     });
     it('ClassDescriber', () => {
-      expect(ClassDescriber).to.be.equal(ClassDescriberExported);
+      expect(ClassDescriber).toBe(ClassDescriberExported);
     });
     it('FallbackDescriber', () => {
-      expect(FallbackDescriber).to.be.equal(FallbackDescriberExported);
+      expect(FallbackDescriber).toBe(FallbackDescriberExported);
     });
     it('DescriptionListDescriber', () => {
-      expect(DescriptionListDescriber).to.be.equal(
-        DescriptionListDescriberExported
-      );
+      expect(DescriptionListDescriber).toBe(DescriptionListDescriberExported);
     });
     it('DebugDescriber', () => {
-      expect(DebugDescriber).to.be.equal(DebugDescriberExported);
+      expect(DebugDescriber).toBe(DebugDescriberExported);
     });
   });
 
   describe('converters', () => {
     it('AnyConverter', () => {
-      expect(AnyConverter).to.be.equal(AnyConverterExported);
+      expect(AnyConverter).toBe(AnyConverterExported);
     });
     it('StringConverter', () => {
-      expect(StringConverter).to.be.equal(StringConverterExported);
+      expect(StringConverter).toBe(StringConverterExported);
     });
     it('NumberConverter', () => {
-      expect(NumberConverter).to.be.equal(NumberConverterExported);
+      expect(NumberConverter).toBe(NumberConverterExported);
     });
     it('BooleanConverter', () => {
-      expect(BooleanConverter).to.be.equal(BooleanConverterExported);
+      expect(BooleanConverter).toBe(BooleanConverterExported);
     });
     it('StringLiteralConverter', () => {
-      expect(StringLiteralConverter).to.be.equal(
-        StringLiteralConverterExported
-      );
+      expect(StringLiteralConverter).toBe(StringLiteralConverterExported);
     });
     it('NumberLiteralConverter', () => {
-      expect(NumberLiteralConverter).to.be.equal(
-        NumberLiteralConverterExported
-      );
+      expect(NumberLiteralConverter).toBe(NumberLiteralConverterExported);
     });
     it('FalseLiteralConverter', () => {
-      expect(FalseLiteralConverter).to.be.equal(FalseLiteralConverterExported);
+      expect(FalseLiteralConverter).toBe(FalseLiteralConverterExported);
     });
     it('TrueLiteralConverter', () => {
-      expect(TrueLiteralConverter).to.be.equal(TrueLiteralConverterExported);
+      expect(TrueLiteralConverter).toBe(TrueLiteralConverterExported);
     });
     it('EnumLiteralConverter', () => {
-      expect(EnumLiteralConverter).to.be.equal(EnumLiteralConverterExported);
+      expect(EnumLiteralConverter).toBe(EnumLiteralConverterExported);
     });
     it('ESSymbolConverter', () => {
-      expect(ESSymbolConverter).to.be.equal(ESSymbolConverterExported);
+      expect(ESSymbolConverter).toBe(ESSymbolConverterExported);
     });
     it('VoidConverter', () => {
-      expect(VoidConverter).to.be.equal(VoidConverterExported);
+      expect(VoidConverter).toBe(VoidConverterExported);
     });
     it('NullConverter', () => {
-      expect(NullConverter).to.be.equal(NullConverterExported);
+      expect(NullConverter).toBe(NullConverterExported);
     });
     it('UndefinedConverter', () => {
-      expect(UndefinedConverter).to.be.equal(UndefinedConverterExported);
+      expect(UndefinedConverter).toBe(UndefinedConverterExported);
     });
     it('NeverConverter', () => {
-      expect(NeverConverter).to.be.equal(NeverConverterExported);
+      expect(NeverConverter).toBe(NeverConverterExported);
     });
     it('TupleConverter', () => {
-      expect(TupleConverter).to.be.equal(TupleConverterExported);
+      expect(TupleConverter).toBe(TupleConverterExported);
     });
     it('UnionConverter', () => {
-      expect(UnionConverter).to.be.equal(UnionConverterExported);
+      expect(UnionConverter).toBe(UnionConverterExported);
     });
     it('ReferenceConverter', () => {
-      expect(ReferenceConverter).to.be.equal(ReferenceConverterExported);
+      expect(ReferenceConverter).toBe(ReferenceConverterExported);
     });
     it('ClassConverter', () => {
-      expect(ClassConverter).to.be.equal(ClassConverterExported);
+      expect(ClassConverter).toBe(ClassConverterExported);
     });
     it('UnknownConverter', () => {
-      expect(UnknownConverter).to.be.equal(UnknownConverterExported);
+      expect(UnknownConverter).toBe(UnknownConverterExported);
     });
     it('FunctionConverter', () => {
-      expect(FunctionConverter).to.be.equal(FunctionConverterExported);
+      expect(FunctionConverter).toBe(FunctionConverterExported);
     });
     it('ArrayConverter', () => {
-      expect(ArrayConverter).to.be.equal(ArrayConverterExported);
+      expect(ArrayConverter).toBe(ArrayConverterExported);
     });
     it('PropsOfConverter', () => {
-      expect(PropsOfConverter).to.be.equal(PropsOfConverterExported);
+      expect(PropsOfConverter).toBe(PropsOfConverterExported);
     });
     it('TypeOfConverter', () => {
-      expect(TypeOfConverter).to.be.equal(TypeOfConverterExported);
+      expect(TypeOfConverter).toBe(TypeOfConverterExported);
     });
     it('TSRuntimeConverter', () => {
-      expect(TSRuntimeConverter).to.be.equal(TSRuntimeConverterExported);
+      expect(TSRuntimeConverter).toBe(TSRuntimeConverterExported);
     });
   });
 
   describe('type transformers', () => {
     it('InjectingPropsTransformer', () => {
-      expect(InjectingPropsTransformer).to.be.equal(
-        InjectingPropsTransformerExported
-      );
+      expect(InjectingPropsTransformer).toBe(InjectingPropsTransformerExported);
     });
     it('InternalPropsTransformer', () => {
-      expect(InternalPropsTransformer).to.be.equal(
-        InternalPropsTransformerExported
-      );
+      expect(InternalPropsTransformer).toBe(InternalPropsTransformerExported);
     });
   });
 
   describe('components', () => {
     it('Typend', () => {
-      expect(Typend).to.be.equal(TypendExported);
+      expect(Typend).toBe(TypendExported);
     });
     it('Validator', () => {
-      expect(Validator).to.be.equal(ValidatorExported);
+      expect(Validator).toBe(ValidatorExported);
     });
     it('Describer', () => {
-      expect(Describer).to.be.equal(DescriberExported);
+      expect(Describer).toBe(DescriberExported);
     });
     it('Description', () => {
-      expect(Description).to.be.equal(DescriptionExported);
+      expect(Description).toBe(DescriptionExported);
     });
     it('DescriptionList', () => {
-      expect(DescriptionList).to.be.equal(DescriptionListExported);
+      expect(DescriptionList).toBe(DescriptionListExported);
     });
     it('Pattern', () => {
-      expect(Pattern).to.be.equal(PatternExported);
+      expect(Pattern).toBe(PatternExported);
     });
     it('PatternValidator', () => {
-      expect(PatternValidator).to.be.equal(PatternValidatorExported);
+      expect(PatternValidator).toBe(PatternValidatorExported);
     });
     it('isInstanceOfExpectation', () => {
-      expect(isInstanceOfExpectation).to.be.equal(
-        isInstanceOfExpectationExported
-      );
+      expect(isInstanceOfExpectation).toBe(isInstanceOfExpectationExported);
     });
 
     describe('helpers', () => {
       it('getResolvablePath', () => {
-        expect(getResolvablePath).to.be.equal(getResolvablePathExported);
+        expect(getResolvablePath).toBe(getResolvablePathExported);
       });
       it('isResolvablePath', () => {
-        expect(isResolvablePath).to.be.equal(isResolvablePathExported);
+        expect(isResolvablePath).toBe(isResolvablePathExported);
       });
       it('isPatternClass', () => {
-        expect(isPatternClass).to.be.equal(isPatternClassExported);
+        expect(isPatternClass).toBe(isPatternClassExported);
       });
       it('isPattern', () => {
-        expect(isPattern).to.be.equal(isPatternExported);
+        expect(isPattern).toBe(isPatternExported);
       });
       it('isUtility', () => {
-        expect(isUtility).to.be.equal(isUtilityExported);
+        expect(isUtility).toBe(isUtilityExported);
       });
       it('isType', () => {
-        expect(isType).to.be.equal(isTypeExported);
+        expect(isType).toBe(isTypeExported);
       });
       it('isValidable', () => {
-        expect(isValidable).to.be.equal(isValidableExported);
+        expect(isValidable).toBe(isValidableExported);
       });
       it('getMatchingParentProto', () => {
-        expect(getMatchingParentProto).to.be.equal(
-          getMatchingParentProtoExported
-        );
+        expect(getMatchingParentProto).toBe(getMatchingParentProtoExported);
       });
       it('isSpecial', () => {
-        expect(isSpecial).to.be.equal(isSpecialExported);
+        expect(isSpecial).toBe(isSpecialExported);
       });
     });
   });
 
   describe('typend end-api', () => {
     it('typend', () => {
-      expect(typend).to.be.instanceof(Typend);
+      expect(typend).toBeInstanceOf(Typend);
     });
     it('validator', () => {
-      expect(validator).to.be.instanceOf(Validator);
+      expect(validator).toBeInstanceOf(Validator);
     });
     it('describer', () => {
-      expect(describer).to.be.instanceOf(Describer);
+      expect(describer).toBeInstanceOf(Describer);
     });
     it('converter', () => {
-      expect(converter).to.be.instanceOf(TSRuntimeConverter);
+      expect(converter).toBeInstanceOf(TSRuntimeConverter);
     });
     it('validate', () => {
-      expect(validate).to.be.instanceof(Function);
+      expect(validate).toBeInstanceOf(Function);
     });
     it('isValid', () => {
-      expect(isValid).to.be.instanceof(Function);
+      expect(isValid).toBeInstanceOf(Function);
     });
     it('isInstanceOf', () => {
-      expect(isInstanceOf).to.be.instanceof(Function);
+      expect(isInstanceOf).toBeInstanceOf(Function);
     });
     it('check', () => {
-      expect(check).to.be.instanceof(Function);
+      expect(check).toBeInstanceOf(Function);
     });
     it('is', () => {
-      expect(is).to.be.instanceof(Function);
+      expect(is).toBeInstanceOf(Function);
     });
     it('instanceOf', () => {
-      expect(instanceOf).to.be.instanceof(Function);
+      expect(instanceOf).toBeInstanceOf(Function);
     });
     it('convert', () => {
-      expect(convert).to.be.instanceof(Function);
+      expect(convert).toBeInstanceOf(Function);
     });
     it('reflect', () => {
-      expect(reflect).to.be.instanceof(Function);
+      expect(reflect).toBeInstanceOf(Function);
     });
 
     describe('default api for patterns', () => {
       it('any', () => {
-        expect(any).to.be.instanceof(Any);
+        expect(any).toBeInstanceOf(Any);
       });
       it('iof', () => {
-        expect(iof(String)).to.be.instanceof(InstanceOf);
+        expect(iof(String)).toBeInstanceOf(InstanceOf);
       });
       it('collection', () => {
-        expect(collection({})).to.be.instanceof(Collection);
+        expect(collection({})).toBeInstanceOf(Collection);
       });
       it('collectionIncluding', () => {
-        expect(collectionIncluding({})).to.be.instanceof(CollectionIncluding);
+        expect(collectionIncluding({})).toBeInstanceOf(CollectionIncluding);
       });
       it('collectionWithin', () => {
-        expect(collectionWithin({})).to.be.instanceof(CollectionWithin);
+        expect(collectionWithin({})).toBeInstanceOf(CollectionWithin);
       });
       it('eq', () => {
-        expect(eq('my-value')).to.be.instanceof(Equals);
+        expect(eq('my-value')).toBeInstanceOf(Equals);
       });
       it('integer', () => {
-        expect(integer).to.be.equal(Integer);
+        expect(integer).toBe(Integer);
       });
       it('list', () => {
-        expect(list([String])).to.be.instanceof(List);
+        expect(list([String])).toBeInstanceOf(List);
       });
       it('maybe', () => {
-        expect(maybe('my-value')).to.be.instanceof(Maybe);
+        expect(maybe('my-value')).toBeInstanceOf(Maybe);
       });
       it('never', () => {
-        expect(never).to.be.instanceof(Never);
+        expect(never).toBeInstanceOf(Never);
       });
       it('oneOf', () => {
-        expect(oneOf([String, Number])).to.be.instanceof(OneOf);
+        expect(oneOf([String, Number])).toBeInstanceOf(OneOf);
       });
       it('optional', () => {
-        expect(optional(String)).to.be.instanceof(Optional);
+        expect(optional(String)).toBeInstanceOf(Optional);
       });
       it('unknown', () => {
-        expect(unknown).to.be.instanceof(Unknown);
+        expect(unknown).toBeInstanceOf(Unknown);
       });
       it('unrecognized', () => {
-        expect(unrecognized('my-unrecognized-value')).to.be.instanceof(
+        expect(unrecognized('my-unrecognized-value')).toBeInstanceOf(
           Unrecognized
         );
       });
       it('voided', () => {
-        expect(voided).to.be.instanceof(Void);
+        expect(voided).toBeInstanceOf(Void);
       });
       it('where', () => {
-        expect(where((): boolean => true)).to.be.instanceof(Where);
+        expect(where((): boolean => true)).toBeInstanceOf(Where);
       });
       it('tuple', () => {
-        expect(tuple([String, Number, 'my-value'])).to.be.instanceof(Tuple);
+        expect(tuple([String, Number, 'my-value'])).toBeInstanceOf(Tuple);
       });
       it('string', () => {
-        expect(string).to.be.equal(String);
+        expect(string).toBe(String);
       });
       it('number', () => {
-        expect(number).to.be.equal(Number);
+        expect(number).toBe(Number);
       });
       it('boolean', () => {
-        expect(boolean).to.be.equal(Boolean);
+        expect(boolean).toBe(Boolean);
       });
       it('symbol', () => {
-        expect(symbol).to.be.equal(Symbol);
+        expect(symbol).toBe(Symbol);
       });
     });
 
     describe('PropTypes api for patterns', () => {
       it('PropType.any', () => {
-        expect(PropTypes.any).to.be.instanceof(Any);
+        expect(PropTypes.any).toBeInstanceOf(Any);
       });
 
       it('PropType.array', () => {
-        expect(PropTypes.array).to.be.equal(Array);
+        expect(PropTypes.array).toBe(Array);
       });
 
       it('PropType.arrayOf', () => {
-        expect(PropTypes.arrayOf()).to.be.instanceof(List);
+        expect(PropTypes.arrayOf()).toBeInstanceOf(List);
       });
 
       it('PropTypes.bool', () => {
-        expect(PropTypes.bool).to.be.equal(Boolean);
+        expect(PropTypes.bool).toBe(Boolean);
       });
 
       it('PropTypes.func', () => {
-        expect(PropTypes.func).to.be.equal(Function);
+        expect(PropTypes.func).toBe(Function);
       });
 
       it('PropType.equal', () => {
-        expect(PropTypes.equal('my-value')).to.be.instanceof(Equals);
+        expect(PropTypes.equal('my-value')).toBeInstanceOf(Equals);
       });
 
       it('PropTypes.instanceOf', () => {
-        expect(PropTypes.instanceOf(String)).to.be.instanceof(InstanceOf);
+        expect(PropTypes.instanceOf(String)).toBeInstanceOf(InstanceOf);
       });
 
       it('PropTypes.integer', () => {
-        expect(PropTypes.integer).to.be.equal(Integer);
+        expect(PropTypes.integer).toBe(Integer);
       });
 
       it('PropTypes.Integer', () => {
-        expect(PropTypes.integer).to.be.equal(Integer);
+        expect(PropTypes.integer).toBe(Integer);
       });
 
       it('PropTypes.interface', () => {
-        expect(PropTypes.interface({})).to.be.instanceof(Interface);
+        expect(PropTypes.interface({})).toBeInstanceOf(Interface);
       });
 
       it('PropTypes.maybe', () => {
-        expect(PropTypes.maybe('my-value')).to.be.instanceof(Maybe);
+        expect(PropTypes.maybe('my-value')).toBeInstanceOf(Maybe);
       });
 
       it('PropTypes.never', () => {
-        expect(PropTypes.never).to.be.instanceof(Never);
+        expect(PropTypes.never).toBeInstanceOf(Never);
       });
 
       it('PropTypes.number', () => {
-        expect(PropTypes.number).to.be.equal(Number);
+        expect(PropTypes.number).toBe(Number);
       });
 
       it('PropTypes.object', () => {
-        expect(PropTypes.object).to.be.instanceof(Collection);
+        expect(PropTypes.object).toBeInstanceOf(Collection);
       });
 
       it('PropTypes.objectOf', () => {
-        expect(PropTypes.objectOf(PropTypes.number)).to.be.instanceof(
-          Collection
-        );
+        expect(PropTypes.objectOf(PropTypes.number)).toBeInstanceOf(Collection);
       });
 
       it('PropTypes.oneOf', () => {
-        expect(PropTypes.oneOf([1, 'my-string'])).to.be.instanceof(OneOf);
+        expect(PropTypes.oneOf([1, 'my-string'])).toBeInstanceOf(OneOf);
       });
 
       it('PropTypes.oneOfType', () => {
-        expect(PropTypes.oneOfType([String, Number])).to.be.instanceof(OneOf);
+        expect(PropTypes.oneOfType([String, Number])).toBeInstanceOf(OneOf);
       });
 
       it('PropTypes.shape', () => {
-        expect(PropTypes.shape({})).to.be.instanceof(Collection);
+        expect(PropTypes.shape({})).toBeInstanceOf(Collection);
       });
 
       it('PropTypes.string', () => {
-        expect(PropTypes.string).to.be.equal(String);
+        expect(PropTypes.string).toBe(String);
       });
 
       it('PropTypes.symbol', () => {
-        expect(PropTypes.symbol).to.be.equal(Symbol);
+        expect(PropTypes.symbol).toBe(Symbol);
       });
 
       it('PropTypes.tuple', () => {
-        expect(PropTypes.tuple([String, Number, 'my-value'])).to.be.instanceof(
+        expect(PropTypes.tuple([String, Number, 'my-value'])).toBeInstanceOf(
           Tuple
         );
       });
 
       it('PropTypes.void', () => {
-        expect(PropTypes.void).to.be.instanceof(Void);
+        expect(PropTypes.void).toBeInstanceOf(Void);
       });
 
       it('PropTypes.where', () => {
-        expect(PropTypes.where((): boolean => true)).to.be.instanceof(Where);
+        expect(PropTypes.where((): boolean => true)).toBeInstanceOf(Where);
       });
     });
     it('propsOf', () => {
       class MyClass {}
-      expect(propsOf(MyClass)).to.be.instanceof(PropsOf);
+      expect(propsOf(MyClass)).toBeInstanceOf(PropsOf);
     });
     it('typeOf', () => {
       class MyClass {}
-      expect(typeOf(MyClass)).to.be.instanceof(TypeOf);
+      expect(typeOf(MyClass)).toBeInstanceOf(TypeOf);
     });
   });
 
   describe('chai', () => {
     it('equivalentClassChaiExported', () => {
-      expect(equivalentClassChai).to.be.equal(equivalentClassChaiExported);
+      expect(equivalentClassChai).toBe(equivalentClassChaiExported);
     });
   });
 });

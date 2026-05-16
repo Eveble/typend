@@ -1,15 +1,20 @@
-import { expect, use } from 'chai';
-import { stubInterface } from 'ts-sinon';
-import sinonChai from 'sinon-chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
-import sinon from 'sinon';
 import { InstanceOfValidator } from '../../../src/validators/instance-of-validator';
 import { InstanceOf } from '../../../src/patterns/instance-of';
 import { types } from '../../../src/types';
 import { PatternValidator } from '../../../src/pattern-validator';
 import { UnmatchedTypeError, InvalidTypeError } from '../../../src/errors';
-
-use(sinonChai);
 
 describe(`InstanceOfValidator`, () => {
   let describer: any;
@@ -38,24 +43,25 @@ describe(`InstanceOfValidator`, () => {
   type Matches = [any, any][];
 
   it(`extends PatternValidator`, () => {
-    expect(InstanceOfValidator.prototype).to.instanceof(PatternValidator);
+    expect(InstanceOfValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
-    context('explicit expectation', () => {
+    describe('explicit expectation', () => {
       it('returns true for pattern instance of InstanceOf', () => {
         const instanceOfValidator = new InstanceOfValidator();
-        expect(instanceOfValidator.canValidate(new InstanceOf(String))).to.be
-          .true;
+        expect(instanceOfValidator.canValidate(new InstanceOf(String))).toBe(
+          true
+        );
       });
     });
 
-    context('implicit expectation', () => {
-      context('valid', () => {
+    describe('implicit expectation', () => {
+      describe('valid', () => {
         it('returns true for valid expectation as nil', () => {
           const instanceOfValidator = new InstanceOfValidator();
-          expect(instanceOfValidator.canValidate(undefined)).to.be.true;
-          expect(instanceOfValidator.canValidate(null)).to.be.true;
+          expect(instanceOfValidator.canValidate(undefined)).toBe(true);
+          expect(instanceOfValidator.canValidate(null)).toBe(true);
         });
 
         it('returns true for valid expectation as constructor types', () => {
@@ -95,24 +101,24 @@ describe(`InstanceOfValidator`, () => {
             expect(
               instanceOfValidator.canValidate(expectation),
               `Expected expectation ${expectationStr} to be valid`
-            ).to.true;
+            ).toBe(true);
           }
         });
 
         it('returns true for valid expectation as sinon clock date', () => {
-          const clock = sinon.useFakeTimers();
+          const clock = vi.useFakeTimers();
           const instanceOfValidator = new InstanceOfValidator();
           const expectationStr = 'ClockDate(sinon)';
           describer.describe.returns(expectationStr);
           expect(
             instanceOfValidator.canValidate(Date),
             `Expected expectation ${expectationStr} to be valid`
-          ).to.true;
-          clock.restore();
+          ).toBe(true);
+          vi.useRealTimers();
         });
       });
 
-      context('invalid', () => {
+      describe('invalid', () => {
         it('returns false for array instance expectatios', () => {
           const instanceOfValidator = new InstanceOfValidator();
           const expectation = [];
@@ -122,7 +128,7 @@ describe(`InstanceOfValidator`, () => {
           expect(
             instanceOfValidator.canValidate(expectation),
             `Expected expectation ${expectationStr} to be invalid`
-          ).to.false;
+          ).toBe(false);
         });
 
         it('returns false for non-constructor expectations', () => {
@@ -171,7 +177,7 @@ describe(`InstanceOfValidator`, () => {
             expect(
               instanceOfValidator.canValidate(expectation),
               `Expected expectation ${expectationStr} to be invalid`
-            ).to.false;
+            ).toBe(false);
           }
         });
       });
@@ -188,7 +194,7 @@ describe(`InstanceOfValidator`, () => {
       describer.describe.withArgs(value).returns(valueStr);
       describer.describe.withArgs(expectation).returns(expectationStr);
 
-      expect(() => instanceOfValidator.validate(value, expectation)).to.throw(
+      expect(() => instanceOfValidator.validate(value, expectation)).toThrow(
         InvalidTypeError,
         `InstanceOfValidator can't handle Array values, got []`
       );
@@ -199,14 +205,14 @@ describe(`InstanceOfValidator`, () => {
       const value = 'value';
       const instanceOf = new InstanceOf(String);
 
-      expect(instanceOfValidator.validate(value, instanceOf)).to.be.true;
+      expect(instanceOfValidator.validate(value, instanceOf)).toBe(true);
     });
 
-    context('valid values', () => {
+    describe('valid values', () => {
       it('returns true for valid values as nil', () => {
         const instanceOfValidator = new InstanceOfValidator();
-        expect(instanceOfValidator.validate(undefined, undefined)).to.be.true;
-        expect(instanceOfValidator.validate(null, null)).to.be.true;
+        expect(instanceOfValidator.validate(undefined, undefined)).toBe(true);
+        expect(instanceOfValidator.validate(null, null)).toBe(true);
       });
 
       it('returns true for valid values matching constructor types', () => {
@@ -277,21 +283,21 @@ describe(`InstanceOfValidator`, () => {
         describer.describe.withArgs(value).returns(inspect(value));
         describer.describe.withArgs(expectation).returns(inspect(expectation));
 
-        expect(instanceOfValidator.validate(value, expectation)).to.true;
+        expect(instanceOfValidator.validate(value, expectation)).toBe(true);
       });
 
       it('returns true for valid expectation as sinon clock date', () => {
-        const clock = sinon.useFakeTimers();
+        const clock = vi.useFakeTimers();
         const instanceOfValidator = new InstanceOfValidator();
         const expectationStr = 'ClockDate(sinon)';
         describer.describe.returns(expectationStr);
 
-        expect(instanceOfValidator.validate(new Date(), Date)).to.true;
-        clock.restore();
+        expect(instanceOfValidator.validate(new Date(), Date)).toBe(true);
+        vi.useRealTimers();
       });
     });
 
-    context('invalid values', () => {
+    describe('invalid values', () => {
       it('throws UnmatchedTypeError for not matching constructor values', () => {
         class FirstClass {}
         class SecondClass {}
@@ -305,7 +311,7 @@ describe(`InstanceOfValidator`, () => {
         describer.describe.withArgs(value).returns(valueStr);
         describer.describe.withArgs(expectation).returns(expectationStr);
 
-        expect(() => instanceOfValidator.validate(value, expectation)).to.throw(
+        expect(() => instanceOfValidator.validate(value, expectation)).toThrow(
           UnmatchedTypeError,
           `Expected ${valueStr} to be a ${expectationStr}`
         );
@@ -321,7 +327,7 @@ describe(`InstanceOfValidator`, () => {
         describer.describe.withArgs(value).returns(valueStr);
         describer.describe.withArgs(expectation).returns(expectationStr);
 
-        expect(() => instanceOfValidator.validate(value, expectation)).to.throw(
+        expect(() => instanceOfValidator.validate(value, expectation)).toThrow(
           UnmatchedTypeError,
           `Expected ${valueStr} to be a ${expectationStr}`
         );
@@ -339,7 +345,7 @@ describe(`InstanceOfValidator`, () => {
         describer.describe.withArgs(value).returns(valueStr);
         describer.describe.withArgs(expectation).returns(expectationStr);
 
-        expect(() => instanceOfValidator.validate(value, expectation)).to.throw(
+        expect(() => instanceOfValidator.validate(value, expectation)).toThrow(
           UnmatchedTypeError,
           `Expected ${valueStr} to be a ${expectationStr}`
         );

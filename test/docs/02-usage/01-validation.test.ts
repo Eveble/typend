@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   UnmatchedTypeError,
@@ -11,8 +20,8 @@ import {
 describe('01-validation', () => {
   describe('TypeScript api', () => {
     it('check', () => {
-      expect(check<string>('im-a-string')).to.be.true;
-      expect(() => check<number>('im-not-a-number')).to.throw(
+      expect(check<string>('im-a-string')).toBe(true);
+      expect(() => check<number>('im-not-a-number')).toThrow(
         UnmatchedTypeError,
         `Expected String("im-not-a-number") to be a Number`
       );
@@ -30,8 +39,8 @@ describe('01-validation', () => {
       validate('foo', /foo/);
     });
     it('validate #3', () => {
-      expect(validate('im-a-string', String)).to.be.true;
-      expect(() => validate('im-not-a-number', Number)).to.throw(
+      expect(validate('im-a-string', String)).toBe(true);
+      expect(() => validate('im-not-a-number', Number)).toThrow(
         UnmatchedTypeError,
         `Expected String("im-not-a-number") to be a Number`
       );
@@ -46,7 +55,7 @@ describe('01-validation', () => {
           this.sentence = sentence;
         }
       }
-      expect(() => new Unicorn('🦄🦄 Charrlieee! 🍌👑' as any)).to.throw(
+      expect(() => new Unicorn('🦄🦄 Charrlieee! 🍌👑' as any)).toThrow(
         UnequalValueError
       );
     });

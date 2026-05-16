@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { InvalidTypeError } from '../../../src/errors';
 import { Pattern } from '../../../src/pattern';
@@ -122,23 +122,23 @@ describe(`Interface`, () => {
   ];
 
   it(`extends Pattern`, () => {
-    expect(Interface.prototype).to.instanceof(Pattern);
+    expect(Interface.prototype).toBeInstanceOf(Pattern);
   });
 
   describe('construction', () => {
     it('takes valid properties as object literal for construction', () => {
       const props = { key: 'value' };
-      expect(new Interface(props)).to.eql(props);
+      expect(new Interface(props)).toEqual(props);
     });
 
     it('takes valid properties as instance of Collection for construction', () => {
       const collection = new Collection({ key: 'value' });
-      expect(new Interface(collection)).to.eql(collection);
+      expect(new Interface(collection)).toEqual(collection);
     });
 
     it(`has assigned 'INTERFACE' as type kind`, () => {
       const pattern = new Interface({});
-      expect(pattern.getKind()).to.be.equal(KINDS.INTERFACE);
+      expect(pattern.getKind()).toBe(KINDS.INTERFACE);
     });
 
     it('throws InvalidTypeError for invalid expectations on construction', () => {
@@ -148,7 +148,7 @@ describe(`Interface`, () => {
         expect(
           () => new Interface(props),
           `Expected expectation ${propsStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidTypeError,
           `Interface properties are invalid. Expected properties to be a plain object or Collection instance describing interface properties, got ${propsStr}`
         );
@@ -162,8 +162,8 @@ describe(`Interface`, () => {
       const intf = new Interface(props);
       const name = 'MyInterface';
       intf.setName(name);
-      expect(intf.getName()).to.be.equal(name);
-      expect((intf as any).name).to.be.equal('my-name');
+      expect(intf.getName()).toBe(name);
+      expect((intf as any).name).toBe('my-name');
     });
 
     it('ensures that interface name is set on prototype and is not leaked to other instances', () => {
@@ -171,8 +171,8 @@ describe(`Interface`, () => {
       firstIntf.setName('first');
       const secondIntf = new Interface({ key: 'second-value' });
       secondIntf.setName('second');
-      expect(firstIntf.getName()).to.be.equal('first');
-      expect(secondIntf.getName()).to.be.equal('second');
+      expect(firstIntf.getName()).toBe('first');
+      expect(secondIntf.getName()).toBe('second');
     });
   });
 });

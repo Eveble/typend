@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { Integer } from '../../../src/patterns/integer';
 import { types } from '../../../src/types';
@@ -16,32 +25,32 @@ describe(`IntegerValidator`, () => {
   });
 
   it(`extends PatternValidator`, () => {
-    expect(IntegerValidator.prototype).to.instanceof(PatternValidator);
+    expect(IntegerValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
-    context('explicit expectation', () => {
+    describe('explicit expectation', () => {
       it('returns true for pattern instance of Integer', () => {
         const intValidator = new IntegerValidator();
-        expect(intValidator.canValidate(new Integer())).to.be.true;
+        expect(intValidator.canValidate(new Integer())).toBe(true);
       });
     });
 
-    context('implicit expectation', () => {
+    describe('implicit expectation', () => {
       it('returns false for any other expectation that is not instance of Integer', () => {
         const intValidator = new IntegerValidator();
-        expect(intValidator.canValidate(undefined)).to.be.false;
-        expect(intValidator.canValidate(null)).to.be.false;
-        expect(intValidator.canValidate(true)).to.be.false;
-        expect(intValidator.canValidate(false)).to.be.false;
-        expect(intValidator.canValidate(Number)).to.be.false;
-        expect(intValidator.canValidate(1)).to.be.false;
+        expect(intValidator.canValidate(undefined)).toBe(false);
+        expect(intValidator.canValidate(null)).toBe(false);
+        expect(intValidator.canValidate(true)).toBe(false);
+        expect(intValidator.canValidate(false)).toBe(false);
+        expect(intValidator.canValidate(Number)).toBe(false);
+        expect(intValidator.canValidate(1)).toBe(false);
       });
     });
   });
 
   describe('validation', () => {
-    context('valid values', () => {
+    describe('valid values', () => {
       it('returns true for valid Integer as number literal', () => {
         const intValidator = new IntegerValidator();
         const integers: number[] = [
@@ -59,12 +68,12 @@ describe(`IntegerValidator`, () => {
           expect(
             intValidator.validate(value),
             `Expected Integer, got ${valueStr}`
-          ).to.true;
+          ).toBe(true);
         }
       });
     });
 
-    context('invalid values', () => {
+    describe('invalid values', () => {
       it('throws InvalidTypeError for any non number values', () => {
         const intValidator = new IntegerValidator();
         const invalidValues: any[] = [
@@ -92,7 +101,7 @@ describe(`IntegerValidator`, () => {
           const invalidValueStr = inspect(invalidValue);
           describer.describe.withArgs(invalidValue).returns(invalidValueStr);
 
-          expect(() => intValidator.validate(invalidValue)).to.throw(
+          expect(() => intValidator.validate(invalidValue)).toThrow(
             InvalidTypeError,
             `Expected Number, got ${invalidValueStr}`
           );
@@ -106,7 +115,7 @@ describe(`IntegerValidator`, () => {
           const valueStr = inspect(value);
           describer.describe.withArgs(value).returns(valueStr);
 
-          expect(() => intValidator.validate(value)).to.throw(
+          expect(() => intValidator.validate(value)).toThrow(
             InvalidValueError,
             `Expected Integer, got ${valueStr}`
           );
@@ -120,7 +129,7 @@ describe(`IntegerValidator`, () => {
           const valueStr = inspect(value);
           describer.describe.withArgs(value).returns(valueStr);
 
-          expect(() => intValidator.validate(value)).to.throw(
+          expect(() => intValidator.validate(value)).toThrow(
             InvalidValueError,
             `Expected Integer, got ${valueStr}`
           );

@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { any, voided, never, reflect } from '../../../src';
 
 describe('03-reflection', () => {
@@ -11,8 +20,8 @@ describe('03-reflection', () => {
     }
 
     const PersonInterface = reflect<Person>();
-    expect(PersonInterface).to.be.instanceof(Object);
-    expect(PersonInterface).to.be.eql({
+    expect(PersonInterface).toBeInstanceOf(Object);
+    expect(PersonInterface).toEqual({
       firstName: String,
       lastName: String,
       height: Number,
@@ -21,26 +30,26 @@ describe('03-reflection', () => {
   });
 
   it('constructors', () => {
-    expect(reflect<any>()).to.be.eql(any);
-    expect(reflect<string>()).to.be.eql(String);
-    expect(reflect<number>()).to.be.eql(Number);
-    expect(reflect<boolean>()).to.be.eql(Boolean);
-    expect(reflect<null>()).to.be.equal(null);
-    expect(reflect<undefined>()).to.be.equal(undefined);
-    expect(reflect<void>()).to.be.eql(voided);
-    expect(reflect<never>()).to.be.eql(never);
-    expect(reflect<Record<any, any>>()).to.be.eql({});
-    expect(reflect<string[]>()).to.be.eql([String]);
-    expect(reflect<[string, number]>()).to.be.eql([String, Number]);
-    expect(reflect<Date>()).to.be.eql(Date);
+    expect(reflect<any>()).toEqual(any);
+    expect(reflect<string>()).toEqual(String);
+    expect(reflect<number>()).toEqual(Number);
+    expect(reflect<boolean>()).toEqual(Boolean);
+    expect(reflect<null>()).toBe(null);
+    expect(reflect<undefined>()).toBe(undefined);
+    expect(reflect<void>()).toEqual(voided);
+    expect(reflect<never>()).toEqual(never);
+    expect(reflect<Record<any, any>>()).toEqual({});
+    expect(reflect<string[]>()).toEqual([String]);
+    expect(reflect<[string, number]>()).toEqual([String, Number]);
+    expect(reflect<Date>()).toEqual(Date);
   });
 
   it('literals', () => {
-    expect(reflect<'foo'>()).to.be.eql('foo');
-    expect(reflect<1337>()).to.be.eql(1337);
-    expect(reflect<true>()).to.be.eql(true);
-    expect(reflect<false>()).to.be.eql(false);
-    expect(reflect<{ key: string }>()).to.be.eql({ key: String });
-    expect(reflect<['foo', 1337]>()).to.be.eql(['foo', 1337]);
+    expect(reflect<'foo'>()).toEqual('foo');
+    expect(reflect<1337>()).toEqual(1337);
+    expect(reflect<true>()).toEqual(true);
+    expect(reflect<false>()).toEqual(false);
+    expect(reflect<{ key: string }>()).toEqual({ key: String });
+    expect(reflect<['foo', 1337]>()).toEqual(['foo', 1337]);
   });
 });

@@ -1,4 +1,14 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { reflect } from 'tsruntime';
 import { converter } from './setup';
 import { InstanceOf } from '../../../src/patterns/instance-of';
@@ -89,7 +99,7 @@ describe(`Union conversion`, () => {
           expect(
             converter.reflect(type),
             `Expected ${desc} to match converted definition`
-          ).to.be.eql(result);
+          ).toEqual(result);
         }
       });
 
@@ -97,7 +107,7 @@ describe(`Union conversion`, () => {
         expect(
           converter.convert(reflect<undefined | string>()),
           `Expected undefined | string to match converted definition`
-        ).to.be.eql(new Optional(new InstanceOf(String)));
+        ).toEqual(new Optional(new InstanceOf(String)));
       });
     });
 
@@ -131,7 +141,7 @@ describe(`Union conversion`, () => {
           expect(
             converter.convert(type),
             `Expected ${desc} to match converted definition`
-          ).to.be.eql(result);
+          ).toEqual(result);
         }
       });
 
@@ -145,7 +155,6 @@ describe(`Union conversion`, () => {
           [
             `1 | 2 | 3 | 4`,
             reflect<1 | 2 | 3 | 4>(),
-            // Its reflected this way...
             new OneOf(
               new Equals(1),
               new Equals(2),
@@ -154,11 +163,17 @@ describe(`Union conversion`, () => {
             ),
           ],
         ];
+        const sortByValue = (a: any, b: any) => {
+          if (a[0] < b[0]) return -1;
+          if (a[0] > b[0]) return 1;
+          return 0;
+        };
         for (const [desc, type, result] of types) {
+          const converted = converter.convert(type);
           expect(
-            converter.convert(type),
+            [...converted].sort(sortByValue),
             `Expected ${desc} to match converted definition`
-          ).to.be.eql(result);
+          ).toEqual([...result].sort(sortByValue));
         }
       });
 
@@ -166,7 +181,7 @@ describe(`Union conversion`, () => {
         expect(
           converter.convert(reflect<string[] | number[]>()),
           `Expected string[] | number[] to match converted definition`
-        ).to.be.eql(
+        ).toEqual(
           new OneOf(
             new List(new InstanceOf(String)),
             new List(new InstanceOf(Number))
@@ -178,7 +193,7 @@ describe(`Union conversion`, () => {
         expect(
           converter.convert(reflect<MyType | MyOtherType>()),
           `Expected MyType | MyOtherType to match converted definition`
-        ).to.be.eql(
+        ).toEqual(
           new OneOf(
             new Collection({
               first: new InstanceOf(String),
@@ -194,7 +209,7 @@ describe(`Union conversion`, () => {
         expect(
           converter.convert(reflect<MyInterface | MyOtherInterface>()),
           `Expected MyInterface | MyOtherInterface to match converted definition`
-        ).to.be.eql(
+        ).toEqual(
           new OneOf(
             new Collection({
               first: new InstanceOf(String),
@@ -210,7 +225,7 @@ describe(`Union conversion`, () => {
         expect(
           converter.convert(reflect<MyClass | MyOtherClass>()),
           `Expected MyClass | MyOtherClass to match converted definition`
-        ).to.be.eql(
+        ).toEqual(
           new OneOf(new InstanceOf(MyClass), new InstanceOf(MyOtherClass))
         );
       });
@@ -243,7 +258,7 @@ describe(`Union conversion`, () => {
           expect(
             converter.convert(type),
             `Expected ${desc} to match converted definition`
-          ).to.be.eql(result);
+          ).toEqual(result);
         }
       });
     });

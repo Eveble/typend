@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { CompositeTypeConverter } from '../../../src/converters/tsruntime/type-converters/composite.converter';
 import { types } from '../../../src';
 
@@ -19,7 +28,7 @@ describe(`CompositeTypeConverter`, () => {
   describe('evaluation', () => {
     it('returns true for composite type (kind 15)', () => {
       const reflectedType = { kind: 15 }; // TypeKind.Object
-      expect(typeConverter.isConvertible(reflectedType)).to.be.true;
+      expect(typeConverter.isConvertible(reflectedType)).toBe(true);
     });
 
     it('returns false for non-composite types', () => {
@@ -29,7 +38,7 @@ describe(`CompositeTypeConverter`, () => {
         { kind: 18 }, // Reference
       ];
       for (const type of examples) {
-        expect(typeConverter.isConvertible(type)).to.be.false;
+        expect(typeConverter.isConvertible(type)).toBe(false);
       }
     });
   });
@@ -37,38 +46,38 @@ describe(`CompositeTypeConverter`, () => {
   describe('converter management', () => {
     it('adds converter to the list', () => {
       typeConverter.add(mockConverter1);
-      expect(typeConverter.size()).to.equal(1);
-      expect(typeConverter.getConverters()).to.include(mockConverter1);
+      expect(typeConverter.size()).toBe(1);
+      expect(typeConverter.getConverters()).toContain(mockConverter1);
     });
 
     it('adds converter at specific index', () => {
       typeConverter.add(mockConverter1);
       typeConverter.add(mockConverter2, 0);
       const converters = typeConverter.getConverters();
-      expect(converters[0]).to.equal(mockConverter2);
-      expect(converters[1]).to.equal(mockConverter1);
+      expect(converters[0]).toBe(mockConverter2);
+      expect(converters[1]).toBe(mockConverter1);
     });
 
     it('removes converter from the list', () => {
       typeConverter.add(mockConverter1);
       typeConverter.add(mockConverter2);
       const removed = typeConverter.remove(mockConverter1);
-      expect(removed).to.be.true;
-      expect(typeConverter.size()).to.equal(1);
+      expect(removed).toBe(true);
+      expect(typeConverter.size()).toBe(1);
       expect(typeConverter.getConverters()).to.not.include(mockConverter1);
     });
 
     it('returns false when removing non-existent converter', () => {
       const removed = typeConverter.remove(mockConverter1);
-      expect(removed).to.be.false;
+      expect(removed).toBe(false);
     });
 
     it('removes converter at specific index', () => {
       typeConverter.add(mockConverter1);
       typeConverter.add(mockConverter2);
       const removed = typeConverter.removeAt(0);
-      expect(removed).to.equal(mockConverter1);
-      expect(typeConverter.size()).to.equal(1);
+      expect(removed).toBe(mockConverter1);
+      expect(typeConverter.size()).toBe(1);
     });
 
     it('sorts converters by priority', () => {
@@ -77,8 +86,8 @@ describe(`CompositeTypeConverter`, () => {
       typeConverter.add(mockConverter1);
       typeConverter.add(mockConverter2);
       const converters = typeConverter.getConverters();
-      expect(converters[0]).to.equal(mockConverter2);
-      expect(converters[1]).to.equal(mockConverter1);
+      expect(converters[0]).toBe(mockConverter2);
+      expect(converters[1]).toBe(mockConverter1);
     });
   });
 
@@ -99,7 +108,7 @@ describe(`CompositeTypeConverter`, () => {
         reflectedType,
         mockTsRuntimeConverter
       );
-      expect(result).to.equal(expectedResult);
+      expect(result).toBe(expectedResult);
     });
 
     it('finds applicable converter for reflection', () => {
@@ -118,7 +127,7 @@ describe(`CompositeTypeConverter`, () => {
         reflectedType,
         mockTsRuntimeConverter
       );
-      expect(result).to.equal(expectedResult);
+      expect(result).toBe(expectedResult);
     });
 
     it('uses last converter when no applicable converter found', () => {
@@ -141,14 +150,14 @@ describe(`CompositeTypeConverter`, () => {
         reflectedType,
         mockTsRuntimeConverter
       );
-      expect(result).to.equal(expectedResult);
+      expect(result).toBe(expectedResult);
     });
 
     it('throws error when no converters available', () => {
       const reflectedType = { kind: 15 };
       expect(() =>
         typeConverter.convert(reflectedType, mockTsRuntimeConverter)
-      ).to.throw('No applicable converter found for type');
+      ).toThrow('No applicable converter found for type');
     });
   });
 });

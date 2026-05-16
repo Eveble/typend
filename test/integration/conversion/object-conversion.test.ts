@@ -1,4 +1,14 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { reflect } from 'tsruntime';
 import { converter } from './setup';
 import { Collection } from '../../../src/patterns/collection';
@@ -52,21 +62,21 @@ describe(`Object conversion`, () => {
       expect(
         converter.convert(reflect<{ key: 'value' }>()),
         `Expected { key: 'value' } to match converted definition`
-      ).to.be.eql(new Collection({ key: new Equals('value') }));
+      ).toEqual(new Collection({ key: new Equals('value') }));
     });
 
     it('returns converted object literal with symbol key and values', () => {
       expect(
         converter.convert(reflect<{ [symbolAsAKey]: string }>()),
         `Expected { [symbolAsAKey]: string } to match converted definition`
-      ).to.be.eql(new Collection({ [symbolAsAKey]: new InstanceOf(String) }));
+      ).toEqual(new Collection({ [symbolAsAKey]: new InstanceOf(String) }));
     });
 
     it('returns converted object literal with nested object', () => {
       expect(
         converter.convert(reflect<{ first: { second: string } }>()),
         `Expected {first: {second: string}} to match converted definition`
-      ).to.be.eql(
+      ).toEqual(
         new Collection({
           first: new Collection({ second: new InstanceOf(String) }),
         })
@@ -84,7 +94,7 @@ describe(`Object conversion`, () => {
         unknown: unknown;
       };
 
-      expect(converter.convert(reflect<NativeObject>())).to.be.eql(
+      expect(converter.convert(reflect<NativeObject>())).toEqual(
         new Collection({
           any: new Any(),
 
@@ -112,7 +122,7 @@ describe(`Object conversion`, () => {
         boolean: boolean;
       };
 
-      expect(converter.convert(reflect<PrimitiveObject>())).to.be.eql(
+      expect(converter.convert(reflect<PrimitiveObject>())).toEqual(
         new Collection({
           null: null,
 
@@ -140,7 +150,7 @@ describe(`Object conversion`, () => {
         false: false;
       };
 
-      expect(converter.convert(reflect<ValueLiteralObject>())).to.be.eql(
+      expect(converter.convert(reflect<ValueLiteralObject>())).toEqual(
         new Collection({
           stringLiteral: new Equals('my-string'),
 
@@ -170,7 +180,7 @@ describe(`Object conversion`, () => {
         defaultEnumLiteral: DefaultEnum;
       };
 
-      expect(converter.convert(reflect<UnionObject>())).to.be.eql(
+      expect(converter.convert(reflect<UnionObject>())).toEqual(
         new Collection({
           optionalString: new Optional(new InstanceOf(String)),
 
@@ -212,7 +222,7 @@ describe(`Object conversion`, () => {
         optionalMixedNestedTuple?: [string, number, [false, true]];
       };
 
-      expect(converter.convert(reflect<TupleObject>())).to.be.eql(
+      expect(converter.convert(reflect<TupleObject>())).toEqual(
         new Collection({
           stringTuple: new Tuple(new InstanceOf(String)),
 
@@ -261,7 +271,7 @@ describe(`Object conversion`, () => {
         objectTypeWithSymbol: ObjectTypeWithSymbol;
       };
 
-      expect(converter.convert(reflect<NestedObject>())).to.be.eql(
+      expect(converter.convert(reflect<NestedObject>())).toEqual(
         new Collection({
           objectTypeWithSymbol: new Collection({
             key: new InstanceOf(String),
@@ -277,7 +287,7 @@ describe(`Object conversion`, () => {
         class: MyClass;
       };
 
-      expect(converter.convert(reflect<ClassObject>())).to.be.eql(
+      expect(converter.convert(reflect<ClassObject>())).toEqual(
         new Collection({
           class: new InstanceOf(MyClass),
         })
@@ -294,7 +304,7 @@ describe(`Object conversion`, () => {
         type: MyType;
       };
 
-      expect(converter.convert(reflect<TypeObject>())).to.be.eql(
+      expect(converter.convert(reflect<TypeObject>())).toEqual(
         new Collection({
           type: new Collection({
             first: new InstanceOf(String),
@@ -314,7 +324,7 @@ describe(`Object conversion`, () => {
         interface: MyInterface;
       };
 
-      expect(converter.convert(reflect<InterfaceObject>())).to.be.eql(
+      expect(converter.convert(reflect<InterfaceObject>())).toEqual(
         new Collection({
           interface: new Interface({
             first: new InstanceOf(String),
@@ -330,7 +340,7 @@ describe(`Object conversion`, () => {
         second: number;
       }
 
-      expect(converter.convert(reflect<MyInterface>())).to.be.eql(
+      expect(converter.convert(reflect<MyInterface>())).toEqual(
         new Interface({
           first: new InstanceOf(String),
           second: new InstanceOf(Number),
@@ -339,7 +349,7 @@ describe(`Object conversion`, () => {
     });
 
     it('returns converted Record as empty Collection instance', () => {
-      expect(converter.convert(reflect<Record<keyof any, any>>())).to.be.eql(
+      expect(converter.convert(reflect<Record<keyof any, any>>())).toEqual(
         new Collection()
       );
     });
@@ -347,7 +357,7 @@ describe(`Object conversion`, () => {
     it('returns converted Record as a type as empty Collection instance', () => {
       type RecordAsAType = Record<keyof any, any>;
 
-      expect(converter.convert(reflect<RecordAsAType>())).to.be.eql(
+      expect(converter.convert(reflect<RecordAsAType>())).toEqual(
         new Collection()
       );
     });
@@ -359,7 +369,7 @@ describe(`Object conversion`, () => {
 
       expect(
         converter.convert(reflect<{ obj: NamedObjectLiteralAsType }>())
-      ).to.be.eql(
+      ).toEqual(
         new Collection({
           obj: new Collection({ key: new InstanceOf(String) }),
         })
@@ -384,15 +394,15 @@ describe(`Object conversion`, () => {
       const collectionKeys = Reflect.ownKeys(converted);
 
       // Should include regular properties and non-eveble symbols
-      expect(collectionKeys).to.include('regularProp');
-      expect(collectionKeys).to.include(regularSymbol);
+      expect(collectionKeys).toContain('regularProp');
+      expect(collectionKeys).toContain(regularSymbol);
 
       // Should exclude eveble symbols
-      expect(collectionKeys).to.not.include(evebleSymbol1);
-      expect(collectionKeys).to.not.include(evebleSymbol2);
+      expect(collectionKeys).not.toContain(evebleSymbol1);
+      expect(collectionKeys).not.toContain(evebleSymbol2);
 
       // Verify the structure
-      expect(converted).to.be.eql(
+      expect(converted).toEqual(
         new Collection({
           regularProp: new InstanceOf(String),
           [regularSymbol]: new InstanceOf(Number),
@@ -410,8 +420,8 @@ describe(`Object conversion`, () => {
       const converted = converter.convert(reflect<OnlyEvebleSymbols>());
 
       // Should return empty Collection since all symbols are filtered
-      expect(converted).to.be.eql(new Collection({}));
-      expect(Reflect.ownKeys(converted).length).to.equal(0);
+      expect(converted).toEqual(new Collection({}));
+      expect(Reflect.ownKeys(converted).length).toBe(0);
     });
 
     it('preserves symbols without "eveble" in their description', () => {
@@ -427,10 +437,10 @@ describe(`Object conversion`, () => {
       const converted = converter.convert(reflect<MixedSymbols>());
       const collectionKeys = Reflect.ownKeys(converted);
 
-      expect(collectionKeys).to.have.lengthOf(3);
-      expect(collectionKeys).to.include('normalKey');
-      expect(collectionKeys).to.include(mySymbol);
-      expect(collectionKeys).to.include(anotherSymbol);
+      expect(collectionKeys).toHaveLength(3);
+      expect(collectionKeys).toContain('normalKey');
+      expect(collectionKeys).toContain(mySymbol);
+      expect(collectionKeys).toContain(anotherSymbol);
     });
   });
 });

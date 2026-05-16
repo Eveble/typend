@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   Type,
@@ -17,14 +26,14 @@ describe('optional', () => {
   }
 
   it('check', () => {
-    expect(convert<Sandwich>()).to.be.eql(
+    expect(convert<Sandwich>()).toEqual(
       new Class(Sandwich, {
         pickles: PropTypes.equal(Boolean).isOptional,
       })
     );
     check<undefined | string>('foo');
     check<undefined | string>(undefined);
-    expect(() => check<undefined | number>('foo')).to.throw(ValidationError);
+    expect(() => check<undefined | number>('foo')).toThrow(ValidationError);
   });
 
   it('validate', () => {
@@ -32,7 +41,7 @@ describe('optional', () => {
     validate('foo', PropTypes.instanceOf(String).isOptional);
     validate('foo', new Optional(String));
 
-    expect(() => validate('foo', PropTypes.equal(Number).isOptional)).to.throw(
+    expect(() => validate('foo', PropTypes.equal(Number).isOptional)).toThrow(
       ValidationError
     );
   });

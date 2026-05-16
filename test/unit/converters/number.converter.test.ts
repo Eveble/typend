@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { reflect } from 'tsruntime';
 import { NumberConverter } from '../../../src/converters/tsruntime/type-converters/number.converter';
 import { InstanceOf } from '../../../src/patterns/instance-of';
@@ -6,25 +15,25 @@ import { InstanceOf } from '../../../src/patterns/instance-of';
 describe(`NumberConverter`, () => {
   let typeConverter: NumberConverter;
 
-  before(() => {
+  beforeAll(() => {
     typeConverter = new NumberConverter();
   });
 
   describe('evaluation', () => {
     it('returns true for number type', () => {
-      expect(typeConverter.isConvertible(reflect<number>())).to.be.true;
+      expect(typeConverter.isConvertible(reflect<number>())).toBe(true);
     });
 
     it('returns false for other primitive types', () => {
-      expect(typeConverter.isConvertible(reflect<string>())).to.be.false;
-      expect(typeConverter.isConvertible(reflect<boolean>())).to.be.false;
-      expect(typeConverter.isConvertible(reflect<symbol>())).to.be.false;
+      expect(typeConverter.isConvertible(reflect<string>())).toBe(false);
+      expect(typeConverter.isConvertible(reflect<boolean>())).toBe(false);
+      expect(typeConverter.isConvertible(reflect<symbol>())).toBe(false);
     });
   });
 
   describe('reflection', () => {
     it('reflects number type to Number constructor', () => {
-      expect(typeConverter.reflect(reflect<number>())).to.be.equal(Number);
+      expect(typeConverter.reflect(reflect<number>())).toBe(Number);
     });
 
     it('reflects number as a type with initializer', () => {
@@ -35,15 +44,15 @@ describe(`NumberConverter`, () => {
         },
       };
       const result = typeConverter.reflect(reflectedType);
-      expect(result).to.be.equal(Number);
+      expect(result).toBe(Number);
     });
   });
 
   describe('conversion', () => {
     it('converts number type to instance of InstanceOf with Number type', () => {
       const result = typeConverter.convert(reflect<number>());
-      expect(result).to.be.instanceof(InstanceOf);
-      expect(result).to.be.eql(new InstanceOf(Number));
+      expect(result).toBeInstanceOf(InstanceOf);
+      expect(result).toEqual(new InstanceOf(Number));
     });
 
     it('converts number as type with initializer', () => {
@@ -54,10 +63,10 @@ describe(`NumberConverter`, () => {
         },
       };
       const result = typeConverter.convert(reflectedType);
-      expect(result).to.be.instanceof(InstanceOf);
-      expect(result).to.be.eql(new InstanceOf(Number));
-      expect(result.hasInitializer()).to.be.true;
-      expect(result.getInitializer()).to.be.equal(69);
+      expect(result).toBeInstanceOf(InstanceOf);
+      expect(result).toEqual(new InstanceOf(Number));
+      expect(result.hasInitializer()).toBe(true);
+      expect(result.getInitializer()).toBe(69);
     });
   });
 });

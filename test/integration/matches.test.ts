@@ -1,4 +1,14 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../vitest-helper';
 import {
   validate,
   any,
@@ -484,7 +494,7 @@ describe(`matching`, () => {
 
   for (const value of values) {
     it(`returns true for ${value[2].replace('Expected', 'expected')}`, () => {
-      expect(validate(value[0], value[1]), value[2]).to.true;
+      expect(validate(value[0], value[1]), value[2]).toBe(true);
     });
   }
 });
@@ -801,7 +811,7 @@ describe(`not matching`, () => {
 
   for (const value of values) {
     it(`throws ValidationError for ${value[2].replace('Expected', 'expected')}`, () => {
-      expect(() => validate(value[0], value[1]), value[2]).to.throw(ValidationError, value[2]);
+      expect(() => validate(value[0], value[1]), value[2]).toThrow(ValidationError);
     });
   }
 });

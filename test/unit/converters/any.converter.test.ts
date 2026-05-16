@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { reflect } from 'tsruntime';
 import { AnyConverter } from '../../../src/converters/tsruntime/type-converters/any.converter';
 import { Any } from '../../../src/patterns/any';
@@ -12,7 +21,7 @@ describe(`AnyConverter`, () => {
 
   describe('evaluation', () => {
     it('returns true for any type', () => {
-      expect(typeConverter.isConvertible(reflect<any>())).to.be.true;
+      expect(typeConverter.isConvertible(reflect<any>())).toBe(true);
     });
 
     it('returns false for non-any types', () => {
@@ -25,7 +34,7 @@ describe(`AnyConverter`, () => {
         reflect<null>(),
       ];
       for (const type of examples) {
-        expect(typeConverter.isConvertible(type)).to.be.false;
+        expect(typeConverter.isConvertible(type)).toBe(false);
       }
     });
   });
@@ -33,14 +42,14 @@ describe(`AnyConverter`, () => {
   describe('reflection', () => {
     it('reflects any type as Any pattern', () => {
       const result = typeConverter.reflect(reflect<any>());
-      expect(result).to.be.instanceof(Any);
+      expect(result).toBeInstanceOf(Any);
     });
   });
 
   describe('conversion', () => {
     it('converts any type to Any pattern', () => {
       const result = typeConverter.convert(reflect<any>());
-      expect(result).to.be.instanceof(Any);
+      expect(result).toBeInstanceOf(Any);
     });
   });
 });

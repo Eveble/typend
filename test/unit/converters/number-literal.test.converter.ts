@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { reflect } from 'tsruntime';
 import { NumberLiteralConverter } from '../../../src/converters/tsruntime/type-converters/number-literal.converter';
 import { Equals } from '../../../src/patterns/equals';
@@ -6,7 +15,7 @@ import { Equals } from '../../../src/patterns/equals';
 describe(`NumberLiteralConverter`, () => {
   let typeConverter: NumberLiteralConverter;
 
-  before(() => {
+  beforeAll(() => {
     typeConverter = new NumberLiteralConverter();
   });
 
@@ -22,31 +31,31 @@ describe(`NumberLiteralConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
     it('returns false for other types', () => {
-      expect(typeConverter.isConvertible(reflect<number>())).to.be.false;
-      expect(typeConverter.isConvertible(reflect<string>())).to.be.false;
-      expect(typeConverter.isConvertible(reflect<'69'>())).to.be.false;
+      expect(typeConverter.isConvertible(reflect<number>())).toBe(false);
+      expect(typeConverter.isConvertible(reflect<string>())).toBe(false);
+      expect(typeConverter.isConvertible(reflect<'69'>())).toBe(false);
     });
   });
 
   describe('reflection', () => {
     it('reflects number literal to its value', () => {
       const reflectedType = { kind: 6, value: 69 };
-      expect(typeConverter.reflect(reflectedType)).to.be.equal(69);
+      expect(typeConverter.reflect(reflectedType)).toBe(69);
     });
 
     it('reflects zero literal', () => {
       const reflectedType = { kind: 6, value: 0 };
-      expect(typeConverter.reflect(reflectedType)).to.be.equal(0);
+      expect(typeConverter.reflect(reflectedType)).toBe(0);
     });
 
     it('reflects negative number literal', () => {
       const reflectedType = { kind: 6, value: -1 };
-      expect(typeConverter.reflect(reflectedType)).to.be.equal(-1);
+      expect(typeConverter.reflect(reflectedType)).toBe(-1);
     });
   });
 
@@ -54,8 +63,8 @@ describe(`NumberLiteralConverter`, () => {
     it('converts number literal to instance of Equals pattern', () => {
       const reflectedType = { kind: 6, value: 69 };
       const result = typeConverter.convert(reflectedType);
-      expect(result).to.be.instanceof(Equals);
-      expect(result).to.be.eql(new Equals(69));
+      expect(result).toBeInstanceOf(Equals);
+      expect(result).toEqual(new Equals(69));
     });
   });
 });

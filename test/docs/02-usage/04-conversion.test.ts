@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   any,
   voided,
@@ -18,51 +27,51 @@ describe('03-reflection', () => {
     }
 
     const PersonInterface = convert<Person>();
-    expect(PersonInterface).to.be.instanceof(Interface);
-    expect(PersonInterface).to.be.eql({
+    expect(PersonInterface).toBeInstanceOf(Interface);
+    expect(PersonInterface).toEqual({
       firstName: PropTypes.instanceOf(String),
       lastName: PropTypes.instanceOf(String),
       height: PropTypes.instanceOf(Number),
       getName: PropTypes.instanceOf(Function),
     });
 
-    expect(convert<'foo'>()).to.be.eql(PropTypes.equal('foo'));
+    expect(convert<'foo'>()).toEqual(PropTypes.equal('foo'));
   });
 
   it('constructors', () => {
-    expect(convert<any>()).to.be.eql(any);
-    expect(convert<string>()).to.be.eql(PropTypes.instanceOf(String));
-    expect(convert<number>()).to.be.eql(PropTypes.instanceOf(Number));
-    expect(convert<boolean>()).to.be.eql(PropTypes.instanceOf(Boolean));
-    expect(convert<null>()).to.be.equal(null);
-    expect(convert<undefined>()).to.be.equal(undefined);
-    expect(convert<void>()).to.be.eql(voided);
-    expect(convert<never>()).to.be.eql(never);
-    expect(convert<Record<any, any>>()).to.be.eql(PropTypes.object);
-    expect(convert<string[]>()).to.be.eql(
+    expect(convert<any>()).toEqual(any);
+    expect(convert<string>()).toEqual(PropTypes.instanceOf(String));
+    expect(convert<number>()).toEqual(PropTypes.instanceOf(Number));
+    expect(convert<boolean>()).toEqual(PropTypes.instanceOf(Boolean));
+    expect(convert<null>()).toBe(null);
+    expect(convert<undefined>()).toBe(undefined);
+    expect(convert<void>()).toEqual(voided);
+    expect(convert<never>()).toEqual(never);
+    expect(convert<Record<any, any>>()).toEqual(PropTypes.object);
+    expect(convert<string[]>()).toEqual(
       PropTypes.arrayOf(PropTypes.instanceOf(String))
     );
-    expect(convert<[string, number]>()).to.be.eql(
+    expect(convert<[string, number]>()).toEqual(
       PropTypes.tuple(
         PropTypes.instanceOf(String),
         PropTypes.instanceOf(Number)
       )
     );
-    expect(convert<Date>()).to.be.eql(PropTypes.instanceOf(Date));
+    expect(convert<Date>()).toEqual(PropTypes.instanceOf(Date));
   });
 
   it('literals', () => {
-    expect(convert<'foo'>()).to.be.eql(PropTypes.equal('foo'));
-    expect(convert<'foo' | 'bar'>()).to.be.eql(
+    expect(convert<'foo'>()).toEqual(PropTypes.equal('foo'));
+    expect(convert<'foo' | 'bar'>()).toEqual(
       PropTypes.oneOf([PropTypes.equal('foo'), PropTypes.equal('bar')])
     );
-    expect(convert<1337>()).to.be.eql(PropTypes.equal(1337));
-    expect(convert<true>()).to.be.eql(PropTypes.equal(true));
-    expect(convert<false>()).to.be.eql(PropTypes.equal(false));
-    expect(convert<{ key: string }>()).to.be.eql(
+    expect(convert<1337>()).toEqual(PropTypes.equal(1337));
+    expect(convert<true>()).toEqual(PropTypes.equal(true));
+    expect(convert<false>()).toEqual(PropTypes.equal(false));
+    expect(convert<{ key: string }>()).toEqual(
       PropTypes.shape({ key: PropTypes.instanceOf(String) })
     );
-    expect(convert<['foo', 1337]>()).to.be.eql(
+    expect(convert<['foo', 1337]>()).toEqual(
       PropTypes.tuple(PropTypes.equal('foo'), PropTypes.equal(1337))
     );
   });

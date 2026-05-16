@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { InvalidTypeError } from '../../../src/errors';
 import { Pattern } from '../../../src/pattern';
@@ -125,7 +125,7 @@ describe(`InstanceOf`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(InstanceOf.prototype).to.instanceof(WrapperPattern);
+    expect(InstanceOf.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
@@ -136,13 +136,13 @@ describe(`InstanceOf`, () => {
         expect(
           new InstanceOf(type),
           `Expected type ${typeStr} to be valid`
-        ).to.eql([type]);
+        ).toEqual([type]);
       }
     });
 
     it(`has assigned 'INSTANCE_OF' as type kind`, () => {
       const pattern = new InstanceOf(String);
-      expect(pattern.getKind()).to.be.equal(KINDS.INSTANCE_OF);
+      expect(pattern.getKind()).toBe(KINDS.INSTANCE_OF);
     });
 
     it('throws InvalidTypeError for invalid type on construction', () => {
@@ -152,7 +152,7 @@ describe(`InstanceOf`, () => {
         expect(
           () => new InstanceOf(type),
           `Expected type ${typeStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidTypeError,
           `InstanceOf type is invalid. Expected type to be nil, a native type constructor, class, got ${typeStr}`
         );
@@ -166,7 +166,7 @@ describe(`InstanceOf`, () => {
       // tries to serialize InstanceOf for test output display
       expect(() => {
         new InstanceOf(1 as any);
-      }).to.not.throw();
+      }).not.toThrow();
     });
 
     it('handles array length property access during serialization', () => {
@@ -178,12 +178,12 @@ describe(`InstanceOf`, () => {
       expect(() => {
         // This mimics accessing array properties during iteration
         const reconstructed = new InstanceOf(instance[0]);
-        expect(reconstructed[0]).to.equal(String);
-      }).to.not.throw();
+        expect(reconstructed[0]).toBe(String);
+      }).not.toThrow();
 
       // Verify the instance still behaves correctly
-      expect(instance[0]).to.equal(String);
-      expect(instance.length).to.equal(1);
+      expect(instance[0]).toBe(String);
+      expect(instance.length).toBe(1);
     });
   });
 });

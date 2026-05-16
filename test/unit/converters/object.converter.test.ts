@@ -1,6 +1,15 @@
 import { Types as tsrTypes, reflect } from 'tsruntime';
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { ObjectConverter } from '../../../src/converters/tsruntime/type-converters/object.converter';
 import { types } from '../../../src/types';
 import { Collection } from '../../../src/patterns/collection';
@@ -14,7 +23,7 @@ describe(`ObjectConverter`, () => {
   let classConverter: any;
   let typeConverter: ObjectConverter;
 
-  before(() => {
+  beforeAll(() => {
     converter = stubInterface<types.Converter>();
     classConverter = stubInterface<types.TypeConverter>();
     typeConverter = new ObjectConverter();
@@ -36,7 +45,7 @@ describe(`ObjectConverter`, () => {
   describe('evaluation', () => {
     it('returns true for Object type (TypeKind.Object = 15)', () => {
       const objectType = { kind: 15 };
-      expect(typeConverter.isConvertible(objectType)).to.be.true;
+      expect(typeConverter.isConvertible(objectType)).toBe(true);
     });
 
     it('returns true for Record type', () => {
@@ -49,7 +58,7 @@ describe(`ObjectConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -57,14 +66,14 @@ describe(`ObjectConverter`, () => {
       expect(
         typeConverter.isConvertible(reflect<{}>()),
         `Expected {} to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns true for object literal with key and values', () => {
       expect(
         typeConverter.isConvertible(reflect<{ key: 'value' }>()),
         `Expected {key: 'value'} to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns true for object literal with symbol key', () => {
@@ -75,7 +84,7 @@ describe(`ObjectConverter`, () => {
           }>()
         ),
         `Expected {[symbolAsAKey]: string} to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns true for object literal with another nested object', () => {
@@ -88,21 +97,21 @@ describe(`ObjectConverter`, () => {
           }>()
         ),
         `Expected {first: {second: string}} to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns true for interface with properties', () => {
       expect(
         typeConverter.isConvertible(reflect<MyInterface>()),
         `Expected MyInterface to be convertible`
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns false for non-object types', () => {
-      expect(typeConverter.isConvertible(reflect<string>())).to.be.false;
-      expect(typeConverter.isConvertible(reflect<number>())).to.be.false;
-      expect(typeConverter.isConvertible({ kind: 16 } as any)).to.be.false; // Tuple
-      expect(typeConverter.isConvertible({ kind: 17 } as any)).to.be.false; // Union
+      expect(typeConverter.isConvertible(reflect<string>())).toBe(false);
+      expect(typeConverter.isConvertible(reflect<number>())).toBe(false);
+      expect(typeConverter.isConvertible({ kind: 16 } as any)).toBe(false); // Tuple
+      expect(typeConverter.isConvertible({ kind: 17 } as any)).toBe(false); // Union
     });
   });
 
@@ -113,8 +122,8 @@ describe(`ObjectConverter`, () => {
         reflect<{}>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Object);
-      expect(objType).to.be.eql({});
+      expect(objType).toBeInstanceOf(Object);
+      expect(objType).toEqual({});
     });
 
     it('returns reflected object literal with key and value', () => {
@@ -123,8 +132,8 @@ describe(`ObjectConverter`, () => {
         reflect<{ key: string }>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Object);
-      expect(objType).to.be.eql({ key: String });
+      expect(objType).toBeInstanceOf(Object);
+      expect(objType).toEqual({ key: String });
     });
 
     it('returns reflected interface with properties', () => {
@@ -134,8 +143,8 @@ describe(`ObjectConverter`, () => {
         reflect<MyInterface>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Object);
-      expect(objType).to.be.eql({ key: String, myMethod: Function });
+      expect(objType).toBeInstanceOf(Object);
+      expect(objType).toEqual({ key: String, myMethod: Function });
     });
 
     it('ensures tha property key as symbol is preserved on properties', () => {
@@ -144,8 +153,8 @@ describe(`ObjectConverter`, () => {
         reflect<{ [symbolAsAKey]: string }>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Object);
-      expect(objType).to.be.eql({ [symbolAsAKey]: String });
+      expect(objType).toBeInstanceOf(Object);
+      expect(objType).toEqual({ [symbolAsAKey]: String });
     });
 
     it(`ensures tha use of 'Reflect.ownKeys' does not impact on properties with key names matching build-in native ones`, () => {
@@ -154,8 +163,8 @@ describe(`ObjectConverter`, () => {
         reflect<{ length: number }>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Object);
-      expect(objType).to.be.eql({ length: Number });
+      expect(objType).toBeInstanceOf(Object);
+      expect(objType).toEqual({ length: Number });
     });
 
     it('returns converted object literal with property value as a type', () => {
@@ -168,8 +177,8 @@ describe(`ObjectConverter`, () => {
         reflect<{ key: MyClass }>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Object);
-      expect(objType).to.be.eql({ key: MyClass });
+      expect(objType).toBeInstanceOf(Object);
+      expect(objType).toEqual({ key: MyClass });
     });
   });
 
@@ -183,8 +192,8 @@ describe(`ObjectConverter`, () => {
         reflect<{}>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Collection);
-      expect(objType).to.be.eql(new Collection({}));
+      expect(objType).toBeInstanceOf(Collection);
+      expect(objType).toEqual(new Collection({}));
     });
 
     it('returns converted object literal with key and value as Collection instance', () => {
@@ -195,10 +204,8 @@ describe(`ObjectConverter`, () => {
         reflect<{ key: string }>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Collection);
-      expect(objType).to.be.eql(
-        new Collection({ key: new InstanceOf(String) })
-      );
+      expect(objType).toBeInstanceOf(Collection);
+      expect(objType).toEqual(new Collection({ key: new InstanceOf(String) }));
     });
 
     it('returns converted interface with properties as Interface instance', () => {
@@ -212,9 +219,9 @@ describe(`ObjectConverter`, () => {
         reflect<MyInterface>() as tsrTypes.ObjectType,
         converter
       ) as Interface;
-      expect(intfType).to.be.instanceof(Interface);
-      expect(intfType.getName()).to.be.equal('MyInterface');
-      expect(intfType).to.be.eql(
+      expect(intfType).toBeInstanceOf(Interface);
+      expect(intfType.getName()).toBe('MyInterface');
+      expect(intfType).toEqual(
         new Interface({
           key: new InstanceOf(String),
           myMethod: new InstanceOf(Function),
@@ -230,8 +237,8 @@ describe(`ObjectConverter`, () => {
         reflect<{ [symbolAsAKey]: string }>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Collection);
-      expect(objType).to.be.eql(
+      expect(objType).toBeInstanceOf(Collection);
+      expect(objType).toEqual(
         new Collection({ [symbolAsAKey]: new InstanceOf(String) })
       );
     });
@@ -244,8 +251,8 @@ describe(`ObjectConverter`, () => {
         reflect<{ length: number }>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Collection);
-      expect(objType).to.be.eql(
+      expect(objType).toBeInstanceOf(Collection);
+      expect(objType).toEqual(
         new Collection({ length: new InstanceOf(Number) })
       );
     });
@@ -260,10 +267,8 @@ describe(`ObjectConverter`, () => {
         reflect<{ key: MyClass }>() as tsrTypes.ObjectType,
         converter
       );
-      expect(objType).to.be.instanceof(Collection);
-      expect(objType).to.be.eql(
-        new Collection({ key: new InstanceOf(MyClass) })
-      );
+      expect(objType).toBeInstanceOf(Collection);
+      expect(objType).toEqual(new Collection({ key: new InstanceOf(MyClass) }));
     });
   });
 });

@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { Description, DescriptionList } from '../../src/description';
 
 describe(`Description`, () => {
@@ -8,7 +17,7 @@ describe(`Description`, () => {
       const type = 'my-type';
       const message = 'my-message';
       const desc = new Description({ value, type, message });
-      expect(desc).to.be.eql({
+      expect(desc).toEqual({
         value,
         type,
         message,
@@ -20,7 +29,7 @@ describe(`Description`, () => {
       const type = 'my-type';
       const message = 'my-message';
       const desc = new Description({ value, type, message });
-      expect(desc).to.be.eql({
+      expect(desc).toEqual({
         value,
         type,
         message,
@@ -34,7 +43,7 @@ describe(`Description`, () => {
       const type = 'my-type';
       const message = 'my-message';
       const desc = new Description({ value, type, message });
-      expect(desc.toString()).to.be.equal(message);
+      expect(desc.toString()).toBe(message);
     });
   });
 });
@@ -43,8 +52,8 @@ describe(`DescriptionList`, () => {
   describe(`construction`, () => {
     it(`initializes with description list as empty array`, () => {
       const list = new DescriptionList();
-      expect(list.descriptions).to.be.an.instanceof(Array);
-      expect(list.descriptions).to.be.empty;
+      expect(list.descriptions).toBeInstanceOf(Array);
+      expect(list.descriptions).toHaveLength(0);
     });
 
     it(`takes an array of descriptions and assigns them`, () => {
@@ -54,7 +63,7 @@ describe(`DescriptionList`, () => {
       const desc = new Description({ value, type, message });
       const descArray = [desc];
       const list = new DescriptionList(descArray);
-      expect(list.descriptions).to.be.equal(descArray);
+      expect(list.descriptions).toBe(descArray);
     });
   });
 
@@ -72,9 +81,7 @@ describe(`DescriptionList`, () => {
       });
       const descArray = [desc1, desc2];
       const list = new DescriptionList(descArray);
-      expect(list.toString()).to.be.equal(
-        'my-first-message, my-second-message'
-      );
+      expect(list.toString()).toBe('my-first-message, my-second-message');
     });
   });
 });

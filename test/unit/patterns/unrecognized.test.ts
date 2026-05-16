@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { Unrecognized } from '../../../src/patterns/unrecognized';
 import { Pattern } from '../../../src/pattern';
@@ -121,7 +121,7 @@ describe(`Unrecognized`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(Unrecognized.prototype).to.instanceof(WrapperPattern);
+    expect(Unrecognized.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
@@ -132,17 +132,17 @@ describe(`Unrecognized`, () => {
         expect(
           new Unrecognized(expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([expectation]);
+        ).toEqual([expectation]);
       }
     });
 
     it('does not require expectation on construction', () => {
-      expect(() => new Unrecognized()).not.to.throw(Error);
+      expect(() => new Unrecognized()).not.toThrow(Error);
     });
 
     it(`has assigned 'UNRECOGNIZED' as type kind`, () => {
       const pattern = new Unrecognized(String);
-      expect(pattern.getKind()).to.be.equal(KINDS.UNRECOGNIZED);
+      expect(pattern.getKind()).toBe(KINDS.UNRECOGNIZED);
     });
   });
 });

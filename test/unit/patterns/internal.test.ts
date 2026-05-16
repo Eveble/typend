@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { Internal } from '../../../src/patterns/internal';
 import { Pattern } from '../../../src/pattern';
@@ -121,7 +121,7 @@ describe(`Internal`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(Internal.prototype).to.instanceof(WrapperPattern);
+    expect(Internal.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
@@ -132,17 +132,17 @@ describe(`Internal`, () => {
         expect(
           new Internal(expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([expectation]);
+        ).toEqual([expectation]);
       }
     });
 
     it('does not require expectation on construction', () => {
-      expect(() => new Internal()).not.to.throw(Error);
+      expect(() => new Internal()).not.toThrow(Error);
     });
 
     it(`has assigned 'InternalValidator' as type kind`, () => {
       const pattern = new Internal(String);
-      expect(pattern.getKind()).to.be.equal(KINDS.INTERNAL);
+      expect(pattern.getKind()).toBe(KINDS.INTERNAL);
     });
   });
 });

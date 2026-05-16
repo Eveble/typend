@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { UnknownValidator } from '../../../src/validators/unknown-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -26,13 +35,13 @@ describe(`UnknownValidator`, () => {
   class MyError extends Error {}
 
   it(`extends PatternValidator`, () => {
-    expect(UnknownValidator.prototype).to.instanceof(PatternValidator);
+    expect(UnknownValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
     it('returns true for pattern instance of Unknown', () => {
       const unknownValidator = new UnknownValidator();
-      expect(unknownValidator.canValidate(new Unknown())).to.be.true;
+      expect(unknownValidator.canValidate(new Unknown())).toBe(true);
     });
 
     it('returns false for any other implicit expectation', () => {
@@ -140,7 +149,7 @@ describe(`UnknownValidator`, () => {
         expect(
           unknownValidator.canValidate(expectation),
           `Expected implicit expectation ${expectationStr} to be not applicable`
-        ).to.false;
+        ).toBe(false);
       }
     });
   });
@@ -151,7 +160,7 @@ describe(`UnknownValidator`, () => {
       expect(
         unknownValidator.validate(),
         `Expected validation of unknown value to always be true`
-      ).to.true;
+      ).toBe(true);
     });
   });
 });

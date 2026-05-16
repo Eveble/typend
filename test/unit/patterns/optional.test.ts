@@ -1,13 +1,10 @@
-import { expect, use } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
-import sinonChai from 'sinon-chai';
 import { Optional } from '../../../src/patterns/optional';
 import { Pattern } from '../../../src/pattern';
 import { types } from '../../../src/types';
 import { KINDS } from '../../../src/constants/literal-keys';
-
-use(sinonChai);
 
 describe(`Optional`, () => {
   let describer: any;
@@ -122,7 +119,7 @@ describe(`Optional`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(Optional.prototype).to.instanceof(Array);
+    expect(Optional.prototype).toBeInstanceOf(Array);
   });
 
   describe('construction', () => {
@@ -133,13 +130,13 @@ describe(`Optional`, () => {
         expect(
           new Optional(expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([expectation]);
+        ).toEqual([expectation]);
       }
     });
 
     it(`has assigned 'OPTIONAL' as type kind`, () => {
       const pattern = new Optional(null);
-      expect(pattern.getKind()).to.be.equal(KINDS.OPTIONAL);
+      expect(pattern.getKind()).toBe(KINDS.OPTIONAL);
     });
   });
 
@@ -151,9 +148,9 @@ describe(`Optional`, () => {
     const valStr = `String('my-value'`;
     describer.describe.withArgs(val).returns(valStr);
 
-    expect(pattern.describe(val)).to.be.equal(valStr);
-    expect(describer.describe).to.be.calledOnce;
-    expect(describer.describe).to.be.calledWithExactly(val);
+    expect(pattern.describe(val)).toBe(valStr);
+    expect(describer.describe).toHaveBeenCalledTimes(1);
+    expect(describer.describe).toHaveBeenCalledWith(val);
   });
 
   describe('property initializers', () => {
@@ -161,18 +158,18 @@ describe(`Optional`, () => {
       it('returns true if property initializer is set on pattern', () => {
         const pattern = new Optional();
         pattern.setInitializer('my-initializer-value');
-        expect(pattern.hasInitializer()).to.be.true;
+        expect(pattern.hasInitializer()).toBe(true);
       });
       it('returns false if property initializer is missing from pattern', () => {
         const pattern = new Optional();
-        expect(pattern.hasInitializer()).to.be.false;
+        expect(pattern.hasInitializer()).toBe(false);
       });
     });
     it('sets the property initializer on pattern', () => {
       const pattern = new Optional();
       const initializer = 'my-initializer-value';
       pattern.setInitializer(initializer);
-      expect(pattern.getInitializer()).to.be.equal(initializer);
+      expect(pattern.getInitializer()).toBe(initializer);
     });
   });
 });

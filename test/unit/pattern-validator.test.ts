@@ -1,10 +1,16 @@
-import { expect, use } from 'chai';
-import { stubInterface } from 'ts-sinon';
-import sinonChai from 'sinon-chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../vitest-helper';
 import { types } from '../../src/types';
 import { PatternValidator } from '../../src/pattern-validator';
-
-use(sinonChai);
 
 describe(`PatternValidator`, () => {
   let describer: any;
@@ -15,7 +21,7 @@ describe(`PatternValidator`, () => {
 
   it('allows to set describer on Validator', () => {
     PatternValidator.setDescriber(describer);
-    expect(PatternValidator.getDescriber()).to.be.equal(describer);
+    expect(PatternValidator.getDescriber()).toBe(describer);
   });
 
   it('describes provided value to string', () => {
@@ -27,8 +33,8 @@ describe(`PatternValidator`, () => {
     const valStr = `String('my-value'`;
     describer.describe.withArgs(val).returns(valStr);
 
-    expect(validator.describe(val)).to.be.equal(valStr);
-    expect(describer.describe).to.be.calledOnce;
-    expect(describer.describe).to.be.calledWithExactly(val);
+    expect(validator.describe(val)).toBe(valStr);
+    expect(describer.describe).toHaveBeenCalledTimes(1);
+    expect(describer.describe).toHaveBeenCalledWith(val);
   });
 });

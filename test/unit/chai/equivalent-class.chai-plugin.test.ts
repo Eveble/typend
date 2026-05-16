@@ -1,6 +1,6 @@
 /* eslint-disable no-redeclare */
+import { describe, it, beforeEach, afterEach, vi } from 'vitest';
 import chai, { expect } from 'chai';
-import sinon from 'sinon';
 import { equivalentClassChai } from '../../../src/chai/equivalent-class.chai-plugin';
 import { Type } from '../../../src/decorators/type.decorator';
 
@@ -527,7 +527,7 @@ describe('Chai equivalentClass matcher', () => {
       });
 
       it('should handle library registration verification', () => {
-        const mockLibrary = { registerType: sinon.stub() };
+        const mockLibrary = { registerType: vi.fn() };
 
         // Simulate your actual use case
         @Type('LibraryTest')
@@ -536,7 +536,7 @@ describe('Chai equivalentClass matcher', () => {
         // Simulate library registration
         mockLibrary.registerType('LibraryTest', LibraryTestClass);
 
-        const [name, registeredClass] = mockLibrary.registerType.firstCall.args;
+        const [name, registeredClass] = mockLibrary.registerType.mock.calls[0];
 
         expect(name).to.equal('LibraryTest');
         expect(registeredClass).to.be.equivalentClass(LibraryTestClass, {

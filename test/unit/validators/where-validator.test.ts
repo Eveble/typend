@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { inspect } from 'util';
 import { Where } from '../../../src/patterns/where';
 import { WhereValidator } from '../../../src/validators/where-validator';
@@ -18,23 +27,23 @@ describe(`Where`, () => {
   class MyError extends Error {}
 
   it(`extends PatternValidator`, () => {
-    expect(WhereValidator.prototype).to.instanceof(PatternValidator);
+    expect(WhereValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
-    context('explicit expectation', () => {
+    describe('explicit expectation', () => {
       it('returns true for pattern instance of Where', () => {
         const whereValidator = new WhereValidator();
         const fn = (): boolean => true;
-        expect(whereValidator.canValidate(new Where(fn))).to.be.true;
+        expect(whereValidator.canValidate(new Where(fn))).toBe(true);
       });
     });
 
-    context('implicit expectation', () => {
+    describe('implicit expectation', () => {
       it('returns true for implicit expectation as a anonymous function', () => {
         const whereValidator = new WhereValidator();
         const fn = (): boolean => true;
-        expect(whereValidator.canValidate(fn)).to.be.true;
+        expect(whereValidator.canValidate(fn)).toBe(true);
       });
 
       it('returns true for implicit expectation as named function', () => {
@@ -42,7 +51,7 @@ describe(`Where`, () => {
         function fn(): boolean {
           return true;
         }
-        expect(whereValidator.canValidate(fn)).to.be.true;
+        expect(whereValidator.canValidate(fn)).toBe(true);
       });
 
       it('returns true for implicit expectation as class method functions', () => {
@@ -53,24 +62,25 @@ describe(`Where`, () => {
           }
         }
         const instance = new MyClass();
-        expect(whereValidator.canValidate(MyClass.prototype.myMethod)).to.be
-          .true;
-        expect(whereValidator.canValidate(instance.myMethod)).to.be.true;
+        expect(whereValidator.canValidate(MyClass.prototype.myMethod)).toBe(
+          true
+        );
+        expect(whereValidator.canValidate(instance.myMethod)).toBe(true);
       });
 
       it.skip('returns false for constructor functions', () => {
         class MyClass {}
 
         const whereValidator = new WhereValidator();
-        expect(whereValidator.canValidate(MyClass)).to.be.false;
-        expect(whereValidator.canValidate(Error)).to.be.false;
-        expect(whereValidator.canValidate(EvalError)).to.be.false;
-        expect(whereValidator.canValidate(RangeError)).to.be.false;
-        expect(whereValidator.canValidate(ReferenceError)).to.be.false;
-        expect(whereValidator.canValidate(SyntaxError)).to.be.false;
-        expect(whereValidator.canValidate(TypeError)).to.be.false;
-        expect(whereValidator.canValidate(URIError)).to.be.false;
-        expect(whereValidator.canValidate(MyError)).to.be.false;
+        expect(whereValidator.canValidate(MyClass)).toBe(false);
+        expect(whereValidator.canValidate(Error)).toBe(false);
+        expect(whereValidator.canValidate(EvalError)).toBe(false);
+        expect(whereValidator.canValidate(RangeError)).toBe(false);
+        expect(whereValidator.canValidate(ReferenceError)).toBe(false);
+        expect(whereValidator.canValidate(SyntaxError)).toBe(false);
+        expect(whereValidator.canValidate(TypeError)).toBe(false);
+        expect(whereValidator.canValidate(URIError)).toBe(false);
+        expect(whereValidator.canValidate(MyError)).toBe(false);
       });
 
       it('returns false for any other expectation that is not instance of Where or is not a function', () => {
@@ -161,7 +171,7 @@ describe(`Where`, () => {
           expect(
             whereValidator.canValidate(expectation),
             `Expected implicit expectation ${expectationStr} to be not applicable`
-          ).to.false;
+          ).toBe(false);
         }
       });
     });
@@ -175,10 +185,10 @@ describe(`Where`, () => {
       const value = 'my-string';
       const where = new Where(fn);
 
-      expect(whereValidator.validate(value, where)).to.be.true;
+      expect(whereValidator.validate(value, where)).toBe(true);
     });
 
-    context('valid values', () => {
+    describe('valid values', () => {
       it('returns true for value that is valid by executing expectation as evaluating function', () => {
         const whereValidator = new WhereValidator();
 
@@ -186,11 +196,11 @@ describe(`Where`, () => {
           value === 'my-valid-value';
         const value = 'my-valid-value';
 
-        expect(whereValidator.validate(value, expectation)).to.be.true;
+        expect(whereValidator.validate(value, expectation)).toBe(true);
       });
     });
 
-    context('invalid values', () => {
+    describe('invalid values', () => {
       it('pass-through any error thrown inside expectation function on evaluated invalid value', () => {
         const whereValidator = new WhereValidator();
         const error = new ValidationError('my-error');
@@ -202,7 +212,7 @@ describe(`Where`, () => {
         };
         const value = 'my-invalid-value';
 
-        expect(() => whereValidator.validate(value, expectation)).to.throw(
+        expect(() => whereValidator.validate(value, expectation)).toThrow(
           error
         );
       });
@@ -214,7 +224,7 @@ describe(`Where`, () => {
           value === 'my-valid-value';
         const value = 'my-invalid-value';
 
-        expect(() => whereValidator.validate(value, expectation)).to.throw(
+        expect(() => whereValidator.validate(value, expectation)).toThrow(
           ValidationError,
           'Failed Where validation'
         );

@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { reflect } from 'tsruntime';
 import { StringLiteralConverter } from '../../../src/converters/tsruntime/type-converters/string-literal.converter';
 import { Equals } from '../../../src/patterns/equals';
@@ -6,7 +15,7 @@ import { Equals } from '../../../src/patterns/equals';
 describe(`StringLiteralConverter`, () => {
   let typeConverter: StringLiteralConverter;
 
-  before(() => {
+  beforeAll(() => {
     typeConverter = new StringLiteralConverter();
   });
 
@@ -21,26 +30,26 @@ describe(`StringLiteralConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
     it('returns false for other types', () => {
-      expect(typeConverter.isConvertible(reflect<string>())).to.be.false;
-      expect(typeConverter.isConvertible(reflect<number>())).to.be.false;
-      expect(typeConverter.isConvertible(reflect<69>())).to.be.false;
+      expect(typeConverter.isConvertible(reflect<string>())).toBe(false);
+      expect(typeConverter.isConvertible(reflect<number>())).toBe(false);
+      expect(typeConverter.isConvertible(reflect<69>())).toBe(false);
     });
   });
 
   describe('reflection', () => {
     it('reflects string literal to its value', () => {
       const reflectedType = { kind: 5, value: 'my-string' };
-      expect(typeConverter.reflect(reflectedType)).to.be.equal('my-string');
+      expect(typeConverter.reflect(reflectedType)).toBe('my-string');
     });
 
     it('reflects empty string literal', () => {
       const reflectedType = { kind: 5, value: '' };
-      expect(typeConverter.reflect(reflectedType)).to.be.equal('');
+      expect(typeConverter.reflect(reflectedType)).toBe('');
     });
   });
 
@@ -48,8 +57,8 @@ describe(`StringLiteralConverter`, () => {
     it('converts string literal to instance of Equals pattern', () => {
       const reflectedType = { kind: 5, value: 'my-string' };
       const result = typeConverter.convert(reflectedType);
-      expect(result).to.be.instanceof(Equals);
-      expect(result).to.be.eql(new Equals('my-string'));
+      expect(result).toBeInstanceOf(Equals);
+      expect(result).toEqual(new Equals('my-string'));
     });
   });
 });

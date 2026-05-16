@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { Type, validate, PropsOf, ValidationError } from '../../../src/index';
 
 describe('ddd', () => {
@@ -25,14 +34,12 @@ describe('ddd', () => {
   }
 
   it('is valid', () => {
-    expect(() => new Parent({ parent: 'foo' })).to.not.throw(Error);
-    expect(() => new Child({ parent: 'foo', child: 'bar' })).to.not.throw(
-      Error
-    );
+    expect(() => new Parent({ parent: 'foo' })).not.toThrow(Error);
+    expect(() => new Child({ parent: 'foo', child: 'bar' })).not.toThrow(Error);
   });
 
   it('is invalid', () => {
-    expect(() => new Child({ parent: 'foo' })).to.throw(ValidationError);
+    expect(() => new Child({ parent: 'foo' })).toThrow(ValidationError);
     expect(
       () =>
         new Child({
@@ -40,7 +47,7 @@ describe('ddd', () => {
           child: 'bar',
           unexpected: 'unexpected',
         })
-    ).to.throw(ValidationError);
+    ).toThrow(ValidationError);
   });
 
   class Aggregate {}
@@ -88,7 +95,7 @@ describe('ddd', () => {
       phoneNumber,
       emailAddress,
     });
-    expect(customer).to.be.eql({
+    expect(customer).toEqual({
       firstName: 'Jane',
       lastName: 'Doe',
       phoneNumber,
@@ -103,6 +110,6 @@ describe('ddd', () => {
           phoneNumber: '500500500',
           emailAddress: 'jane@doe.com',
         })
-    ).to.throw(ValidationError);
+    ).toThrow(ValidationError);
   });
 });

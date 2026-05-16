@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { InvalidTypeError, UndefinableClassError } from '../../../src/errors';
 import { Utility } from '../../../src/utility';
@@ -128,18 +137,18 @@ describe(`TypeOf`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(TypeOf.prototype).to.instanceof(WrapperPattern);
+    expect(TypeOf.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
     it('takes valid type as a class constructor', () => {
       const instance = new TypeOf(ParentClass);
-      expect(instance).to.eql([ParentClass]);
+      expect(instance).toEqual([ParentClass]);
     });
 
     it('takes valid type as a error constructor', () => {
       const instance = new TypeOf(MyError);
-      expect(instance).to.eql([MyError]);
+      expect(instance).toEqual([MyError]);
     });
 
     it('throws InvalidTypeError for invalid type on construction', () => {
@@ -149,7 +158,7 @@ describe(`TypeOf`, () => {
         expect(
           () => new TypeOf(type),
           `Expected type ${typeStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidTypeError,
           `Type is invalid. Expected type to be a class constructor, got ${typeStr}`
         );
@@ -171,9 +180,9 @@ describe(`TypeOf`, () => {
       const type = new Class(MyClass, definition);
       library.converter.convert.withArgs(MyClass).returns(type);
       const generatedResult = typeOf.generate(library) as Class;
-      expect(generatedResult).to.be.instanceOf(Class);
-      expect(generatedResult.type).to.be.equal(MyClass);
-      expect(generatedResult.properties).to.be.eql(definition);
+      expect(generatedResult).toBeInstanceOf(Class);
+      expect(generatedResult.type).toBe(MyClass);
+      expect(generatedResult.properties).toEqual(definition);
     });
 
     it(`generates instance of Any pattern for non-validable types`, () => {
@@ -185,7 +194,7 @@ describe(`TypeOf`, () => {
 
       const typeOf = new TypeOf(MyClass);
       const generatedResult = typeOf.generate(library) as Class;
-      expect(generatedResult).to.be.instanceOf(Any);
+      expect(generatedResult).toBeInstanceOf(Any);
     });
 
     it(`throws UndefinableClassError on non-definable types`, () => {
@@ -194,7 +203,7 @@ describe(`TypeOf`, () => {
       }
 
       const typeOf = new TypeOf(MyClass);
-      expect(() => typeOf.generate(library)).to.throw(
+      expect(() => typeOf.generate(library)).toThrow(
         UndefinableClassError,
         `MyClass: provided argument must be a class that implements '@Type()' decorator`
       );

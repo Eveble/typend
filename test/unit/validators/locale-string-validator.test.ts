@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { LocaleStringValidator } from '../../../src/validators/locale-string-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -30,32 +39,32 @@ describe(`LocaleStringValidator`, () => {
   class MyError extends Error {}
 
   it(`extends PatternValidator`, () => {
-    expect(LocaleStringValidator.prototype).to.instanceof(PatternValidator);
+    expect(LocaleStringValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
     it('returns true for pattern instance of LocaleString', () => {
       const localeStringValidator = new LocaleStringValidator();
-      expect(localeStringValidator.canValidate(new LocaleString())).to.be.true;
+      expect(localeStringValidator.canValidate(new LocaleString())).toBe(true);
     });
 
     it('returns false for any other implicit expectation', () => {
       const localeStringValidator = new LocaleStringValidator();
-      expect(localeStringValidator.canValidate(true)).to.be.false;
-      expect(localeStringValidator.canValidate(false)).to.be.false;
-      expect(localeStringValidator.canValidate(undefined)).to.be.false;
-      expect(localeStringValidator.canValidate(null)).to.be.false;
+      expect(localeStringValidator.canValidate(true)).toBe(false);
+      expect(localeStringValidator.canValidate(false)).toBe(false);
+      expect(localeStringValidator.canValidate(undefined)).toBe(false);
+      expect(localeStringValidator.canValidate(null)).toBe(false);
     });
   });
 
   describe('validation', () => {
     it('returns true for undefined value', () => {
       const localeStringValidator = new LocaleStringValidator();
-      expect(localeStringValidator.validate(undefined)).to.be.true;
+      expect(localeStringValidator.validate(undefined)).toBe(true);
     });
     it('returns true for string value', () => {
       const localeStringValidator = new LocaleStringValidator();
-      expect(localeStringValidator.validate('localized string')).to.be.true;
+      expect(localeStringValidator.validate('localized string')).toBe(true);
     });
 
     it('returns false for any other value', () => {
@@ -157,7 +166,7 @@ describe(`LocaleStringValidator`, () => {
         const valStr = inspect(val);
         describer.describe.withArgs(val).returns(valStr);
 
-        expect(() => localeStringValidator.validate(val)).to.throw(
+        expect(() => localeStringValidator.validate(val)).toThrow(
           ValidationError,
           `Expected value to never be assigned, got ${valStr}`
         );

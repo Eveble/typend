@@ -1,6 +1,6 @@
-import { expect } from 'chai';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { inspect } from 'util';
-import { stubInterface } from 'ts-sinon';
+import { stubInterface } from '../../vitest-helper';
 import { List } from '../../../src/patterns/list';
 import { Pattern } from '../../../src/pattern';
 import { types } from '../../../src/types';
@@ -125,7 +125,7 @@ describe(`List`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(List.prototype).to.instanceof(WrapperPattern);
+    expect(List.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
@@ -136,13 +136,13 @@ describe(`List`, () => {
         expect(
           new List(expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([expectation]);
+        ).toEqual([expectation]);
       }
     });
 
     it(`has assigned 'ARRAY' as type kind`, () => {
       const pattern = new List(Array);
-      expect(pattern.getKind()).to.be.equal(KINDS.ARRAY);
+      expect(pattern.getKind()).toBe(KINDS.ARRAY);
     });
 
     it('throws InvalidDefinitionError for more then one argument(use Tuple pattern for that)', () => {
@@ -152,7 +152,7 @@ describe(`List`, () => {
       expect(
         () => new List(...values),
         `Expected expectation ${valueStr} to be invalid`
-      ).to.throw(
+      ).toThrow(
         InvalidDefinitionError,
         `List expectation is invalid. Expected expectation to have maximum of one argument, got ${valueStr}`
       );

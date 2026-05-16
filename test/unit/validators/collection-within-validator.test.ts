@@ -1,6 +1,14 @@
-import { expect, use } from 'chai';
-import sinonChai from 'sinon-chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { CollectionWithin } from '../../../src/patterns/collection-within';
 import { CollectionWithinValidator } from '../../../src/validators/collection-within-validator';
@@ -11,8 +19,6 @@ import {
   UnequalValueError,
   UnexpectedKeyError,
 } from '../../../src/errors';
-
-use(sinonChai);
 
 describe(`CollectionWithinValidator`, () => {
   let describer: any;
@@ -31,27 +37,30 @@ describe(`CollectionWithinValidator`, () => {
   }
 
   it(`extends PatternValidator`, () => {
-    expect(CollectionWithinValidator.prototype).to.instanceof(PatternValidator);
+    expect(CollectionWithinValidator.prototype).toBeInstanceOf(
+      PatternValidator
+    );
   });
 
   describe('evaluation', () => {
-    context('explicit expectation', () => {
+    describe('explicit expectation', () => {
       it('returns true for pattern instance of CollectionWithin', () => {
         const collWithinValidator = new CollectionWithinValidator();
-        expect(collWithinValidator.canValidate(new CollectionWithin({}))).to.be
-          .true;
+        expect(collWithinValidator.canValidate(new CollectionWithin({}))).toBe(
+          true
+        );
       });
     });
 
-    context('implicit expectation', () => {
+    describe('implicit expectation', () => {
       it('returns false for any other expectation', () => {
         const collWithinValidator = new CollectionWithinValidator();
-        expect(collWithinValidator.canValidate({})).to.be.false;
-        expect(collWithinValidator.canValidate({})).to.be.false;
-        expect(collWithinValidator.canValidate(undefined)).to.be.false;
-        expect(collWithinValidator.canValidate(null)).to.be.false;
-        expect(collWithinValidator.canValidate(true)).to.be.false;
-        expect(collWithinValidator.canValidate(false)).to.be.false;
+        expect(collWithinValidator.canValidate({})).toBe(false);
+        expect(collWithinValidator.canValidate({})).toBe(false);
+        expect(collWithinValidator.canValidate(undefined)).toBe(false);
+        expect(collWithinValidator.canValidate(null)).toBe(false);
+        expect(collWithinValidator.canValidate(true)).toBe(false);
+        expect(collWithinValidator.canValidate(false)).toBe(false);
       });
     });
   });
@@ -71,12 +80,12 @@ describe(`CollectionWithinValidator`, () => {
 
       expect(() =>
         collWithinValidator.validate(val, expectation, validator)
-      ).to.throw(InvalidTypeError, `Expected ${valStr} to be an Object`);
-      expect(describer.describe).to.be.called;
-      expect(describer.describe).to.be.calledWith(val);
+      ).toThrow(InvalidTypeError, `Expected ${valStr} to be an Object`);
+      expect(describer.describe).toHaveBeenCalled();
+      expect(describer.describe).toHaveBeenCalledWith(val);
     });
 
-    context('valid values', () => {
+    describe('valid values', () => {
       it(`iterates through each expected object entries and validates them against validator`, () => {
         const collWithinValidator = new CollectionWithinValidator();
 
@@ -91,11 +100,12 @@ describe(`CollectionWithinValidator`, () => {
         validator.validate.withArgs('value', String).returns(true);
         validator.validate.withArgs(2, Number).returns(true);
 
-        expect(collWithinValidator.validate(val, expectation, validator)).to.be
-          .true;
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWith('value', String);
-        expect(validator.validate).to.be.calledWith(2, Number);
+        expect(collWithinValidator.validate(val, expectation, validator)).toBe(
+          true
+        );
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('value', String);
+        expect(validator.validate).toHaveBeenCalledWith(2, Number);
       });
 
       it(`returns true even for object value with other arbitrary keys and values`, () => {
@@ -117,11 +127,12 @@ describe(`CollectionWithinValidator`, () => {
             new UnequalValueError(`Expected Number(2) to be a undefined`)
           );
 
-        expect(collWithinValidator.validate(val, expectation, validator)).to.be
-          .true;
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWith('value', String);
-        expect(validator.validate).to.be.calledWith(2, undefined);
+        expect(collWithinValidator.validate(val, expectation, validator)).toBe(
+          true
+        );
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('value', String);
+        expect(validator.validate).toHaveBeenCalledWith(2, undefined);
       });
 
       it(`returns true for object value with missing nested object properties`, () => {
@@ -152,11 +163,12 @@ describe(`CollectionWithinValidator`, () => {
             )
           );
 
-        expect(collWithinValidator.validate(val, expectation, validator)).to.be
-          .true;
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWith('value', String);
-        expect(validator.validate).to.be.calledWith(undefined, {
+        expect(collWithinValidator.validate(val, expectation, validator)).toBe(
+          true
+        );
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('value', String);
+        expect(validator.validate).toHaveBeenCalledWith(undefined, {
           third: String,
         });
       });
@@ -191,18 +203,19 @@ describe(`CollectionWithinValidator`, () => {
             )
           );
 
-        expect(collWithinValidator.validate(val, expectation, validator)).to.be
-          .true;
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWith('value', String);
-        expect(validator.validate).to.be.calledWith(
+        expect(collWithinValidator.validate(val, expectation, validator)).toBe(
+          true
+        );
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('value', String);
+        expect(validator.validate).toHaveBeenCalledWith(
           { a: 'a-value', unexpected: 'unexpected-value' },
           { a: 'a-value' }
         );
       });
     });
 
-    context('invalid values', () => {
+    describe('invalid values', () => {
       it(`pass-through errors from type validator validation if provided object value contain nested properties that does not match expected one`, () => {
         const collWithinValidator = new CollectionWithinValidator();
 
@@ -243,13 +256,13 @@ describe(`CollectionWithinValidator`, () => {
 
         expect(() =>
           collWithinValidator.validate(val, expectation, validator)
-        ).to.throw(
+        ).toThrow(
           UnequalValueError,
           `(Key 'foo.bar.b': Expected Number, got String("invalid-should-be-number") in {"foo":{"bar":{"a":"a-value","b":"b-invalid-not-a-number"},"baz":{"c":"c-value"}}})`
         );
-        expect(validator.validate).to.be.calledTwice;
-        expect(validator.validate).to.be.calledWith('a-value', String);
-        expect(validator.validate).to.be.calledWith(
+        expect(validator.validate).toHaveBeenCalledTimes(2);
+        expect(validator.validate).toHaveBeenCalledWith('a-value', String);
+        expect(validator.validate).toHaveBeenCalledWith(
           'b-invalid-not-a-number',
           Number
         );

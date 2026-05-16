@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   PropTypes,
@@ -11,7 +20,7 @@ describe('oneOf', () => {
   it('check', () => {
     check<string | number>('foo');
     check<string | number>(1337);
-    expect(() => check<string | number>(true)).to.throw(NotAMemberError);
+    expect(() => check<string | number>(true)).toThrow(NotAMemberError);
   });
 
   it('validate', () => {

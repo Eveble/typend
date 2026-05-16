@@ -1,6 +1,6 @@
-import { expect } from 'chai';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { inspect } from 'util';
-import { stubInterface } from 'ts-sinon';
+import { stubInterface } from '../../vitest-helper';
 import { Tuple } from '../../../src/patterns/tuple';
 import { Pattern } from '../../../src/pattern';
 import { types } from '../../../src/types';
@@ -125,7 +125,7 @@ describe(`Tuple`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(Tuple.prototype).to.instanceof(WrapperPattern);
+    expect(Tuple.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
@@ -136,7 +136,7 @@ describe(`Tuple`, () => {
         expect(
           new Tuple(expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([expectation]);
+        ).toEqual([expectation]);
       }
     });
 
@@ -147,13 +147,13 @@ describe(`Tuple`, () => {
         expect(
           new Tuple(expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([expectation]);
+        ).toEqual([expectation]);
       }
     });
 
     it(`has assigned 'TUPLE' as type kind`, () => {
       const pattern = new Tuple([String]);
-      expect(pattern.getKind()).to.be.equal(KINDS.TUPLE);
+      expect(pattern.getKind()).toBe(KINDS.TUPLE);
     });
 
     it('throws InvalidDefinitionError for none-arguments(use List pattern for that)', () => {
@@ -163,7 +163,7 @@ describe(`Tuple`, () => {
       expect(
         () => new Tuple(...expectations),
         `Expected expectation ${expectationStr} to be invalid`
-      ).to.throw(
+      ).toThrow(
         InvalidDefinitionError,
         `Tuple expectation is invalid. Expectation must include at least one argument defined like: <tuple(String, Number, 'value')>, got ${expectationStr}`
       );

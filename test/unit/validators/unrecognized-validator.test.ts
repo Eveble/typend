@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { UnrecognizedValidator } from '../../../src/validators/unrecognized-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -16,13 +25,13 @@ describe(`UnrecognizedValidator`, () => {
   });
 
   it(`extends PatternValidator`, () => {
-    expect(UnrecognizedValidator.prototype).to.instanceof(PatternValidator);
+    expect(UnrecognizedValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('construction', () => {
     it('takes default behavior as a boolean and assigns it', () => {
-      expect(new UnrecognizedValidator(true).getDefaultBehavior()).to.be.true;
-      expect(new UnrecognizedValidator(false).getDefaultBehavior()).to.be.false;
+      expect(new UnrecognizedValidator(true).getDefaultBehavior()).toBe(true);
+      expect(new UnrecognizedValidator(false).getDefaultBehavior()).toBe(false);
     });
   });
 
@@ -33,15 +42,15 @@ describe(`UnrecognizedValidator`, () => {
         unrecognizedValidator.canValidate(
           new Unrecognized('unrecognized-value')
         )
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it('returns false for any other implicit expectation', () => {
       const unrecognizedValidator = new UnrecognizedValidator(true);
-      expect(unrecognizedValidator.canValidate(true)).to.be.false;
-      expect(unrecognizedValidator.canValidate(false)).to.be.false;
-      expect(unrecognizedValidator.canValidate(undefined)).to.be.false;
-      expect(unrecognizedValidator.canValidate(null)).to.be.false;
+      expect(unrecognizedValidator.canValidate(true)).toBe(false);
+      expect(unrecognizedValidator.canValidate(false)).toBe(false);
+      expect(unrecognizedValidator.canValidate(undefined)).toBe(false);
+      expect(unrecognizedValidator.canValidate(null)).toBe(false);
     });
   });
 
@@ -50,7 +59,7 @@ describe(`UnrecognizedValidator`, () => {
       const unrecognizedValidator = new UnrecognizedValidator(true);
       const val = 'my-unrecognized-value';
       const unrecognized = new Unrecognized('unrecognized-value');
-      expect(unrecognizedValidator.validate(val, unrecognized)).to.be.true;
+      expect(unrecognizedValidator.validate(val, unrecognized)).toBe(true);
     });
 
     it('throws UnknownError for unrecognized value as default behavior assigned on validator construction', () => {
@@ -63,7 +72,7 @@ describe(`UnrecognizedValidator`, () => {
       describer.describe.withArgs(val).returns(valStr);
       describer.describe.withArgs(expectation).returns(expectationStr);
 
-      expect(() => unrecognizedValidator.validate(val, unrecognized)).to.throw(
+      expect(() => unrecognizedValidator.validate(val, unrecognized)).toThrow(
         UnknownError,
         `Unrecognized expectation ${expectationStr} that cannot handle ${valStr} value`
       );

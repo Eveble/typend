@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   UnequalValueError,
@@ -10,7 +19,7 @@ describe('equals', () => {
   it('check', () => {
     check<'foo'>('foo');
     check<1337>(1337);
-    expect(() => check<1337>('foo')).to.throw(UnequalValueError);
+    expect(() => check<1337>('foo')).toThrow(UnequalValueError);
   });
 
   it('validate', () => {

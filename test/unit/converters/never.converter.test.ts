@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { NeverConverter } from '../../../src/converters/tsruntime/type-converters/never.converter';
 import { Never } from '../../../src/patterns/never';
 
@@ -12,7 +21,7 @@ describe(`NeverConverter`, () => {
   describe('evaluation', () => {
     it('returns true for never type', () => {
       const neverType = { kind: 14 }; // TypeKind.Never
-      expect(typeConverter.isConvertible(neverType)).to.be.true;
+      expect(typeConverter.isConvertible(neverType)).toBe(true);
     });
 
     it('returns false for non-never types', () => {
@@ -22,7 +31,7 @@ describe(`NeverConverter`, () => {
         { kind: 12 }, // Undefined
       ];
       for (const type of examples) {
-        expect(typeConverter.isConvertible(type)).to.be.false;
+        expect(typeConverter.isConvertible(type)).toBe(false);
       }
     });
   });
@@ -31,7 +40,7 @@ describe(`NeverConverter`, () => {
     it('reflects never type as Never pattern', () => {
       const neverType = { kind: 14 };
       const result = typeConverter.reflect(neverType);
-      expect(result).to.be.instanceof(Never);
+      expect(result).toBeInstanceOf(Never);
     });
   });
 
@@ -39,7 +48,7 @@ describe(`NeverConverter`, () => {
     it('converts never type to Never pattern', () => {
       const neverType = { kind: 14 };
       const result = typeConverter.convert(neverType);
-      expect(result).to.be.instanceof(Never);
+      expect(result).toBeInstanceOf(Never);
     });
   });
 });

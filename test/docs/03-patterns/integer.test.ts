@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   integer,
@@ -10,7 +19,7 @@ import {
 describe('integer', () => {
   it('check', () => {
     check<integer>(10);
-    expect(() => check<integer>(Math.PI)).to.throw(InvalidValueError);
+    expect(() => check<integer>(Math.PI)).toThrow(InvalidValueError);
   });
 
   it('validate', () => {

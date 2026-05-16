@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { OneOf } from '../../../src/patterns/one-of';
 import { InvalidDefinitionError } from '../../../src/errors';
@@ -148,7 +148,7 @@ describe(`OneOf`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(OneOf.prototype).to.instanceof(WrapperPattern);
+    expect(OneOf.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
@@ -159,7 +159,7 @@ describe(`OneOf`, () => {
         expect(
           new OneOf(expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([expectation]);
+        ).toEqual([expectation]);
       }
     });
 
@@ -170,13 +170,13 @@ describe(`OneOf`, () => {
         expect(
           new OneOf(...expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([...expectation]);
+        ).toEqual([...expectation]);
       }
     });
 
     it(`has assigned 'ONE_OF' as type kind`, () => {
       const pattern = new OneOf(String, Number);
-      expect(pattern.getKind()).to.be.equal(KINDS.ONE_OF);
+      expect(pattern.getKind()).toBe(KINDS.ONE_OF);
     });
 
     it('throws InvalidDefinitionError for empty expectation', () => {
@@ -186,7 +186,7 @@ describe(`OneOf`, () => {
       expect(
         () => new OneOf(),
         `Expected expectation ${expectationStr} to be invalid`
-      ).to.throw(
+      ).toThrow(
         InvalidDefinitionError,
         `OneOf expectation is invalid. Expectation must include at least one element defined like: <oneOf(String, Number, 'value')>, got ${expectationStr}`
       );

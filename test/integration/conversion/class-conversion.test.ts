@@ -1,5 +1,14 @@
-import { expect, use } from 'chai';
-import sinonChai from 'sinon-chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { reflect } from 'tsruntime';
 import { converter } from './setup';
 import { Class } from '../../../src/patterns/class';
@@ -14,8 +23,6 @@ import { Optional } from '../../../src/patterns/optional';
 import { Tuple } from '../../../src/patterns/tuple';
 import { Collection } from '../../../src/patterns/collection';
 import { Type } from '../../../src/decorators/type.decorator';
-
-use(sinonChai);
 
 describe(`Class conversion`, () => {
   @Type()
@@ -53,7 +60,7 @@ describe(`Class conversion`, () => {
         [symbolAsAKey]: string;
       }
 
-      expect(converter.reflect(reflect<SymbolClass>())).to.be.eql({
+      expect(converter.reflect(reflect<SymbolClass>())).toEqual({
         [symbolAsAKey]: String,
       });
     });
@@ -64,7 +71,7 @@ describe(`Class conversion`, () => {
         length: number;
       }
 
-      expect(converter.reflect(reflect<EnsureKeysClass>())).to.be.eql({
+      expect(converter.reflect(reflect<EnsureKeysClass>())).toEqual({
         length: Number,
       });
     });
@@ -75,7 +82,7 @@ describe(`Class conversion`, () => {
         key!: string;
       }
 
-      expect(converter.reflect(reflect<BangClass>())).to.be.eql({
+      expect(converter.reflect(reflect<BangClass>())).toEqual({
         key: String,
       });
     });
@@ -92,7 +99,7 @@ describe(`Class conversion`, () => {
         unknown: unknown;
       }
 
-      expect(converter.reflect(reflect<NativeClass>())).to.be.eql({
+      expect(converter.reflect(reflect<NativeClass>())).toEqual({
         any: new Any(),
 
         void: new Void(),
@@ -119,7 +126,7 @@ describe(`Class conversion`, () => {
         boolean: boolean;
       }
 
-      expect(converter.reflect(reflect<PrimitiveClass>())).to.be.eql({
+      expect(converter.reflect(reflect<PrimitiveClass>())).toEqual({
         null: null,
 
         undefined,
@@ -146,7 +153,7 @@ describe(`Class conversion`, () => {
         false: false;
       }
 
-      expect(converter.reflect(reflect<ValueLiteralClass>())).to.be.eql({
+      expect(converter.reflect(reflect<ValueLiteralClass>())).toEqual({
         stringLiteral: 'my-string',
 
         numberLiteral: 5,
@@ -175,7 +182,7 @@ describe(`Class conversion`, () => {
         defaultEnumLiteral: DefaultEnum;
       }
 
-      expect(converter.reflect(reflect<UnionClass>())).to.be.eql({
+      expect(converter.reflect(reflect<UnionClass>())).toEqual({
         optionalString: [String, undefined],
 
         undefinedOrString: [String, undefined],
@@ -212,7 +219,7 @@ describe(`Class conversion`, () => {
         optionalMixedNestedTuple?: [string, number, [false, true]];
       }
 
-      expect(converter.reflect(reflect<TupleClass>())).to.be.eql({
+      expect(converter.reflect(reflect<TupleClass>())).toEqual({
         stringTuple: [String],
 
         numberTuple: [Number],
@@ -242,7 +249,7 @@ describe(`Class conversion`, () => {
         objectTypeWithSymbol: ObjectTypeWithSymbol;
       }
 
-      expect(converter.reflect(reflect<NestedClass>())).to.be.eql({
+      expect(converter.reflect(reflect<NestedClass>())).toEqual({
         objectTypeWithSymbol: new Collection({
           key: String,
           69: Number,
@@ -257,7 +264,7 @@ describe(`Class conversion`, () => {
         class: MyClass;
       }
 
-      expect(converter.reflect(reflect<NestedClass>())).to.be.eql({
+      expect(converter.reflect(reflect<NestedClass>())).toEqual({
         class: MyClass,
       });
     });
@@ -273,7 +280,7 @@ describe(`Class conversion`, () => {
         type: MyType;
       }
 
-      expect(converter.reflect(reflect<TypeClass>())).to.be.eql({
+      expect(converter.reflect(reflect<TypeClass>())).toEqual({
         type: new Collection({
           first: String,
           second: Number,
@@ -292,7 +299,7 @@ describe(`Class conversion`, () => {
         interface: MyInterface;
       }
 
-      expect(converter.reflect(reflect<InterfaceClass>())).to.be.eql({
+      expect(converter.reflect(reflect<InterfaceClass>())).toEqual({
         interface: new Collection({
           first: String,
           second: Number,
@@ -308,7 +315,7 @@ describe(`Class conversion`, () => {
         [symbolAsAKey]: string;
       }
 
-      expect(converter.convert(reflect<SymbolClass>())).to.be.eql(
+      expect(converter.convert(reflect<SymbolClass>())).toEqual(
         new Class(SymbolClass, {
           [symbolAsAKey]: new InstanceOf(String),
         })
@@ -321,7 +328,7 @@ describe(`Class conversion`, () => {
         length: number;
       }
 
-      expect(converter.convert(reflect<EnsureKeysClass>())).to.be.eql(
+      expect(converter.convert(reflect<EnsureKeysClass>())).toEqual(
         new Class(EnsureKeysClass, {
           length: new InstanceOf(Number),
         })
@@ -334,7 +341,7 @@ describe(`Class conversion`, () => {
         key!: string;
       }
 
-      expect(converter.convert(reflect<BangClass>())).to.be.eql(
+      expect(converter.convert(reflect<BangClass>())).toEqual(
         new Class(BangClass, {
           key: new InstanceOf(String),
         })
@@ -353,7 +360,7 @@ describe(`Class conversion`, () => {
         unknown: unknown;
       }
 
-      expect(converter.convert(reflect<NativeClass>())).to.be.eql(
+      expect(converter.convert(reflect<NativeClass>())).toEqual(
         new Class(NativeClass, {
           any: new Any(),
 
@@ -382,7 +389,7 @@ describe(`Class conversion`, () => {
         boolean: boolean;
       }
 
-      expect(converter.convert(reflect<PrimitiveClass>())).to.be.eql(
+      expect(converter.convert(reflect<PrimitiveClass>())).toEqual(
         new Class(PrimitiveClass, {
           null: null,
 
@@ -411,7 +418,7 @@ describe(`Class conversion`, () => {
         false: false;
       }
 
-      expect(converter.convert(reflect<ValueLiteralClass>())).to.be.eql(
+      expect(converter.convert(reflect<ValueLiteralClass>())).toEqual(
         new Class(ValueLiteralClass, {
           stringLiteral: new Equals('my-string'),
 
@@ -442,7 +449,7 @@ describe(`Class conversion`, () => {
         defaultEnumLiteral: DefaultEnum;
       }
 
-      expect(converter.convert(reflect<UnionClass>())).to.be.eql(
+      expect(converter.convert(reflect<UnionClass>())).toEqual(
         new Class(UnionClass, {
           optionalString: new Optional(new InstanceOf(String)),
 
@@ -485,7 +492,7 @@ describe(`Class conversion`, () => {
         optionalMixedNestedTuple?: [string, number, [false, true]];
       }
 
-      expect(converter.convert(reflect<TupleClass>())).to.be.eql(
+      expect(converter.convert(reflect<TupleClass>())).toEqual(
         new Class(TupleClass, {
           stringTuple: new Tuple(new InstanceOf(String)),
 
@@ -535,7 +542,7 @@ describe(`Class conversion`, () => {
         objectTypeWithSymbol: ObjectTypeWithSymbol;
       }
 
-      expect(converter.convert(reflect<NestedClass>())).to.be.eql(
+      expect(converter.convert(reflect<NestedClass>())).toEqual(
         new Class(NestedClass, {
           objectTypeWithSymbol: new Collection({
             key: new InstanceOf(String),
@@ -552,7 +559,7 @@ describe(`Class conversion`, () => {
         class: MyClass;
       }
 
-      expect(converter.convert(reflect<NestedClass>())).to.be.eql(
+      expect(converter.convert(reflect<NestedClass>())).toEqual(
         new Class(NestedClass, {
           class: new InstanceOf(MyClass),
         })
@@ -570,7 +577,7 @@ describe(`Class conversion`, () => {
         type: MyType;
       }
 
-      expect(converter.convert(reflect<TypeClass>())).to.be.eql(
+      expect(converter.convert(reflect<TypeClass>())).toEqual(
         new Class(TypeClass, {
           type: new Collection({
             first: new InstanceOf(String),
@@ -591,7 +598,7 @@ describe(`Class conversion`, () => {
         interface: MyInterface;
       }
 
-      expect(converter.convert(reflect<InterfaceClass>())).to.be.eql(
+      expect(converter.convert(reflect<InterfaceClass>())).toEqual(
         new Class(InterfaceClass, {
           interface: new Collection({
             first: new InstanceOf(String),

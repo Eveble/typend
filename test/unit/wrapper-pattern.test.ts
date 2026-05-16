@@ -1,11 +1,16 @@
-import { expect, use } from 'chai';
-import { stubInterface } from 'ts-sinon';
-import sinonChai from 'sinon-chai';
-import sinon from 'sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../vitest-helper';
 import { types } from '../../src/types';
 import { WrapperPattern } from '../../src/wrapper-pattern';
-
-use(sinonChai);
 
 describe(`WrapperPattern`, () => {
   let describer: any;
@@ -16,11 +21,11 @@ describe(`WrapperPattern`, () => {
 
   it('wraps provided expectation as array', () => {
     class MyPattern extends WrapperPattern {}
-    expect(new MyPattern('my-expectation')).to.be.eql(['my-expectation']);
+    expect(new MyPattern('my-expectation')).toEqual(['my-expectation']);
   });
 
   it('runs onValidation hook before assigning expectation', () => {
-    const onValidation = sinon.stub();
+    const onValidation = vi.fn();
     class MyPattern extends WrapperPattern {
       onValidation(...expectations: any[]): boolean {
         onValidation(expectations);
@@ -30,21 +35,21 @@ describe(`WrapperPattern`, () => {
 
     const expectation = 'my-expectation';
     const instance = new MyPattern(expectation);
-    expect(instance).to.be.eql([expectation]);
-    expect(onValidation).to.be.calledOnce;
-    expect(onValidation).to.be.calledWithExactly([expectation]);
+    expect(instance).toEqual([expectation]);
+    expect(onValidation).toHaveBeenCalledTimes(1);
+    expect(onValidation).toHaveBeenCalledWith([expectation]);
   });
 
   it('returns patterns type kind', () => {
     class MyPattern extends WrapperPattern {
       static kind = 'my-kind';
     }
-    expect(new MyPattern().getKind()).to.be.equal('my-kind');
+    expect(new MyPattern().getKind()).toBe('my-kind');
   });
 
   it('allows to set describer on WrapperPattern', () => {
     WrapperPattern.setDescriber(describer);
-    expect(WrapperPattern.getDescriber()).to.be.equal(describer);
+    expect(WrapperPattern.getDescriber()).toBe(describer);
   });
 
   it('describes provided value to string', () => {
@@ -56,9 +61,9 @@ describe(`WrapperPattern`, () => {
     const valStr = `String('my-value'`;
     describer.describe.withArgs(val).returns(valStr);
 
-    expect(pattern.describe(val)).to.be.equal(valStr);
-    expect(describer.describe).to.be.calledOnce;
-    expect(describer.describe).to.be.calledWithExactly(val);
+    expect(pattern.describe(val)).toBe(valStr);
+    expect(describer.describe).toHaveBeenCalledTimes(1);
+    expect(describer.describe).toHaveBeenCalledWith(val);
   });
 
   describe('property initializers', () => {
@@ -68,18 +73,18 @@ describe(`WrapperPattern`, () => {
       it('returns true if property initializer is set on pattern', () => {
         const pattern = new MyPattern();
         pattern.setInitializer('my-initializer-value');
-        expect(pattern.hasInitializer()).to.be.true;
+        expect(pattern.hasInitializer()).toBe(true);
       });
       it('returns false if property initializer is missing from pattern', () => {
         const pattern = new MyPattern();
-        expect(pattern.hasInitializer()).to.be.false;
+        expect(pattern.hasInitializer()).toBe(false);
       });
     });
     it('sets the property initializer on pattern', () => {
       const pattern = new MyPattern();
       const initializer = 'my-initializer-value';
       pattern.setInitializer(initializer);
-      expect(pattern.getInitializer()).to.be.equal(initializer);
+      expect(pattern.getInitializer()).toBe(initializer);
     });
   });
 });

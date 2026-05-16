@@ -1,5 +1,15 @@
 import 'reflect-metadata';
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { Internal } from '../../../src/annotations/internal';
 import {
   INTERNAL_PROPS_KEY,
@@ -47,7 +57,7 @@ describe(`internal`, () => {
         INTERNAL_PROPS_KEY,
         Parent
       );
-      expect(internalKeys).to.be.eql({
+      expect(internalKeys).toEqual({
         internalParentKey: true,
         internalOtherParentKey: true,
       });
@@ -58,7 +68,7 @@ describe(`internal`, () => {
         INTERNAL_PROPS_KEY,
         Child
       );
-      expect(internalKeys).to.be.eql({
+      expect(internalKeys).toEqual({
         internalChildKey: true,
       });
     });
@@ -70,7 +80,7 @@ describe(`internal`, () => {
         INTERNAL_METHODS_KEY,
         Parent
       );
-      expect(internalMethods).to.be.eql({
+      expect(internalMethods).toEqual({
         internalParentMethod: true,
         internalOtherParentMethod: true,
       });
@@ -81,7 +91,7 @@ describe(`internal`, () => {
         INTERNAL_METHODS_KEY,
         Child
       );
-      expect(internalKeys).to.be.eql({
+      expect(internalKeys).toEqual({
         internalChildMethod: true,
       });
     });

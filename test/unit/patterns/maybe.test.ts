@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { Maybe } from '../../../src/patterns/maybe';
 import { Pattern } from '../../../src/pattern';
@@ -120,7 +120,7 @@ describe(`Maybe`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(Maybe.prototype).to.instanceof(WrapperPattern);
+    expect(Maybe.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
@@ -131,13 +131,13 @@ describe(`Maybe`, () => {
         expect(
           new Maybe(expectation),
           `Expected expectation ${expectationStr} to be valid`
-        ).to.eql([expectation]);
+        ).toEqual([expectation]);
       }
     });
 
     it(`has assigned 'MAYBE' as type kind`, () => {
       const pattern = new Maybe(String);
-      expect(pattern.getKind()).to.be.equal(KINDS.MAYBE);
+      expect(pattern.getKind()).toBe(KINDS.MAYBE);
     });
   });
 });

@@ -1,6 +1,14 @@
-import { expect, use } from 'chai';
-import sinonChai from 'sinon-chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { Interface } from '../../../src/patterns/interface';
 import { InterfaceValidator } from '../../../src/validators/interface-validator';
@@ -11,8 +19,6 @@ import {
   UnequalValueError,
   UnexpectedKeyError,
 } from '../../../src/errors';
-
-use(sinonChai);
 
 describe(`InterfaceValidator`, () => {
   let describer: any;
@@ -44,26 +50,27 @@ describe(`InterfaceValidator`, () => {
   }
 
   it(`extends PatternValidator`, () => {
-    expect(InterfaceValidator.prototype).to.instanceof(PatternValidator);
+    expect(InterfaceValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
-    context('explicit expectation', () => {
+    describe('explicit expectation', () => {
       it('returns true for pattern instance of Interface', () => {
         const classValidator = new InterfaceValidator();
-        expect(classValidator.canValidate(new Interface({ key: String }))).to.be
-          .true;
+        expect(classValidator.canValidate(new Interface({ key: String }))).toBe(
+          true
+        );
       });
     });
 
-    context('implicit expectation', () => {
+    describe('implicit expectation', () => {
       it('does not support implicit expectations', () => {
         const classValidator = new InterfaceValidator();
-        expect(classValidator.canValidate(undefined)).to.be.false;
-        expect(classValidator.canValidate(null)).to.be.false;
-        expect(classValidator.canValidate(true)).to.be.false;
-        expect(classValidator.canValidate(false)).to.be.false;
-        expect(classValidator.canValidate({})).to.be.false;
+        expect(classValidator.canValidate(undefined)).toBe(false);
+        expect(classValidator.canValidate(null)).toBe(false);
+        expect(classValidator.canValidate(true)).toBe(false);
+        expect(classValidator.canValidate(false)).toBe(false);
+        expect(classValidator.canValidate({})).toBe(false);
       });
     });
   });
@@ -79,16 +86,16 @@ describe(`InterfaceValidator`, () => {
       const valStr = inspect(val);
       describer.describe.returns(valStr);
 
-      expect(() => intfValidator.validate(val, intf, validator)).to.throw(
+      expect(() => intfValidator.validate(val, intf, validator)).toThrow(
         InvalidTypeError,
         `Expected ${valStr} to be an Object or class instance`
       );
-      expect(describer.describe).to.be.called;
-      expect(describer.describe).to.be.calledWith(val);
+      expect(describer.describe).toHaveBeenCalled();
+      expect(describer.describe).toHaveBeenCalledWith(val);
     });
   });
 
-  context('valid values', () => {
+  describe('valid values', () => {
     it('iterates through each expected properties and methods entries of class instance and validates them against validator', () => {
       const intfValidator = new InterfaceValidator();
 
@@ -104,12 +111,12 @@ describe(`InterfaceValidator`, () => {
       validator.validate.withArgs('getName', Function).returns(true);
       validator.validate.withArgs('getAge', Function).returns(true);
 
-      expect(intfValidator.validate(val, intf, validator)).to.be.true;
-      expect(validator.validate).to.be.callCount(4);
-      expect(validator.validate).to.be.calledWith('Jane Doe', String);
-      expect(validator.validate).to.be.calledWith(28, Number);
-      expect(validator.validate).to.be.calledWith(val.getAge, Function);
-      expect(validator.validate).to.be.calledWith(val.getName, Function);
+      expect(intfValidator.validate(val, intf, validator)).toBe(true);
+      expect(validator.validate).toHaveBeenCalledTimes(4);
+      expect(validator.validate).toHaveBeenCalledWith('Jane Doe', String);
+      expect(validator.validate).toHaveBeenCalledWith(28, Number);
+      expect(validator.validate).toHaveBeenCalledWith(val.getAge, Function);
+      expect(validator.validate).toHaveBeenCalledWith(val.getName, Function);
     });
 
     it('iterates through each expected properties and methods of an object entries and validates them against validator', () => {
@@ -136,12 +143,12 @@ describe(`InterfaceValidator`, () => {
       validator.validate.withArgs('getName', Function).returns(true);
       validator.validate.withArgs('getAge', Function).returns(true);
 
-      expect(intfValidator.validate(val, intf, validator)).to.be.true;
-      expect(validator.validate).to.be.callCount(4);
-      expect(validator.validate).to.be.calledWith('Jane Doe', String);
-      expect(validator.validate).to.be.calledWith(28, Number);
-      expect(validator.validate).to.be.calledWith(val.getAge, Function);
-      expect(validator.validate).to.be.calledWith(val.getName, Function);
+      expect(intfValidator.validate(val, intf, validator)).toBe(true);
+      expect(validator.validate).toHaveBeenCalledTimes(4);
+      expect(validator.validate).toHaveBeenCalledWith('Jane Doe', String);
+      expect(validator.validate).toHaveBeenCalledWith(28, Number);
+      expect(validator.validate).toHaveBeenCalledWith(val.getAge, Function);
+      expect(validator.validate).toHaveBeenCalledWith(val.getName, Function);
     });
 
     it(`returns true for object value with other arbitrary keys and values`, () => {
@@ -161,9 +168,9 @@ describe(`InterfaceValidator`, () => {
         .withArgs(2, undefined)
         .throws(new UnequalValueError(`Expected Number(2) to be a undefined`));
 
-      expect(intfValidator.validate(val, intf, validator)).to.be.true;
-      expect(validator.validate).to.be.calledOnce;
-      expect(validator.validate).to.be.calledWith('value', String);
+      expect(intfValidator.validate(val, intf, validator)).toBe(true);
+      expect(validator.validate).toHaveBeenCalledTimes(1);
+      expect(validator.validate).toHaveBeenCalledWith('value', String);
     });
 
     it(`returns true for nested object value with other arbitrary keys and values`, () => {
@@ -196,13 +203,13 @@ describe(`InterfaceValidator`, () => {
           )
         );
 
-      expect(intfValidator.validate(val, expectation, validator)).to.be.true;
-      expect(validator.validate).to.be.calledOnce;
-      expect(validator.validate).to.be.calledWith('value', String);
+      expect(intfValidator.validate(val, expectation, validator)).toBe(true);
+      expect(validator.validate).toHaveBeenCalledTimes(1);
+      expect(validator.validate).toHaveBeenCalledWith('value', String);
     });
   });
 
-  context('invalid values', () => {
+  describe('invalid values', () => {
     it(`pass-through errors from type validator validation if provided value contain nested properties that does not match expected one`, () => {
       const intfValidator = new InterfaceValidator();
 
@@ -241,12 +248,12 @@ describe(`InterfaceValidator`, () => {
         );
       validator.validate.withArgs('c-value', String).returns(true);
 
-      expect(() => intfValidator.validate(val, pattern, validator)).to.throw(
+      expect(() => intfValidator.validate(val, pattern, validator)).toThrow(
         UnequalValueError,
         `(Key 'foo.bar.b': Expected Number, got String("invalid-should-be-number") in {"foo":{"bar":{"a":"a-value","b":"b-invalid-not-a-number"},"baz":{"c":"c-value"}}})`
       );
-      expect(validator.validate).to.be.calledWith('a-value', String);
-      expect(validator.validate).to.be.calledWith(
+      expect(validator.validate).toHaveBeenCalledWith('a-value', String);
+      expect(validator.validate).toHaveBeenCalledWith(
         'b-invalid-not-a-number',
         Number
       );

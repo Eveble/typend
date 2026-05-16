@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { validate, ValidationError, PropTypes } from '../../../src/index';
 
 describe('where', () => {
@@ -14,6 +23,6 @@ describe('where', () => {
 
     expect(() => {
       validate('bar', PropTypes.where(validateFoo));
-    }).to.throw(ValidationError);
+    }).toThrow(ValidationError);
   });
 });

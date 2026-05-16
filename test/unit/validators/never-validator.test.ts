@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { NeverValidator } from '../../../src/validators/never-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -30,28 +39,28 @@ describe(`NeverValidator`, () => {
   class MyError extends Error {}
 
   it(`extends PatternValidator`, () => {
-    expect(NeverValidator.prototype).to.instanceof(PatternValidator);
+    expect(NeverValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
     it('returns true for pattern instance of Never', () => {
       const neverValidator = new NeverValidator();
-      expect(neverValidator.canValidate(new Never())).to.be.true;
+      expect(neverValidator.canValidate(new Never())).toBe(true);
     });
 
     it('returns false for any other implicit expectation', () => {
       const neverValidator = new NeverValidator();
-      expect(neverValidator.canValidate(true)).to.be.false;
-      expect(neverValidator.canValidate(false)).to.be.false;
-      expect(neverValidator.canValidate(undefined)).to.be.false;
-      expect(neverValidator.canValidate(null)).to.be.false;
+      expect(neverValidator.canValidate(true)).toBe(false);
+      expect(neverValidator.canValidate(false)).toBe(false);
+      expect(neverValidator.canValidate(undefined)).toBe(false);
+      expect(neverValidator.canValidate(null)).toBe(false);
     });
   });
 
   describe('validation', () => {
     it('returns true for undefined value', () => {
       const neverValidator = new NeverValidator();
-      expect(neverValidator.validate(undefined)).to.be.true;
+      expect(neverValidator.validate(undefined)).toBe(true);
     });
 
     it('returns false for any other value', () => {
@@ -155,7 +164,7 @@ describe(`NeverValidator`, () => {
         const valStr = inspect(val);
         describer.describe.withArgs(val).returns(valStr);
 
-        expect(() => neverValidator.validate(val)).to.throw(
+        expect(() => neverValidator.validate(val)).toThrow(
           ValidationError,
           `Expected value to never be assigned, got ${valStr}`
         );

@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { Where } from '../../../src/patterns/where';
 import { InvalidTypeError } from '../../../src/errors';
@@ -106,7 +106,7 @@ describe(`Where`, () => {
   ];
 
   it(`extends Array`, () => {
-    expect(Where.prototype).to.instanceof(WrapperPattern);
+    expect(Where.prototype).toBeInstanceOf(WrapperPattern);
   });
 
   describe('construction', () => {
@@ -117,7 +117,7 @@ describe(`Where`, () => {
       expect(
         new Where(expectation),
         `Expected expectation ${expectationStr} to be valid`
-      ).to.eql([expectation]);
+      ).toEqual([expectation]);
     });
 
     it.skip('throws InvalidTypeError for constructor functions', () => {
@@ -140,7 +140,7 @@ describe(`Where`, () => {
         expect(
           () => new Where(expectation),
           `Expected expectation ${expectationStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidTypeError,
           `Where expectation is invalid. Expected expectation to be a Function, got ${expectationStr}`
         );
@@ -154,7 +154,7 @@ describe(`Where`, () => {
         expect(
           () => new Where(expectation),
           `Expected expectation ${expectationStr} to be invalid`
-        ).to.throw(
+        ).toThrow(
           InvalidTypeError,
           `Where expectation is invalid. Expected expectation to be a Function, got ${expectationStr}`
         );
@@ -163,7 +163,7 @@ describe(`Where`, () => {
 
     it(`has assigned 'WHERE' as type kind`, () => {
       const pattern = new Where((): boolean => true);
-      expect(pattern.getKind()).to.be.equal(KINDS.WHERE);
+      expect(pattern.getKind()).toBe(KINDS.WHERE);
     });
   });
 });

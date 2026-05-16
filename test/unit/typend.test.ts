@@ -1,6 +1,14 @@
-import { expect, use } from 'chai';
-import sinonChai from 'sinon-chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../vitest-helper';
 import { inspect } from 'util';
 import { Class } from '../../src/patterns/class';
 import { types } from '../../src/types';
@@ -11,8 +19,6 @@ import { Utility } from '../../src/utility';
 import { InvalidTypeError } from '../../src/errors';
 import { InstanceOf } from '../../src/patterns/instance-of';
 import { Interface } from '../../src/patterns/interface';
-
-use(sinonChai);
 
 describe(`Typend`, () => {
   let converter: any;
@@ -28,9 +34,9 @@ describe(`Typend`, () => {
   describe('construction', () => {
     it('takes arguments: converters implementing Converter, describer implementing Describer, validator implementing Validator and assigns them', () => {
       const typend = new Typend(converter, describer, validator);
-      expect(typend.converter).to.be.equal(converter);
-      expect(typend.describer).to.be.equal(describer);
-      expect(typend.validator).to.be.equal(validator);
+      expect(typend.converter).toBe(converter);
+      expect(typend.describer).toBe(describer);
+      expect(typend.validator).toBe(validator);
     });
   });
 
@@ -42,9 +48,9 @@ describe(`Typend`, () => {
       const isStrict = true;
       validator.validate.withArgs(value, expectation, isStrict).returns(true);
 
-      expect(typend.validate(value, expectation, isStrict)).to.be.true;
-      expect(validator.validate).to.be.calledOnce;
-      expect(validator.validate).to.be.calledWithExactly(
+      expect(typend.validate(value, expectation, isStrict)).toBe(true);
+      expect(validator.validate).toHaveBeenCalledTimes(1);
+      expect(validator.validate).toHaveBeenCalledWith(
         value,
         expectation,
         isStrict
@@ -61,13 +67,9 @@ describe(`Typend`, () => {
       const isStrict = true;
       validator.validate.withArgs(value, pattern, isStrict).returns(true);
 
-      expect(typend.validate(value, utility, isStrict)).to.be.true;
-      expect(validator.validate).to.be.calledOnce;
-      expect(validator.validate).to.be.calledWithExactly(
-        value,
-        pattern,
-        isStrict
-      );
+      expect(typend.validate(value, utility, isStrict)).toBe(true);
+      expect(validator.validate).toHaveBeenCalledTimes(1);
+      expect(validator.validate).toHaveBeenCalledWith(value, pattern, isStrict);
     });
 
     it('delegates validation of instantiated pattern from class by utility to validator', () => {
@@ -82,11 +84,11 @@ describe(`Typend`, () => {
       const isStrict = true;
       validator.validate.returns(true);
 
-      expect(typend.validate(value, MyPattern, isStrict)).to.be.true;
-      expect(validator.validate).to.be.calledOnce;
-      expect(validator.validate.getCall(0).args[0]).to.be.equal(value);
-      expect(validator.validate.getCall(0).args[1]).to.be.instanceOf(MyPattern);
-      expect(validator.validate.getCall(0).args[2]).to.be.equal(isStrict);
+      expect(typend.validate(value, MyPattern, isStrict)).toBe(true);
+      expect(validator.validate).toHaveBeenCalledTimes(1);
+      expect(validator.validate.mock.calls[0][0]).toBe(value);
+      expect(validator.validate.mock.calls[0][1]).toBeInstanceOf(MyPattern);
+      expect(validator.validate.mock.calls[0][2]).toBe(isStrict);
     });
   });
 
@@ -99,9 +101,9 @@ describe(`Typend`, () => {
         const isStrict = true;
         validator.isValid.withArgs(value, expectation, isStrict).returns(true);
 
-        expect(typend.isValid(value, expectation, isStrict)).to.be.true;
-        expect(validator.isValid).to.be.calledOnce;
-        expect(validator.isValid).to.be.calledWithExactly(
+        expect(typend.isValid(value, expectation, isStrict)).toBe(true);
+        expect(validator.isValid).toHaveBeenCalledTimes(1);
+        expect(validator.isValid).toHaveBeenCalledWith(
           value,
           expectation,
           isStrict
@@ -118,9 +120,9 @@ describe(`Typend`, () => {
         const isStrict = true;
         validator.isValid.withArgs(value, pattern, isStrict).returns(true);
 
-        expect(typend.isValid(value, utility, isStrict)).to.be.true;
-        expect(validator.isValid).to.be.calledOnce;
-        expect(validator.isValid).to.be.calledWithExactly(
+        expect(typend.isValid(value, utility, isStrict)).toBe(true);
+        expect(validator.isValid).toHaveBeenCalledTimes(1);
+        expect(validator.isValid).toHaveBeenCalledWith(
           value,
           pattern,
           isStrict
@@ -139,13 +141,11 @@ describe(`Typend`, () => {
         const isStrict = true;
         validator.isValid.returns(true);
 
-        expect(typend.isValid(value, MyPattern, isStrict)).to.be.true;
-        expect(validator.isValid).to.be.calledOnce;
-        expect(validator.isValid.getCall(0).args[0]).to.be.equal(value);
-        expect(validator.isValid.getCall(0).args[1]).to.be.instanceOf(
-          MyPattern
-        );
-        expect(validator.isValid.getCall(0).args[2]).to.be.equal(isStrict);
+        expect(typend.isValid(value, MyPattern, isStrict)).toBe(true);
+        expect(validator.isValid).toHaveBeenCalledTimes(1);
+        expect(validator.isValid.mock.calls[0][0]).toBe(value);
+        expect(validator.isValid.mock.calls[0][1]).toBeInstanceOf(MyPattern);
+        expect(validator.isValid.mock.calls[0][2]).toBe(isStrict);
       });
     });
 
@@ -155,7 +155,7 @@ describe(`Typend`, () => {
         const expectationStr = inspect(expectation);
         describer.describe.withArgs(expectation).returns(expectationStr);
         const typend = new Typend(converter, describer, validator);
-        expect(() => typend.isInstanceOf(true, expectation)).to.throw(
+        expect(() => typend.isInstanceOf(true, expectation)).toThrow(
           InvalidTypeError,
           `Provided expectation to instanceOf is invalid. Expected type or interface, got ${expectationStr}`
         );
@@ -167,12 +167,9 @@ describe(`Typend`, () => {
         const expectation = String;
         validator.isInstanceOf.withArgs(value, expectation).returns(true);
 
-        expect(typend.isInstanceOf(value, expectation)).to.be.true;
-        expect(validator.isInstanceOf).to.be.calledOnce;
-        expect(validator.isInstanceOf).to.be.calledWithExactly(
-          value,
-          expectation
-        );
+        expect(typend.isInstanceOf(value, expectation)).toBe(true);
+        expect(validator.isInstanceOf).toHaveBeenCalledTimes(1);
+        expect(validator.isInstanceOf).toHaveBeenCalledWith(value, expectation);
       });
 
       it('delegates evaluation of explicit Class pattern instance to validator', () => {
@@ -184,12 +181,9 @@ describe(`Typend`, () => {
         const expectation = new Class(MyClass, { key: String });
         validator.isInstanceOf.withArgs(value, expectation).returns(true);
 
-        expect(typend.isInstanceOf(value, expectation)).to.be.true;
-        expect(validator.isInstanceOf).to.be.calledOnce;
-        expect(validator.isInstanceOf).to.be.calledWithExactly(
-          value,
-          expectation
-        );
+        expect(typend.isInstanceOf(value, expectation)).toBe(true);
+        expect(validator.isInstanceOf).toHaveBeenCalledTimes(1);
+        expect(validator.isInstanceOf).toHaveBeenCalledWith(value, expectation);
       });
 
       it('delegates evaluation of explicit InstanceOf pattern instance to validator', () => {
@@ -201,12 +195,9 @@ describe(`Typend`, () => {
         const expectation = new InstanceOf(MyClass);
         validator.isInstanceOf.withArgs(value, expectation).returns(true);
 
-        expect(typend.isInstanceOf(value, expectation)).to.be.true;
-        expect(validator.isInstanceOf).to.be.calledOnce;
-        expect(validator.isInstanceOf).to.be.calledWithExactly(
-          value,
-          expectation
-        );
+        expect(typend.isInstanceOf(value, expectation)).toBe(true);
+        expect(validator.isInstanceOf).toHaveBeenCalledTimes(1);
+        expect(validator.isInstanceOf).toHaveBeenCalledWith(value, expectation);
       });
 
       it('delegates evaluation of explicit Interface pattern instance to validator', () => {
@@ -219,12 +210,9 @@ describe(`Typend`, () => {
         });
         validator.isInstanceOf.withArgs(value, expectation).returns(true);
 
-        expect(typend.isInstanceOf(value, expectation)).to.be.true;
-        expect(validator.isInstanceOf).to.be.calledOnce;
-        expect(validator.isInstanceOf).to.be.calledWithExactly(
-          value,
-          expectation
-        );
+        expect(typend.isInstanceOf(value, expectation)).toBe(true);
+        expect(validator.isInstanceOf).toHaveBeenCalledTimes(1);
+        expect(validator.isInstanceOf).toHaveBeenCalledWith(value, expectation);
       });
     });
   });
@@ -233,33 +221,33 @@ describe(`Typend`, () => {
     it('allows to override converter', () => {
       const otherConverter = stubInterface<types.Converter>();
       const typend = new Typend(converter, describer, validator);
-      expect(typend.getConverter()).to.be.equal(converter);
+      expect(typend.getConverter()).toBe(converter);
 
       typend.setConverter(otherConverter);
-      expect(typend.getConverter()).to.be.equal(otherConverter);
+      expect(typend.getConverter()).toBe(otherConverter);
     });
 
     it('allows to override describer', () => {
       const otherDescriber = stubInterface<types.Describer>();
       const typend = new Typend(converter, describer, validator);
-      expect(Pattern.getDescriber()).to.be.equal(describer);
-      expect(PatternValidator.getDescriber()).to.be.equal(describer);
-      expect(Utility.getDescriber()).to.be.equal(describer);
+      expect(Pattern.getDescriber()).toBe(describer);
+      expect(PatternValidator.getDescriber()).toBe(describer);
+      expect(Utility.getDescriber()).toBe(describer);
 
       typend.setDescriber(otherDescriber);
-      expect(typend.getDescriber()).to.be.equal(otherDescriber);
-      expect(Pattern.getDescriber()).to.be.equal(otherDescriber);
-      expect(PatternValidator.getDescriber()).to.be.equal(otherDescriber);
-      expect(Utility.getDescriber()).to.be.equal(otherDescriber);
+      expect(typend.getDescriber()).toBe(otherDescriber);
+      expect(Pattern.getDescriber()).toBe(otherDescriber);
+      expect(PatternValidator.getDescriber()).toBe(otherDescriber);
+      expect(Utility.getDescriber()).toBe(otherDescriber);
     });
 
     it('allows to override validator', () => {
       const otherValidator = stubInterface<types.Validator>();
       const typend = new Typend(converter, describer, validator);
-      expect(typend.getValidator()).to.be.equal(validator);
+      expect(typend.getValidator()).toBe(validator);
 
       typend.setValidator(otherValidator);
-      expect(typend.getValidator()).to.be.equal(otherValidator);
+      expect(typend.getValidator()).toBe(otherValidator);
     });
   });
 
@@ -267,22 +255,22 @@ describe(`Typend`, () => {
     it('enables debugging on library on inexplicit call', () => {
       const typend = new Typend(converter, describer, validator);
       typend.debug();
-      expect(describer.setFormatting).to.be.calledOnce;
-      expect(describer.setFormatting).to.be.calledWithExactly('debug');
+      expect(describer.setFormatting).toHaveBeenCalledTimes(1);
+      expect(describer.setFormatting).toHaveBeenCalledWith('debug');
     });
 
     it('enables debugging on library on explicit call', () => {
       const typend = new Typend(converter, describer, validator);
       typend.debug(true);
-      expect(describer.setFormatting).to.be.calledOnce;
-      expect(describer.setFormatting).to.be.calledWithExactly('debug');
+      expect(describer.setFormatting).toHaveBeenCalledTimes(1);
+      expect(describer.setFormatting).toHaveBeenCalledWith('debug');
     });
 
     it('disables debugging on library on explicit call', () => {
       const typend = new Typend(converter, describer, validator);
       typend.debug(false);
-      expect(describer.setFormatting).to.be.calledOnce;
-      expect(describer.setFormatting).to.be.calledWithExactly('default');
+      expect(describer.setFormatting).toHaveBeenCalledTimes(1);
+      expect(describer.setFormatting).toHaveBeenCalledWith('default');
     });
   });
 });

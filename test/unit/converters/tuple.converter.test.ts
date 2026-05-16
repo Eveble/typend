@@ -1,6 +1,15 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { reflect } from 'tsruntime';
-import { stubInterface } from 'ts-sinon';
+import { stubInterface } from '../../vitest-helper';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { TupleConverter } from '../../../src/converters/tsruntime/type-converters/tuple.converter';
 import { types } from '../../../src/types';
@@ -61,7 +70,7 @@ describe(`TupleConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -80,7 +89,7 @@ describe(`TupleConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -94,7 +103,7 @@ describe(`TupleConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -106,7 +115,7 @@ describe(`TupleConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -121,7 +130,7 @@ describe(`TupleConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -133,7 +142,7 @@ describe(`TupleConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to be convertible`
-        ).to.be.true;
+        ).toBe(true);
       }
     });
 
@@ -149,7 +158,7 @@ describe(`TupleConverter`, () => {
         expect(
           typeConverter.isConvertible(type),
           `Expected ${desc} to not be convertible`
-        ).to.be.false;
+        ).toBe(false);
       }
     });
   });
@@ -161,7 +170,7 @@ describe(`TupleConverter`, () => {
       converter.reflect.withArgs({ kind: 4 }).returns(Boolean);
       expect(
         typeConverter.reflect(reflect<[string, number, boolean]>(), converter)
-      ).to.be.eql([String, Number, Boolean]);
+      ).toEqual([String, Number, Boolean]);
     });
 
     it('reflects tuple with reference types as type constructors', () => {
@@ -173,7 +182,7 @@ describe(`TupleConverter`, () => {
         ],
       };
 
-      expect(typeConverter.reflect(tupleType, converter)).to.be.eql([
+      expect(typeConverter.reflect(tupleType, converter)).toEqual([
         MyClass,
         MyOtherClass,
       ]);
@@ -192,7 +201,7 @@ describe(`TupleConverter`, () => {
       converter.reflect.withArgs({ kind: TypeKind.String }).returns(String);
       converter.reflect.withArgs({ kind: TypeKind.Number }).returns(Number);
 
-      expect(typeConverter.reflect(tupleType, converter)).to.be.eql([
+      expect(typeConverter.reflect(tupleType, converter)).toEqual([
         String,
         MyClass,
         Number,
@@ -212,12 +221,12 @@ describe(`TupleConverter`, () => {
       converter.convert.withArgs({ kind: TypeKind.Number }).returns(Number);
 
       const result = typeConverter.convert(tupleType, converter);
-      expect(result).to.be.instanceof(Tuple);
-      expect(result).to.be.eql([new InstanceOf(MyClass), Number]);
-      expect(result.hasInitializer()).to.be.true;
-      expect(result.getInitializer()).to.be.instanceOf(Array);
-      expect(result.getInitializer()[0]).to.be.instanceOf(MyClass);
-      expect(result.getInitializer()[1]).to.equal(42);
+      expect(result).toBeInstanceOf(Tuple);
+      expect(result).toEqual([new InstanceOf(MyClass), Number]);
+      expect(result.hasInitializer()).toBe(true);
+      expect(result.getInitializer()).toBeInstanceOf(Array);
+      expect(result.getInitializer()[0]).toBeInstanceOf(MyClass);
+      expect(result.getInitializer()[1]).toBe(42);
     });
   });
 
@@ -230,8 +239,8 @@ describe(`TupleConverter`, () => {
         reflect<[string, number, boolean]>(),
         converter
       );
-      expect(result).to.be.instanceof(Tuple);
-      expect(result).to.be.eql([String, Number, Boolean]);
+      expect(result).toBeInstanceOf(Tuple);
+      expect(result).toEqual([String, Number, Boolean]);
     });
 
     it('converts tuple assigned as property with initializer', () => {
@@ -245,10 +254,10 @@ describe(`TupleConverter`, () => {
       converter.convert.withArgs({ kind: 3 }).returns(Number);
       converter.convert.withArgs({ kind: 4 }).returns(Boolean);
       const result = typeConverter.convert(reflectedType, converter);
-      expect(result).to.be.instanceof(Tuple);
-      expect(result).to.be.eql([String, Number, Boolean]);
-      expect(result.hasInitializer()).to.be.true;
-      expect(result.getInitializer()).to.be.eql(['my-value', 1337, true]);
+      expect(result).toBeInstanceOf(Tuple);
+      expect(result).toEqual([String, Number, Boolean]);
+      expect(result.hasInitializer()).toBe(true);
+      expect(result.getInitializer()).toEqual(['my-value', 1337, true]);
     });
 
     it('converts tuple with reference types as InstanceOf patterns', () => {
@@ -261,8 +270,8 @@ describe(`TupleConverter`, () => {
       };
 
       const result = typeConverter.convert(tupleType, converter);
-      expect(result).to.be.instanceof(Tuple);
-      expect(result).to.be.eql([
+      expect(result).toBeInstanceOf(Tuple);
+      expect(result).toEqual([
         new InstanceOf(MyClass),
         new InstanceOf(MyOtherClass),
       ]);
@@ -282,8 +291,8 @@ describe(`TupleConverter`, () => {
       converter.convert.withArgs({ kind: TypeKind.Number }).returns(Number);
 
       const result = typeConverter.convert(tupleType, converter);
-      expect(result).to.be.instanceof(Tuple);
-      expect(result).to.be.eql([String, new InstanceOf(MyClass), Number]);
+      expect(result).toBeInstanceOf(Tuple);
+      expect(result).toEqual([String, new InstanceOf(MyClass), Number]);
     });
   });
 });

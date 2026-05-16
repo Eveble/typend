@@ -1,4 +1,14 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { Types as tsruntimeTypes } from 'tsruntime';
 import { Type } from '../../../src/decorators/type.decorator';
 import 'reflect-metadata';
@@ -22,7 +32,7 @@ describe(`Type`, () => {
     for (const metadataKey of metadataKeys) {
       if (metadataKey.toString() === Symbol('tsruntime:type').toString()) {
         const metadata = Reflect.getMetadata(metadataKey, Parent);
-        expect(metadata).to.be.eql({
+        expect(metadata).toEqual({
           kind: 19,
           name: 'Parent',
           properties: {
@@ -42,7 +52,7 @@ describe(`Type`, () => {
     for (const metadataKey of metadataKeys) {
       if (metadataKey.toString() === Symbol('tsruntime:type').toString()) {
         const metadata = Reflect.getMetadata(metadataKey, Child);
-        expect(metadata).to.be.eql({
+        expect(metadata).toEqual({
           kind: 19,
           name: 'Child',
           properties: {
@@ -74,7 +84,7 @@ describe(`Type`, () => {
       @Type(name)
       class MyType {}
 
-      expect((MyType as any).typeName).to.be.equal(name);
+      expect((MyType as any).typeName).toBe(name);
     });
 
     it('sets afterHook hook on decorator', () => {
@@ -92,18 +102,18 @@ describe(`Type`, () => {
       @Type(name)
       class MyType {}
 
-      expect((MyType as any).typeName).to.be.equal(name);
+      expect((MyType as any).typeName).toBe(name);
     });
   });
 
   describe('isType helper', () => {
     it('returns true on class decorated with @Type decorator', () => {
-      expect(isType(Parent)).to.be.true;
-      expect(isType(Child)).to.be.true;
+      expect(isType(Parent)).toBe(true);
+      expect(isType(Child)).toBe(true);
     });
 
     it('returns false on class that are not decorated with @Type decorator', () => {
-      expect(isType(NonDefinableClass)).to.be.false;
+      expect(isType(NonDefinableClass)).toBe(false);
     });
   });
 });

@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   validate,
   CollectionWithin,
@@ -21,17 +30,17 @@ describe('CollectionWithin', () => {
         { included: { foo: 'foo' }, omitted: { bar: 'bar' } },
         new CollectionWithin(expectation)
       )
-    ).to.be.true;
+    ).toBe(true);
 
     expect(
       validate({ included: { foo: 'foo' } }, new CollectionWithin(expectation))
-    ).to.be.true;
+    ).toBe(true);
 
     expect(() =>
       validate(
         { included: { foo: 'NOT_foo' } },
         new CollectionWithin(expectation)
       )
-    ).to.throw(ValidationError);
+    ).toThrow(ValidationError);
   });
 });

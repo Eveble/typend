@@ -1,4 +1,13 @@
-import { expect } from 'chai';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import {
   check,
   validate,
@@ -11,9 +20,9 @@ import {
 describe('tuple', () => {
   it('check', () => {
     check<[string, number]>(['foo', 1337]);
-    expect(() => check<[string]>(['foo', 1234])).to.throw(NotAMemberError);
-    expect(() => check<[string, number]>(['foo'])).to.throw(NotAMemberError);
-    expect(() => check<[string, number]>(['foo', 'bar'])).to.throw(
+    expect(() => check<[string]>(['foo', 1234])).toThrow(NotAMemberError);
+    expect(() => check<[string, number]>(['foo'])).toThrow(NotAMemberError);
+    expect(() => check<[string, number]>(['foo', 'bar'])).toThrow(
       NotAMemberError
     );
   });

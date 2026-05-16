@@ -1,5 +1,14 @@
-import { expect } from 'chai';
-import { stubInterface } from 'ts-sinon';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import { stubInterface } from '../../vitest-helper';
 import { inspect } from 'util';
 import { AnyValidator } from '../../../src/validators/any-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -26,13 +35,13 @@ describe(`AnyValidator`, () => {
   class MyError extends Error {}
 
   it(`extends PatternValidator`, () => {
-    expect(AnyValidator.prototype).to.instanceof(PatternValidator);
+    expect(AnyValidator.prototype).toBeInstanceOf(PatternValidator);
   });
 
   describe('evaluation', () => {
     it('returns true for pattern instance of Any', () => {
       const anyValidator = new AnyValidator();
-      expect(anyValidator.canValidate(new Any())).to.be.true;
+      expect(anyValidator.canValidate(new Any())).toBe(true);
     });
 
     it('returns false for any other implicit expectation', () => {
@@ -140,7 +149,7 @@ describe(`AnyValidator`, () => {
         expect(
           anyValidator.canValidate(expectation),
           `Expected implicit expectation ${expectationStr} to be not applicable`
-        ).to.false;
+        ).toBe(false);
       }
     });
   });
@@ -151,7 +160,7 @@ describe(`AnyValidator`, () => {
       expect(
         anyValidator.validate(),
         `Expected validation of any value to always be true`
-      ).to.true;
+      ).toBe(true);
     });
   });
 });
