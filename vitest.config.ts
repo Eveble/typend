@@ -6,8 +6,6 @@ let tsProgram: ts.Program | null = null;
 let tsSourceFiles: Map<string, ts.SourceFile> | null = null;
 
 function getTsProgram(): ts.Program {
-  if (tsProgram) return tsProgram;
-
   const configPath = ts.findConfigFile(
     __dirname,
     ts.sys.fileExists,

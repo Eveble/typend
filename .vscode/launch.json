@@ -20,7 +20,7 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
-      "args": ["--reporter", "verbose", "${file}"],
+      "args": ["--reporter", "verbose", "--watch", "${file}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "smartStep": true,
