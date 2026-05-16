@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { inspect } from 'util';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { Tuple } from '../../../src/patterns/tuple';
 import { Pattern } from '../../../src/pattern';
 import { types } from '../../../src/types';
@@ -13,7 +13,7 @@ describe(`Tuple`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -132,7 +132,7 @@ describe(`Tuple`, () => {
     it('takes valid expectation for construction', () => {
       for (const expectation of VALID_EXPECTATIONS) {
         const expectationStr = inspect(expectation);
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
         expect(
           new Tuple(expectation),
           `Expected expectation ${expectationStr} to be valid`
@@ -143,7 +143,7 @@ describe(`Tuple`, () => {
     it('takes valid expectation as multiple arguments for', () => {
       for (const expectation of VALID_EXPECTATIONS) {
         const expectationStr = inspect(expectation);
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
         expect(
           new Tuple(expectation),
           `Expected expectation ${expectationStr} to be valid`
@@ -159,7 +159,7 @@ describe(`Tuple`, () => {
     it('throws InvalidDefinitionError for none-arguments(use List pattern for that)', () => {
       const expectations = [];
       const expectationStr = inspect(expectations);
-      describer.describe.returns(expectationStr);
+      describer.describe.mockReturnValue(expectationStr);
       expect(
         () => new Tuple(...expectations),
         `Expected expectation ${expectationStr} to be invalid`

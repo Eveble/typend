@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { Where } from '../../../src/patterns/where';
 import { InvalidTypeError } from '../../../src/errors';
@@ -12,7 +12,7 @@ describe(`Where`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -113,7 +113,7 @@ describe(`Where`, () => {
     it('takes valid expectation as a function for construction', () => {
       const expectation = (): boolean => true;
       const expectationStr = inspect(expectation);
-      describer.describe.returns(expectationStr);
+      describer.describe.mockReturnValue(expectationStr);
       expect(
         new Where(expectation),
         `Expected expectation ${expectationStr} to be valid`
@@ -136,7 +136,7 @@ describe(`Where`, () => {
       ];
       for (const expectation of constructors) {
         const expectationStr = inspect(expectation);
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
         expect(
           () => new Where(expectation),
           `Expected expectation ${expectationStr} to be invalid`
@@ -150,7 +150,7 @@ describe(`Where`, () => {
     it('throws InvalidTypeError for invalid expectation on construction', () => {
       for (const expectation of INVALID_EXPECTATIONS) {
         const expectationStr = inspect(expectation);
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
         expect(
           () => new Where(expectation),
           `Expected expectation ${expectationStr} to be invalid`

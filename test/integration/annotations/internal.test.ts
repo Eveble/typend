@@ -9,7 +9,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { Internal } from '../../../src/annotations/internal';
 import {
   INTERNAL_PROPS_KEY,

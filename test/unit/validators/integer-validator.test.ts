@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { Integer } from '../../../src/patterns/integer';
 import { types } from '../../../src/types';
@@ -20,7 +20,7 @@ describe(`IntegerValidator`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -64,7 +64,7 @@ describe(`IntegerValidator`, () => {
         ];
         for (const value of integers) {
           const valueStr = inspect(value);
-          describer.describe.withArgs(value).returns(valueStr);
+          describer.describe.calledWith(value).mockReturnValue(valueStr);
           expect(
             intValidator.validate(value),
             `Expected Integer, got ${valueStr}`
@@ -99,7 +99,9 @@ describe(`IntegerValidator`, () => {
         ];
         for (const invalidValue of invalidValues) {
           const invalidValueStr = inspect(invalidValue);
-          describer.describe.withArgs(invalidValue).returns(invalidValueStr);
+          describer.describe
+            .calledWith(invalidValue)
+            .mockReturnValue(invalidValueStr);
 
           expect(() => intValidator.validate(invalidValue)).toThrow(
             InvalidTypeError,
@@ -113,7 +115,7 @@ describe(`IntegerValidator`, () => {
         const integers: number[] = [1.1, 0.1, -1.1, Math.PI, -Math.PI];
         for (const value of integers) {
           const valueStr = inspect(value);
-          describer.describe.withArgs(value).returns(valueStr);
+          describer.describe.calledWith(value).mockReturnValue(valueStr);
 
           expect(() => intValidator.validate(value)).toThrow(
             InvalidValueError,
@@ -127,7 +129,7 @@ describe(`IntegerValidator`, () => {
         const integers: number[] = [Infinity, -Infinity];
         for (const value of integers) {
           const valueStr = inspect(value);
-          describer.describe.withArgs(value).returns(valueStr);
+          describer.describe.calledWith(value).mockReturnValue(valueStr);
 
           expect(() => intValidator.validate(value)).toThrow(
             InvalidValueError,

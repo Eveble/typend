@@ -9,7 +9,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { ObjectConverter } from '../../../src/converters/tsruntime/type-converters/object.converter';
 import { types } from '../../../src/types';
 import { Collection } from '../../../src/patterns/collection';
@@ -24,8 +24,8 @@ describe(`ObjectConverter`, () => {
   let typeConverter: ObjectConverter;
 
   beforeAll(() => {
-    converter = stubInterface<types.Converter>();
-    classConverter = stubInterface<types.TypeConverter>();
+    converter = mock<types.Converter>();
+    classConverter = mock<types.TypeConverter>();
     typeConverter = new ObjectConverter();
     converter.typeConverters = new Map();
   });
@@ -127,7 +127,9 @@ describe(`ObjectConverter`, () => {
     });
 
     it('returns reflected object literal with key and value', () => {
-      converter.reflect.withArgs({ kind: 2, modifiers: 0 }).returns(String);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: 2, modifiers: 0 }))
+        .mockReturnValue(String);
       const objType = typeConverter.reflect(
         reflect<{ key: string }>() as tsrTypes.ObjectType,
         converter
@@ -137,8 +139,12 @@ describe(`ObjectConverter`, () => {
     });
 
     it('returns reflected interface with properties', () => {
-      converter.reflect.withArgs({ kind: 2, modifiers: 0 }).returns(String);
-      converter.reflect.withArgs({ kind: 21, modifiers: 0 }).returns(Function);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: 2, modifiers: 0 }))
+        .mockReturnValue(String);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: 21, modifiers: 0 }))
+        .mockReturnValue(Function);
       const objType = typeConverter.reflect(
         reflect<MyInterface>() as tsrTypes.ObjectType,
         converter
@@ -148,7 +154,9 @@ describe(`ObjectConverter`, () => {
     });
 
     it('ensures tha property key as symbol is preserved on properties', () => {
-      converter.reflect.withArgs({ kind: 2, modifiers: 0 }).returns(String);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: 2, modifiers: 0 }))
+        .mockReturnValue(String);
       const objType = typeConverter.reflect(
         reflect<{ [symbolAsAKey]: string }>() as tsrTypes.ObjectType,
         converter
@@ -158,7 +166,9 @@ describe(`ObjectConverter`, () => {
     });
 
     it(`ensures tha use of 'Reflect.ownKeys' does not impact on properties with key names matching build-in native ones`, () => {
-      converter.reflect.withArgs({ kind: 3, modifiers: 0 }).returns(Number);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: 3, modifiers: 0 }))
+        .mockReturnValue(Number);
       const objType = typeConverter.reflect(
         reflect<{ length: number }>() as tsrTypes.ObjectType,
         converter
@@ -168,10 +178,19 @@ describe(`ObjectConverter`, () => {
     });
 
     it('returns converted object literal with property value as a type', () => {
-      converter.getConverter.withArgs(KINDS.CLASS).returns(classConverter);
+      converter.getConverter
+        .calledWith(KINDS.CLASS)
+        .mockReturnValue(classConverter);
       classConverter.isConvertible
-        .withArgs({ kind: 18, modifiers: 0, type: MyClass, arguments: [] })
-        .returns(true);
+        .calledWith(
+          expect.objectContaining({
+            kind: 18,
+            modifiers: 0,
+            type: MyClass,
+            arguments: [],
+          })
+        )
+        .mockReturnValue(true);
 
       const objType = typeConverter.reflect(
         reflect<{ key: MyClass }>() as tsrTypes.ObjectType,
@@ -198,8 +217,8 @@ describe(`ObjectConverter`, () => {
 
     it('returns converted object literal with key and value as Collection instance', () => {
       converter.convert
-        .withArgs({ kind: 2, modifiers: 0 })
-        .returns(new InstanceOf(String));
+        .calledWith(expect.objectContaining({ kind: 2, modifiers: 0 }))
+        .mockReturnValue(new InstanceOf(String));
       const objType = typeConverter.convert(
         reflect<{ key: string }>() as tsrTypes.ObjectType,
         converter
@@ -210,11 +229,11 @@ describe(`ObjectConverter`, () => {
 
     it('returns converted interface with properties as Interface instance', () => {
       converter.convert
-        .withArgs({ kind: 2, modifiers: 0 })
-        .returns(new InstanceOf(String));
+        .calledWith(expect.objectContaining({ kind: 2, modifiers: 0 }))
+        .mockReturnValue(new InstanceOf(String));
       converter.convert
-        .withArgs({ kind: 21, modifiers: 0 })
-        .returns(new InstanceOf(Function));
+        .calledWith(expect.objectContaining({ kind: 21, modifiers: 0 }))
+        .mockReturnValue(new InstanceOf(Function));
       const intfType: Interface = typeConverter.convert(
         reflect<MyInterface>() as tsrTypes.ObjectType,
         converter
@@ -231,8 +250,8 @@ describe(`ObjectConverter`, () => {
 
     it('ensures tha property key as symbol is preserved on properties', () => {
       converter.convert
-        .withArgs({ kind: 2, modifiers: 0 })
-        .returns(new InstanceOf(String));
+        .calledWith(expect.objectContaining({ kind: 2, modifiers: 0 }))
+        .mockReturnValue(new InstanceOf(String));
       const objType = typeConverter.convert(
         reflect<{ [symbolAsAKey]: string }>() as tsrTypes.ObjectType,
         converter
@@ -245,8 +264,8 @@ describe(`ObjectConverter`, () => {
 
     it(`ensures tha use of 'Reflect.ownKeys' does not impact on properties with key names matching build-in native ones`, () => {
       converter.convert
-        .withArgs({ kind: 3, modifiers: 0 })
-        .returns(new InstanceOf(Number));
+        .calledWith(expect.objectContaining({ kind: 3, modifiers: 0 }))
+        .mockReturnValue(new InstanceOf(Number));
       const objType = typeConverter.convert(
         reflect<{ length: number }>() as tsrTypes.ObjectType,
         converter
@@ -258,10 +277,19 @@ describe(`ObjectConverter`, () => {
     });
 
     it('returns converted object literal with property value as a type', () => {
-      converter.getConverter.withArgs(KINDS.CLASS).returns(classConverter);
+      converter.getConverter
+        .calledWith(KINDS.CLASS)
+        .mockReturnValue(classConverter);
       classConverter.isConvertible
-        .withArgs({ kind: 18, modifiers: 0, type: MyClass, arguments: [] })
-        .returns(true);
+        .calledWith(
+          expect.objectContaining({
+            kind: 18,
+            modifiers: 0,
+            type: MyClass,
+            arguments: [],
+          })
+        )
+        .mockReturnValue(true);
 
       const objType = typeConverter.convert(
         reflect<{ key: MyClass }>() as tsrTypes.ObjectType,

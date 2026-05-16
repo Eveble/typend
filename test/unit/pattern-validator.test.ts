@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { types } from '../../src/types';
 import { PatternValidator } from '../../src/pattern-validator';
 
@@ -16,7 +16,7 @@ describe(`PatternValidator`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
   });
 
   it('allows to set describer on Validator', () => {
@@ -31,7 +31,7 @@ describe(`PatternValidator`, () => {
     const validator = new MyValidator();
     const val = 'my-value';
     const valStr = `String('my-value'`;
-    describer.describe.withArgs(val).returns(valStr);
+    describer.describe.calledWith(val).mockReturnValue(valStr);
 
     expect(validator.describe(val)).toBe(valStr);
     expect(describer.describe).toHaveBeenCalledTimes(1);

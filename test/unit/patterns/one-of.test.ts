@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { OneOf } from '../../../src/patterns/one-of';
 import { InvalidDefinitionError } from '../../../src/errors';
@@ -12,7 +12,7 @@ describe(`OneOf`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -155,7 +155,7 @@ describe(`OneOf`, () => {
     it('takes valid expectation with one argument for construction', () => {
       for (const expectation of SINGLE_VALID_EXPECTATIONS) {
         const expectationStr = inspect(expectation);
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
         expect(
           new OneOf(expectation),
           `Expected expectation ${expectationStr} to be valid`
@@ -166,7 +166,7 @@ describe(`OneOf`, () => {
     it('takes valid expectation with more then one argument for construction', () => {
       for (const expectation of MULTI_VALID_EXPECTATIONS) {
         const expectationStr = inspect(expectation);
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
         expect(
           new OneOf(...expectation),
           `Expected expectation ${expectationStr} to be valid`
@@ -182,7 +182,7 @@ describe(`OneOf`, () => {
     it('throws InvalidDefinitionError for empty expectation', () => {
       const expectation = [];
       const expectationStr = inspect(expectation);
-      describer.describe.returns(expectationStr);
+      describer.describe.mockReturnValue(expectationStr);
       expect(
         () => new OneOf(),
         `Expected expectation ${expectationStr} to be invalid`

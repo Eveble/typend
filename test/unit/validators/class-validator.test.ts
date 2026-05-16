@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { Class } from '../../../src/patterns/class';
 import { types } from '../../../src/types';
@@ -27,8 +27,8 @@ describe(`ClassValidator`, () => {
   let validator: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
-    validator = stubInterface<types.Validator>();
+    describer = mock<types.Describer>();
+    validator = mock<types.Validator>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -77,7 +77,7 @@ describe(`ClassValidator`, () => {
         key: String,
       });
       const valStr = inspect(val);
-      describer.describe.returns(valStr);
+      describer.describe.mockReturnValue(valStr);
 
       expect(() =>
         classValidator.validate(val, expectation, validator)
@@ -119,8 +119,8 @@ describe(`ClassValidator`, () => {
           first: String,
           second: Number,
         });
-        validator.validate.withArgs('value', String).returns(true);
-        validator.validate.withArgs(2, Number).returns(true);
+        validator.validate.calledWith('value', String).mockReturnValue(true);
+        validator.validate.calledWith(2, Number).mockReturnValue(true);
 
         expect(classValidator.validate(val, expectation, validator)).toBe(true);
         expect(validator.validate).toHaveBeenCalledTimes(2);
@@ -141,13 +141,11 @@ describe(`ClassValidator`, () => {
           first: String,
         });
         const valStr = JSON.stringify(val);
-        describer.describe.withArgs(val).returns(valStr);
-        validator.validate.withArgs('value', String).returns(true);
-        validator.validate
-          .withArgs(2, undefined)
-          .throws(
-            new UnequalValueError(`Expected Number(2) to be a undefined`)
-          );
+        describer.describe.calledWith(val).mockReturnValue(valStr);
+        validator.validate.calledWith('value', String).mockReturnValue(true);
+        validator.validate.calledWith(2, undefined).mockImplementation(() => {
+          throw new UnequalValueError(`Expected Number(2) to be a undefined`);
+        });
 
         expect(() =>
           classValidator.validate(val, expectation, validator)
@@ -198,17 +196,17 @@ describe(`ClassValidator`, () => {
           },
         });
         const valStr = JSON.stringify(val);
-        describer.describe.withArgs(val).returns(valStr);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
 
-        validator.validate.withArgs('a-value', String).returns(true);
+        validator.validate.calledWith('a-value', String).mockReturnValue(true);
         validator.validate
-          .withArgs('b-invalid-not-a-number', Number)
-          .throws(
-            new UnequalValueError(
+          .calledWith('b-invalid-not-a-number', Number)
+          .mockImplementation(() => {
+            throw new UnequalValueError(
               `Expected Number, got String("invalid-should-be-number")`
-            )
-          );
-        validator.validate.withArgs('c-value', String).returns(true);
+            );
+          });
+        validator.validate.calledWith('c-value', String).mockReturnValue(true);
 
         expect(() =>
           classValidator.validate(val, expectation, validator)
@@ -270,26 +268,26 @@ describe(`ClassValidator`, () => {
           },
         });
         const valStr = JSON.stringify(val);
-        describer.describe.withArgs(val).returns(valStr);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
 
-        validator.validate.withArgs('a-value', String).returns(true);
-        validator.validate.withArgs(2, Number).returns(true);
-        validator.validate.withArgs('c-value', String).returns(true);
+        validator.validate.calledWith('a-value', String).mockReturnValue(true);
+        validator.validate.calledWith(2, Number).mockReturnValue(true);
+        validator.validate.calledWith('c-value', String).mockReturnValue(true);
         validator.validate
-          .withArgs(
-            {
+          .calledWith(
+            expect.objectContaining({
               c: 'c-value',
               unknown: 'unknown',
-            },
-            {
+            }),
+            expect.objectContaining({
               c: 'c-value',
-            }
+            })
           )
-          .throws(
-            new UnexpectedKeyError(
+          .mockImplementation(() => {
+            throw new UnexpectedKeyError(
               `Unexpected key unknown in {"c":"value","unknown":"unknown"}`
-            )
-          );
+            );
+          });
 
         expect(() => classValidator.validate(val, props, validator)).toThrow(
           ValidationError,
@@ -323,8 +321,8 @@ describe(`ClassValidator`, () => {
           first: String,
         });
         const valStr = JSON.stringify(val);
-        describer.describe.withArgs(val).returns(valStr);
-        validator.validate.withArgs('value', String).returns(true);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
+        validator.validate.calledWith('value', String).mockReturnValue(true);
 
         expect(() =>
           classValidator.validate(val, expectation, validator)

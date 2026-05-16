@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { setTypeName } from '@eveble/helpers';
 import { CompactDescriber } from '../../src/describers/compact-describer';
 import { DebugDescriber } from '../../src/describers/debug-describer';
@@ -48,13 +48,13 @@ describe(`Identifier`, () => {
   describe('construction', () => {
     it('takes describers map on construction and assigns it', () => {
       const describers = new Map([
-        [KINDS.NATIVE, stubInterface<types.TypeDescriber>()],
-        [KINDS.ERROR, stubInterface<types.TypeDescriber>()],
-        [KINDS.ARRAY, stubInterface<types.TypeDescriber>()],
-        [KINDS.OBJECT, stubInterface<types.TypeDescriber>()],
-        [KINDS.CLASS, stubInterface<types.TypeDescriber>()],
-        [KINDS.UNKNOWN, stubInterface<types.TypeDescriber>()],
-        [KINDS.DESCRIPTION_LIST, stubInterface<types.TypeDescriber>()],
+        [KINDS.NATIVE, mock<types.TypeDescriber>()],
+        [KINDS.ERROR, mock<types.TypeDescriber>()],
+        [KINDS.ARRAY, mock<types.TypeDescriber>()],
+        [KINDS.OBJECT, mock<types.TypeDescriber>()],
+        [KINDS.CLASS, mock<types.TypeDescriber>()],
+        [KINDS.UNKNOWN, mock<types.TypeDescriber>()],
+        [KINDS.DESCRIPTION_LIST, mock<types.TypeDescriber>()],
       ]);
       const instance = new Describer(describers);
       expect(instance.getDescribers()).toBe(describers);
@@ -64,7 +64,7 @@ describe(`Identifier`, () => {
   describe('managing describers', () => {
     it(`allows to register type describer`, () => {
       const type = 'type';
-      const typeDescriber = stubInterface<types.TypeDescriber>();
+      const typeDescriber = mock<types.TypeDescriber>();
 
       const desc = new Describer();
       desc.registerDescriber(type, typeDescriber);
@@ -73,7 +73,7 @@ describe(`Identifier`, () => {
 
     it(`throws TypeDescriberExistsError when overriding existing type describer`, () => {
       const type = 'type';
-      const typeDescriber = stubInterface<types.TypeDescriber>();
+      const typeDescriber = mock<types.TypeDescriber>();
 
       const desc = new Describer();
       desc.registerDescriber(type, typeDescriber);
@@ -86,8 +86,8 @@ describe(`Identifier`, () => {
 
     it(`allows to override existing type describer`, () => {
       const type = 'type';
-      const typeDescriber = stubInterface<types.TypeDescriber>();
-      const otherDescriber = stubInterface<types.TypeDescriber>();
+      const typeDescriber = mock<types.TypeDescriber>();
+      const otherDescriber = mock<types.TypeDescriber>();
 
       const desc = new Describer();
       desc.registerDescriber(type, typeDescriber);
@@ -97,7 +97,7 @@ describe(`Identifier`, () => {
 
     it(`returns true if type describer is registered`, () => {
       const type = 'type';
-      const typeDescriber = stubInterface<types.TypeDescriber>();
+      const typeDescriber = mock<types.TypeDescriber>();
 
       const desc = new Describer();
       desc.registerDescriber(type, typeDescriber);

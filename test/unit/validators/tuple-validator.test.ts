@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { Tuple } from '../../../src/patterns/tuple';
 import { types } from '../../../src/types';
@@ -26,8 +26,8 @@ describe(`TupleValidator`, () => {
   let validator: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
-    validator = stubInterface<types.Validator>();
+    describer = mock<types.Describer>();
+    validator = mock<types.Validator>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -84,7 +84,7 @@ describe(`TupleValidator`, () => {
       };
       const valueStr = inspect(value);
 
-      describer.describe.returns(valueStr);
+      describer.describe.mockReturnValue(valueStr);
 
       expect(() =>
         tupleValidator.validate(value, new Tuple(String), validator)
@@ -98,8 +98,10 @@ describe(`TupleValidator`, () => {
         const tupleValidator = new TupleValidator();
         const val = ['my-string', 2];
         const tuple = new Tuple(String, Number);
-        validator.validate.withArgs('my-string', String).returns(true);
-        validator.validate.withArgs(2, Number).returns(true);
+        validator.validate
+          .calledWith('my-string', String)
+          .mockReturnValue(true);
+        validator.validate.calledWith(2, Number).mockReturnValue(true);
 
         expect(tupleValidator.validate(val, tuple, validator)).toBe(true);
         expect(validator.validate).toHaveBeenCalledTimes(2);
@@ -114,10 +116,14 @@ describe(`TupleValidator`, () => {
         const val = ['my-string'];
         const tuple = new Tuple(Number);
         const error = new ValidationError('my-error');
-        validator.validate.withArgs('my-string', Number).throws(error);
+        validator.validate
+          .calledWith('my-string', Number)
+          .mockImplementation(() => {
+            throw error;
+          });
 
         const tupleStr = inspect(tuple);
-        describer.describe.withArgs(tuple).returns(tupleStr);
+        describer.describe.calledWith(tuple).mockReturnValue(tupleStr);
 
         expect(() => tupleValidator.validate(val, tuple, validator)).toThrow(
           NotAMemberError,
@@ -136,13 +142,19 @@ describe(`TupleValidator`, () => {
         const tuple = new Tuple(String);
 
         const error = new ValidationError('my-error');
-        validator.validate.withArgs('my-string', String).returns(true);
-        validator.validate.withArgs(1234, undefined).throws(error);
+        validator.validate
+          .calledWith('my-string', String)
+          .mockReturnValue(true);
+        validator.validate
+          .calledWith(1234, undefined)
+          .mockImplementation(() => {
+            throw error;
+          });
 
         const valStr = inspect(val);
         const tupleStr = inspect(tuple);
-        describer.describe.withArgs(val).returns(valStr);
-        describer.describe.withArgs(tuple).returns(tupleStr);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
+        describer.describe.calledWith(tuple).mockReturnValue(tupleStr);
 
         expect(() => tupleValidator.validate(val, tuple, validator)).toThrow(
           NotAMemberError,
@@ -162,13 +174,19 @@ describe(`TupleValidator`, () => {
         const tuple = new Tuple(String, Number);
 
         const error = new ValidationError('my-error');
-        validator.validate.withArgs('my-string', String).returns(true);
-        validator.validate.withArgs(undefined, Number).throws(error);
+        validator.validate
+          .calledWith('my-string', String)
+          .mockReturnValue(true);
+        validator.validate
+          .calledWith(undefined, Number)
+          .mockImplementation(() => {
+            throw error;
+          });
 
         const valStr = inspect(val);
         const tupleStr = inspect(tuple);
-        describer.describe.withArgs(val).returns(valStr);
-        describer.describe.withArgs(tuple).returns(tupleStr);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
+        describer.describe.calledWith(tuple).mockReturnValue(tupleStr);
 
         expect(() => tupleValidator.validate(val, tuple, validator)).toThrow(
           NotAMemberError,
@@ -187,11 +205,13 @@ describe(`TupleValidator`, () => {
         const val = ['my-string', 2];
         const tuple = new Tuple(String, Number, new Optional(Boolean));
 
-        validator.validate.withArgs('my-string', String).returns(true);
-        validator.validate.withArgs(2, Number).returns(true);
         validator.validate
-          .withArgs(undefined, new Optional(Boolean))
-          .returns(true);
+          .calledWith('my-string', String)
+          .mockReturnValue(true);
+        validator.validate.calledWith(2, Number).mockReturnValue(true);
+        validator.validate
+          .calledWith(undefined, new Optional(Boolean))
+          .mockReturnValue(true);
 
         expect(() =>
           tupleValidator.validate(val, tuple, validator)

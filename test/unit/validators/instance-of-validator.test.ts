@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { InstanceOfValidator } from '../../../src/validators/instance-of-validator';
 import { InstanceOf } from '../../../src/patterns/instance-of';
@@ -20,7 +20,7 @@ describe(`InstanceOfValidator`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -97,7 +97,7 @@ describe(`InstanceOfValidator`, () => {
           const instanceOfValidator = new InstanceOfValidator();
           for (const expectation of VALID_EXPECTATIONS) {
             const expectationStr = inspect(expectation);
-            describer.describe.returns(expectationStr);
+            describer.describe.mockReturnValue(expectationStr);
             expect(
               instanceOfValidator.canValidate(expectation),
               `Expected expectation ${expectationStr} to be valid`
@@ -109,7 +109,7 @@ describe(`InstanceOfValidator`, () => {
           const clock = vi.useFakeTimers();
           const instanceOfValidator = new InstanceOfValidator();
           const expectationStr = 'ClockDate(sinon)';
-          describer.describe.returns(expectationStr);
+          describer.describe.mockReturnValue(expectationStr);
           expect(
             instanceOfValidator.canValidate(Date),
             `Expected expectation ${expectationStr} to be valid`
@@ -123,7 +123,7 @@ describe(`InstanceOfValidator`, () => {
           const instanceOfValidator = new InstanceOfValidator();
           const expectation = [];
           const expectationStr = inspect(expectation);
-          describer.describe.returns(expectationStr);
+          describer.describe.mockReturnValue(expectationStr);
 
           expect(
             instanceOfValidator.canValidate(expectation),
@@ -173,7 +173,7 @@ describe(`InstanceOfValidator`, () => {
           const instanceOfValidator = new InstanceOfValidator();
           for (const expectation of INVALID_EXPECTATIONS) {
             const expectationStr = inspect(expectation);
-            describer.describe.returns(expectationStr);
+            describer.describe.mockReturnValue(expectationStr);
             expect(
               instanceOfValidator.canValidate(expectation),
               `Expected expectation ${expectationStr} to be invalid`
@@ -191,8 +191,10 @@ describe(`InstanceOfValidator`, () => {
       const valueStr = inspect(value);
       const expectation = Array;
       const expectationStr = inspect(expectation);
-      describer.describe.withArgs(value).returns(valueStr);
-      describer.describe.withArgs(expectation).returns(expectationStr);
+      describer.describe.calledWith(value).mockReturnValue(valueStr);
+      describer.describe
+        .calledWith(expectation)
+        .mockReturnValue(expectationStr);
 
       expect(() => instanceOfValidator.validate(value, expectation)).toThrow(
         InvalidTypeError,
@@ -267,8 +269,10 @@ describe(`InstanceOfValidator`, () => {
           const expectationStr = inspect(expectation);
           const expectedStr = `Expected ${valStr} to be a ${expectationStr}`;
 
-          describer.describe.withArgs(val).returns(valStr);
-          describer.describe.withArgs(expectation).returns(expectationStr);
+          describer.describe.calledWith(val).mockReturnValue(valStr);
+          describer.describe
+            .calledWith(expectation)
+            .mockReturnValue(expectationStr);
 
           expect(instanceOfValidator.validate(val, expectation), expectedStr).to
             .be.true;
@@ -280,8 +284,10 @@ describe(`InstanceOfValidator`, () => {
         const value = new ChildClass('value');
         const expectation = ParentClass;
 
-        describer.describe.withArgs(value).returns(inspect(value));
-        describer.describe.withArgs(expectation).returns(inspect(expectation));
+        describer.describe.calledWith(value).mockReturnValue(inspect(value));
+        describer.describe
+          .calledWith(expectation)
+          .mockReturnValue(inspect(expectation));
 
         expect(instanceOfValidator.validate(value, expectation)).toBe(true);
       });
@@ -290,7 +296,7 @@ describe(`InstanceOfValidator`, () => {
         const clock = vi.useFakeTimers();
         const instanceOfValidator = new InstanceOfValidator();
         const expectationStr = 'ClockDate(sinon)';
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
 
         expect(instanceOfValidator.validate(new Date(), Date)).toBe(true);
         vi.useRealTimers();
@@ -308,8 +314,10 @@ describe(`InstanceOfValidator`, () => {
         const valueStr = inspect(value);
         const expectationStr = inspect(expectation);
 
-        describer.describe.withArgs(value).returns(valueStr);
-        describer.describe.withArgs(expectation).returns(expectationStr);
+        describer.describe.calledWith(value).mockReturnValue(valueStr);
+        describer.describe
+          .calledWith(expectation)
+          .mockReturnValue(expectationStr);
 
         expect(() => instanceOfValidator.validate(value, expectation)).toThrow(
           UnmatchedTypeError,
@@ -324,8 +332,10 @@ describe(`InstanceOfValidator`, () => {
         const valueStr = inspect(value);
         const expectationStr = inspect(expectation);
 
-        describer.describe.withArgs(value).returns(valueStr);
-        describer.describe.withArgs(expectation).returns(expectationStr);
+        describer.describe.calledWith(value).mockReturnValue(valueStr);
+        describer.describe
+          .calledWith(expectation)
+          .mockReturnValue(expectationStr);
 
         expect(() => instanceOfValidator.validate(value, expectation)).toThrow(
           UnmatchedTypeError,
@@ -342,8 +352,10 @@ describe(`InstanceOfValidator`, () => {
         const valueStr = inspect(value);
         const expectationStr = inspect(expectation);
 
-        describer.describe.withArgs(value).returns(valueStr);
-        describer.describe.withArgs(expectation).returns(expectationStr);
+        describer.describe.calledWith(value).mockReturnValue(valueStr);
+        describer.describe
+          .calledWith(expectation)
+          .mockReturnValue(expectationStr);
 
         expect(() => instanceOfValidator.validate(value, expectation)).toThrow(
           UnmatchedTypeError,

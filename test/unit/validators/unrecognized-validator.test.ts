@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { UnrecognizedValidator } from '../../../src/validators/unrecognized-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -20,7 +20,7 @@ describe(`UnrecognizedValidator`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -69,8 +69,10 @@ describe(`UnrecognizedValidator`, () => {
       const unrecognized = new Unrecognized(expectation);
       const valStr = inspect(val);
       const expectationStr = inspect(expectation);
-      describer.describe.withArgs(val).returns(valStr);
-      describer.describe.withArgs(expectation).returns(expectationStr);
+      describer.describe.calledWith(val).mockReturnValue(valStr);
+      describer.describe
+        .calledWith(expectation)
+        .mockReturnValue(expectationStr);
 
       expect(() => unrecognizedValidator.validate(val, unrecognized)).toThrow(
         UnknownError,

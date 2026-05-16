@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { InvalidDefinitionError, InvalidTypeError } from '../../../src/errors';
 import { Pattern } from '../../../src/pattern';
@@ -11,7 +11,7 @@ describe(`Class`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -231,7 +231,7 @@ describe(`Class`, () => {
     it('throws InvalidTypeError for invalid type on construction', () => {
       for (const type of INVALID_TYPES) {
         const typeStr = inspect(type);
-        describer.describe.returns(typeStr);
+        describer.describe.mockReturnValue(typeStr);
         expect(
           () => new Class(type, {}),
           `Expected type ${typeStr} to be invalid`
@@ -245,7 +245,7 @@ describe(`Class`, () => {
     it('throws InvalidDefinitionError for invalid properties on construction', () => {
       for (const description of INVALID_DEFINITION) {
         const descriptionStr = inspect(description);
-        describer.describe.returns(descriptionStr);
+        describer.describe.mockReturnValue(descriptionStr);
         expect(
           () => new Class(ParentClass, description),
           `Expected definition ${descriptionStr} to be invalid`

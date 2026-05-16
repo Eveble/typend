@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { CompositeTypeConverter } from '../../../src/converters/tsruntime/type-converters/composite.converter';
 import { types } from '../../../src';
 
@@ -19,9 +19,9 @@ describe(`CompositeTypeConverter`, () => {
   let mockTsRuntimeConverter: any;
 
   beforeEach(() => {
-    mockConverter1 = stubInterface<types.TypeConverter>();
-    mockConverter2 = stubInterface<types.TypeConverter>();
-    mockTsRuntimeConverter = stubInterface<types.Converter>();
+    mockConverter1 = mock<types.TypeConverter>();
+    mockConverter2 = mock<types.TypeConverter>();
+    mockTsRuntimeConverter = mock<types.Converter>();
     typeConverter = new CompositeTypeConverter();
   });
 
@@ -97,11 +97,11 @@ describe(`CompositeTypeConverter`, () => {
       const expectedResult = { converted: true };
 
       mockConverter1.isConvertible
-        .withArgs(reflectedType, mockTsRuntimeConverter)
-        .returns(true);
+        .calledWith(reflectedType, mockTsRuntimeConverter)
+        .mockReturnValue(true);
       mockConverter1.convert
-        .withArgs(reflectedType, mockTsRuntimeConverter)
-        .returns(expectedResult);
+        .calledWith(reflectedType, mockTsRuntimeConverter)
+        .mockReturnValue(expectedResult);
 
       typeConverter.add(mockConverter1);
       const result = typeConverter.convert(
@@ -116,11 +116,11 @@ describe(`CompositeTypeConverter`, () => {
       const expectedResult = { reflected: true };
 
       mockConverter1.isConvertible
-        .withArgs(reflectedType, mockTsRuntimeConverter)
-        .returns(true);
+        .calledWith(reflectedType, mockTsRuntimeConverter)
+        .mockReturnValue(true);
       mockConverter1.reflect
-        .withArgs(reflectedType, mockTsRuntimeConverter)
-        .returns(expectedResult);
+        .calledWith(reflectedType, mockTsRuntimeConverter)
+        .mockReturnValue(expectedResult);
 
       typeConverter.add(mockConverter1);
       const result = typeConverter.reflect(
@@ -135,14 +135,14 @@ describe(`CompositeTypeConverter`, () => {
       const expectedResult = { fallback: true };
 
       mockConverter1.isConvertible
-        .withArgs(reflectedType, mockTsRuntimeConverter)
-        .returns(false);
+        .calledWith(reflectedType, mockTsRuntimeConverter)
+        .mockReturnValue(false);
       mockConverter2.isConvertible
-        .withArgs(reflectedType, mockTsRuntimeConverter)
-        .returns(false);
+        .calledWith(reflectedType, mockTsRuntimeConverter)
+        .mockReturnValue(false);
       mockConverter2.convert
-        .withArgs(reflectedType, mockTsRuntimeConverter)
-        .returns(expectedResult);
+        .calledWith(reflectedType, mockTsRuntimeConverter)
+        .mockReturnValue(expectedResult);
 
       typeConverter.add(mockConverter1);
       typeConverter.add(mockConverter2);

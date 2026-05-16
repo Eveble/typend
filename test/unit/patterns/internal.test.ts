@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { Internal } from '../../../src/patterns/internal';
 import { Pattern } from '../../../src/pattern';
@@ -11,7 +11,7 @@ describe(`Internal`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -128,7 +128,7 @@ describe(`Internal`, () => {
     it('takes any expectation for construction', () => {
       for (const expectation of VALID_EXPECTATIONS) {
         const expectationStr = inspect(expectation);
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
         expect(
           new Internal(expectation),
           `Expected expectation ${expectationStr} to be valid`

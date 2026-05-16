@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { Class } from '../../src/patterns/class';
 import { types } from '../../src/types';
@@ -26,9 +26,9 @@ describe(`Typend`, () => {
   let validator: any;
 
   beforeEach(() => {
-    converter = stubInterface<types.Converter>();
-    describer = stubInterface<types.Describer>();
-    validator = stubInterface<types.Validator>();
+    converter = mock<types.Converter>();
+    describer = mock<types.Describer>();
+    validator = mock<types.Validator>();
   });
 
   describe('construction', () => {
@@ -46,7 +46,9 @@ describe(`Typend`, () => {
       const value = 'my-value';
       const expectation = 'my-expectation';
       const isStrict = true;
-      validator.validate.withArgs(value, expectation, isStrict).returns(true);
+      validator.validate
+        .calledWith(value, expectation, isStrict)
+        .mockReturnValue(true);
 
       expect(typend.validate(value, expectation, isStrict)).toBe(true);
       expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -58,14 +60,16 @@ describe(`Typend`, () => {
     });
 
     it('delegates validation of generated pattern by utility to validator', () => {
-      const pattern = stubInterface<types.Pattern>();
-      const utility = stubInterface<types.Utility>();
-      utility.generate.returns(pattern);
+      const pattern = mock<types.Pattern>();
+      const utility = mock<types.Utility>();
+      utility.generate.mockReturnValue(pattern);
 
       const typend = new Typend(converter, describer, validator);
       const value = 'my-value';
       const isStrict = true;
-      validator.validate.withArgs(value, pattern, isStrict).returns(true);
+      validator.validate
+        .calledWith(value, pattern, isStrict)
+        .mockReturnValue(true);
 
       expect(typend.validate(value, utility, isStrict)).toBe(true);
       expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -82,7 +86,7 @@ describe(`Typend`, () => {
       const typend = new Typend(converter, describer, validator);
       const value = 'my-value';
       const isStrict = true;
-      validator.validate.returns(true);
+      validator.validate.mockReturnValue(true);
 
       expect(typend.validate(value, MyPattern, isStrict)).toBe(true);
       expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -99,7 +103,9 @@ describe(`Typend`, () => {
         const value = 'my-value';
         const expectation = 'my-expectation';
         const isStrict = true;
-        validator.isValid.withArgs(value, expectation, isStrict).returns(true);
+        validator.isValid
+          .calledWith(value, expectation, isStrict)
+          .mockReturnValue(true);
 
         expect(typend.isValid(value, expectation, isStrict)).toBe(true);
         expect(validator.isValid).toHaveBeenCalledTimes(1);
@@ -111,14 +117,16 @@ describe(`Typend`, () => {
       });
 
       it('delegates evaluation of generated pattern by utility to validator', () => {
-        const pattern = stubInterface<types.Pattern>();
-        const utility = stubInterface<types.Utility>();
-        utility.generate.returns(pattern);
+        const pattern = mock<types.Pattern>();
+        const utility = mock<types.Utility>();
+        utility.generate.mockReturnValue(pattern);
 
         const typend = new Typend(converter, describer, validator);
         const value = 'my-value';
         const isStrict = true;
-        validator.isValid.withArgs(value, pattern, isStrict).returns(true);
+        validator.isValid
+          .calledWith(value, pattern, isStrict)
+          .mockReturnValue(true);
 
         expect(typend.isValid(value, utility, isStrict)).toBe(true);
         expect(validator.isValid).toHaveBeenCalledTimes(1);
@@ -139,7 +147,7 @@ describe(`Typend`, () => {
         const typend = new Typend(converter, describer, validator);
         const value = 'my-value';
         const isStrict = true;
-        validator.isValid.returns(true);
+        validator.isValid.mockReturnValue(true);
 
         expect(typend.isValid(value, MyPattern, isStrict)).toBe(true);
         expect(validator.isValid).toHaveBeenCalledTimes(1);
@@ -153,7 +161,9 @@ describe(`Typend`, () => {
       it('throws InvalidTypeError error if expectation is not a  class constructor or instance of pattern: Class, InstanceOf, Interface', () => {
         const expectation = 'my-expectation';
         const expectationStr = inspect(expectation);
-        describer.describe.withArgs(expectation).returns(expectationStr);
+        describer.describe
+          .calledWith(expectation)
+          .mockReturnValue(expectationStr);
         const typend = new Typend(converter, describer, validator);
         expect(() => typend.isInstanceOf(true, expectation)).toThrow(
           InvalidTypeError,
@@ -165,7 +175,9 @@ describe(`Typend`, () => {
         const typend = new Typend(converter, describer, validator);
         const value = 'my-value';
         const expectation = String;
-        validator.isInstanceOf.withArgs(value, expectation).returns(true);
+        validator.isInstanceOf
+          .calledWith(value, expectation)
+          .mockReturnValue(true);
 
         expect(typend.isInstanceOf(value, expectation)).toBe(true);
         expect(validator.isInstanceOf).toHaveBeenCalledTimes(1);
@@ -179,7 +191,9 @@ describe(`Typend`, () => {
         const typend = new Typend(converter, describer, validator);
         const value = new MyClass();
         const expectation = new Class(MyClass, { key: String });
-        validator.isInstanceOf.withArgs(value, expectation).returns(true);
+        validator.isInstanceOf
+          .calledWith(value, expectation)
+          .mockReturnValue(true);
 
         expect(typend.isInstanceOf(value, expectation)).toBe(true);
         expect(validator.isInstanceOf).toHaveBeenCalledTimes(1);
@@ -193,7 +207,9 @@ describe(`Typend`, () => {
         const typend = new Typend(converter, describer, validator);
         const value = new MyClass();
         const expectation = new InstanceOf(MyClass);
-        validator.isInstanceOf.withArgs(value, expectation).returns(true);
+        validator.isInstanceOf
+          .calledWith(value, expectation)
+          .mockReturnValue(true);
 
         expect(typend.isInstanceOf(value, expectation)).toBe(true);
         expect(validator.isInstanceOf).toHaveBeenCalledTimes(1);
@@ -208,7 +224,9 @@ describe(`Typend`, () => {
         const expectation = new Interface({
           key: String,
         });
-        validator.isInstanceOf.withArgs(value, expectation).returns(true);
+        validator.isInstanceOf
+          .calledWith(value, expectation)
+          .mockReturnValue(true);
 
         expect(typend.isInstanceOf(value, expectation)).toBe(true);
         expect(validator.isInstanceOf).toHaveBeenCalledTimes(1);
@@ -219,7 +237,7 @@ describe(`Typend`, () => {
 
   describe('overriding', () => {
     it('allows to override converter', () => {
-      const otherConverter = stubInterface<types.Converter>();
+      const otherConverter = mock<types.Converter>();
       const typend = new Typend(converter, describer, validator);
       expect(typend.getConverter()).toBe(converter);
 
@@ -228,7 +246,7 @@ describe(`Typend`, () => {
     });
 
     it('allows to override describer', () => {
-      const otherDescriber = stubInterface<types.Describer>();
+      const otherDescriber = mock<types.Describer>();
       const typend = new Typend(converter, describer, validator);
       expect(Pattern.getDescriber()).toBe(describer);
       expect(PatternValidator.getDescriber()).toBe(describer);
@@ -242,7 +260,7 @@ describe(`Typend`, () => {
     });
 
     it('allows to override validator', () => {
-      const otherValidator = stubInterface<types.Validator>();
+      const otherValidator = mock<types.Validator>();
       const typend = new Typend(converter, describer, validator);
       expect(typend.getValidator()).toBe(validator);
 

@@ -6782,7 +6782,7 @@ npm-normalize-package-bin@^1.0.0, npm-normalize-package-bin@^1.0.1:
   resolved "https://registry.npmjs.org/npm-normalize-package-bin/-/npm-normalize-package-bin-1.0.1.tgz"
   integrity sha512-EPfafl6JL5/rU+ot6P3gRSCpPDW5VmIzX959Ob1+ySFUuuYHWHekXpwdUZcKP5C+DS4GEtdJluwBjnsNDl+fSA==
 
-npm-package-arg@^8.0.0, npm-package-arg@^8.0.1, npm-package-arg@^8.1.0, npm-package-arg@^8.1.2, npm-package-arg@^8.1.4, npm-package-arg@^8.1.5:
+npm-package-arg@^8.0.0, npm-package-arg@^8.0.1, npm-package-arg@^8.1.0, npm-package-arg@^8.1.1, npm-package-arg@^8.1.2, npm-package-arg@^8.1.5:
   version "8.1.5"
   resolved "https://registry.npmjs.org/npm-package-arg/-/npm-package-arg-8.1.5.tgz"
   integrity sha512-LhgZrg0n0VgvzVdSm1oiZworPbTxYHUJCgtsJW8mGvlDpxTM1vSJc3m5QZeUkhAHIzbz3VCHd/R4osi1L1Tg/Q==
@@ -7303,7 +7303,7 @@ p-try@^2.0.0:
   resolved "https://registry.npmjs.org/p-try/-/p-try-2.2.0.tgz"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
-pacote@^11.1.11, pacote@^11.2.6, pacote@^11.3.1, pacote@^11.3.4, pacote@^11.3.5:
+pacote@^11.1.11, pacote@^11.2.6, pacote@^11.3.0, pacote@^11.3.1, pacote@^11.3.5:
   version "11.3.5"
   resolved "https://registry.npmjs.org/pacote/-/pacote-11.3.5.tgz"
   integrity sha512-fT375Yczn4zi+6Hkk2TBe1x1sP8FgFsEIZ2/iWaXY2r/NkhDJfxbcn5paz1+RTFCyNf+dPnaoBDJoAxXSU8Bkg==
@@ -9408,6 +9408,11 @@ ts-api-utils@^2.1.0:
   resolved "https://registry.npmjs.org/ts-api-utils/-/ts-api-utils-2.1.0.tgz"
   integrity sha512-CUgTZL1irw8u29bzrOD/nH85jqyc74D6SshFgujOIA7osm2Rz7dYH77agkx7H4FBNxDq7Cjf+IjaX/8zwFW+ZQ==
 
+ts-essentials@>=10.0.0:
+  version "10.2.0"
+  resolved "https://registry.npmjs.org/ts-essentials/-/ts-essentials-10.2.0.tgz#72996d9e2525c205d06b432450e1ebc52214e267"
+  integrity sha512-z9FlLywg0XEV46Ws1FwYN4NZDMr9qAe38lTTtgVBqzhhyEgwrnCUkFe4MEqnvar1kY1kFEnlkp56bxn2g0V+UA==
+
 ts-patch@3.1.2:
   version "3.1.2"
   resolved "https://registry.npmjs.org/ts-patch/-/ts-patch-3.1.2.tgz"
@@ -9896,11 +9901,6 @@ vinyl@^2.0.0:
     remove-trailing-separator "^1.0.1"
     replace-ext "^1.0.0"
 
-vite-plugin-typescript-transform@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.npmjs.org/vite-plugin-typescript-transform/-/vite-plugin-typescript-transform-1.3.1.tgz#b8cf7b08fde3464950bf32c58035ef8230f42441"
-  integrity sha512-TTG0TaH5vHZcg4ebAS3Md63hKClxJyVpqIjBzx17WNW/NvRCZm3i5a0C3cgZG2D5wp76zHaTpGOTzcNZ9FQJsA==
-
 "vite@^6.0.0 || ^7.0.0 || ^8.0.0":
   version "8.0.13"
   resolved "https://registry.npmjs.org/vite/-/vite-8.0.13.tgz#d75fb40aeee761051b0eb4620993da625c7719ab"
@@ -9913,6 +9913,13 @@ vite-plugin-typescript-transform@^1.3.1:
     tinyglobby "^0.2.16"
   optionalDependencies:
     fsevents "~2.3.3"
+
+vitest-mock-extended@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/vitest-mock-extended/-/vitest-mock-extended-3.1.0.tgz#d4e23f4bbc18d07c4ab928b861e74414c942c974"
+  integrity sha512-vCM0VkuocOUBwwqwV7JB7YStw07pqeKvEIrZnR8l3PtwYi6rAAJAyJACeC1UYNfbQWi85nz7EdiXWBFI5hll2g==
+  dependencies:
+    ts-essentials ">=10.0.0"
 
 vitest@^4.1.6:
   version "4.1.6"

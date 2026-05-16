@@ -9,7 +9,7 @@ import {
   afterAll,
 } from 'vitest';
 import { getClassType, reflect, Types as tsrTypes } from 'tsruntime';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { ClassConverter } from '../../../src/converters/tsruntime/type-converters/class.converter';
 import { Class, Collection, InstanceOf, types } from '../../../src';
 import { Type } from '../../../src/decorators/type.decorator';
@@ -25,8 +25,8 @@ describe(`ClassConverter`, () => {
   let typeConverter: ClassConverter;
 
   beforeEach(() => {
-    converter = stubInterface<types.Converter>();
-    objConverter = stubInterface<types.TypeConverter>();
+    converter = mock<types.Converter>();
+    objConverter = mock<types.TypeConverter>();
     const transformers = new Map();
     typeConverter = new ClassConverter(transformers);
   });
@@ -61,7 +61,9 @@ describe(`ClassConverter`, () => {
 
   describe('reflection', () => {
     beforeEach(() => {
-      converter.getConverter.withArgs(TypeKind.Object).returns(objConverter);
+      converter.getConverter
+        .calledWith(TypeKind.Object)
+        .mockReturnValue(objConverter);
     });
 
     it('returns reflected class properties from passed type', () => {
@@ -71,13 +73,15 @@ describe(`ClassConverter`, () => {
       }
 
       objConverter.reflect
-        .withArgs({
-          kind: 19,
-          name: 'MyExample',
-          properties: { key: { kind: 2, modifiers: 0 } },
-          constructors: [{ modifiers: 0, parameters: [] }],
-        })
-        .returns({
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'MyExample',
+            properties: { key: { kind: 2, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
+          })
+        )
+        .mockReturnValue({
           key: String,
         });
 
@@ -93,13 +97,15 @@ describe(`ClassConverter`, () => {
       }
 
       objConverter.reflect
-        .withArgs({
-          kind: 19,
-          name: 'MyExample',
-          properties: { key: { kind: 3, modifiers: 0 } },
-          constructors: [{ modifiers: 0, parameters: [] }],
-        })
-        .returns({
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'MyExample',
+            properties: { key: { kind: 3, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
+          })
+        )
+        .mockReturnValue({
           key: Number,
         });
 
@@ -127,32 +133,36 @@ describe(`ClassConverter`, () => {
       }
 
       objConverter.reflect
-        .withArgs({
-          kind: 19,
-          name: 'Parent',
-          properties: {
-            firstParent: { kind: 2, modifiers: 0 },
-            secondParent: { kind: 3, modifiers: 0 },
-          },
-          constructors: [{ modifiers: 0, parameters: [] }],
-        })
-        .returns({
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'Parent',
+            properties: {
+              firstParent: { kind: 2, modifiers: 0 },
+              secondParent: { kind: 3, modifiers: 0 },
+            },
+            constructors: [{ modifiers: 0, parameters: [] }],
+          })
+        )
+        .mockReturnValue({
           firstParent: String,
           secondParent: Number,
         });
 
       objConverter.reflect
-        .withArgs({
-          kind: 19,
-          name: 'Child',
-          properties: {
-            firstChild: { kind: 4, modifiers: 0 },
-            secondChild: { kind: 5, modifiers: 0, value: 'my-value' },
-          },
-          constructors: [{ modifiers: 0, parameters: [] }],
-          extends: { kind: 18, type: Parent, arguments: [] },
-        })
-        .returns({
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'Child',
+            properties: {
+              firstChild: { kind: 4, modifiers: 0 },
+              secondChild: { kind: 5, modifiers: 0, value: 'my-value' },
+            },
+            constructors: [{ modifiers: 0, parameters: [] }],
+            extends: { kind: 18, type: Parent, arguments: [] },
+          })
+        )
+        .mockReturnValue({
           firstChild: Boolean,
           secondChild: 'my-value',
         });
@@ -171,7 +181,7 @@ describe(`ClassConverter`, () => {
     });
 
     it('returns transformed transformable properties from reflection', () => {
-      const transformer = stubInterface<types.TypeTransformer>();
+      const transformer = mock<types.TypeTransformer>();
       typeConverter.transformers.set('myTransformer', transformer);
 
       @Type()
@@ -190,16 +200,22 @@ describe(`ClassConverter`, () => {
       const transformedClassType = new Class(MyExample, transformedProperties);
 
       objConverter.reflect
-        .withArgs({
-          kind: 19,
-          name: 'MyExample',
-          properties: { key: { kind: 2, modifiers: 0 } },
-          constructors: [{ modifiers: 0, parameters: [] }],
-        })
-        .returns(properties);
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'MyExample',
+            properties: { key: { kind: 2, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
+          })
+        )
+        .mockReturnValue(properties);
 
-      transformer.canTransform.withArgs(classType).returns(true);
-      transformer.transform.withArgs(classType).returns(transformedClassType);
+      transformer.canTransform
+        .calledWith(expect.objectContaining({ type: MyExample }))
+        .mockReturnValue(true);
+      transformer.transform
+        .calledWith(expect.objectContaining({ type: MyExample }))
+        .mockReturnValue(transformedClassType);
 
       const reflectedAndTransformedClassProps = typeConverter.reflect(
         MyExample,
@@ -217,13 +233,15 @@ describe(`ClassConverter`, () => {
         }
 
         objConverter.reflect
-          .withArgs({
-            kind: 19,
-            name: 'MyExample',
-            properties: { key: { kind: 2, modifiers: 0 } },
-            constructors: [{ modifiers: 0, parameters: [] }],
-          })
-          .returns({
+          .calledWith(
+            expect.objectContaining({
+              kind: 19,
+              name: 'MyExample',
+              properties: { key: { kind: 2, modifiers: 0 } },
+              constructors: [{ modifiers: 0, parameters: [] }],
+            })
+          )
+          .mockReturnValue({
             key: String,
           });
 
@@ -243,13 +261,15 @@ describe(`ClassConverter`, () => {
         }
 
         objConverter.reflect
-          .withArgs({
-            kind: 19,
-            name: 'MyExample',
-            properties: { key: { kind: 2, modifiers: 0 } },
-            constructors: [{ modifiers: 0, parameters: [] }],
-          })
-          .returns({
+          .calledWith(
+            expect.objectContaining({
+              kind: 19,
+              name: 'MyExample',
+              properties: { key: { kind: 2, modifiers: 0 } },
+              constructors: [{ modifiers: 0, parameters: [] }],
+            })
+          )
+          .mockReturnValue({
             key: String,
           });
 
@@ -266,7 +286,9 @@ describe(`ClassConverter`, () => {
 
   describe('conversion', () => {
     beforeEach(() => {
-      converter.getConverter.withArgs(TypeKind.Object).returns(objConverter);
+      converter.getConverter
+        .calledWith(TypeKind.Object)
+        .mockReturnValue(objConverter);
     });
 
     it('returns converted class properties from passed type', () => {
@@ -276,13 +298,15 @@ describe(`ClassConverter`, () => {
       }
 
       objConverter.convert
-        .withArgs({
-          kind: 19,
-          name: 'MyExample',
-          properties: { key: { kind: 2, modifiers: 0 } },
-          constructors: [{ modifiers: 0, parameters: [] }],
-        })
-        .returns(
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'MyExample',
+            properties: { key: { kind: 2, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
+          })
+        )
+        .mockReturnValue(
           new Collection({
             key: new InstanceOf(String),
           })
@@ -302,13 +326,15 @@ describe(`ClassConverter`, () => {
       }
 
       objConverter.convert
-        .withArgs({
-          kind: 19,
-          name: 'MyExample',
-          properties: { key: { kind: 3, modifiers: 0 } },
-          constructors: [{ modifiers: 0, parameters: [] }],
-        })
-        .returns(
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'MyExample',
+            properties: { key: { kind: 3, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
+          })
+        )
+        .mockReturnValue(
           new Collection({
             key: new InstanceOf(Number),
           })
@@ -340,16 +366,18 @@ describe(`ClassConverter`, () => {
       }
 
       objConverter.convert
-        .withArgs({
-          kind: 19,
-          name: 'Parent',
-          properties: {
-            firstParent: { kind: 2, modifiers: 0 },
-            secondParent: { kind: 3, modifiers: 0 },
-          },
-          constructors: [{ modifiers: 0, parameters: [] }],
-        })
-        .returns(
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'Parent',
+            properties: {
+              firstParent: { kind: 2, modifiers: 0 },
+              secondParent: { kind: 3, modifiers: 0 },
+            },
+            constructors: [{ modifiers: 0, parameters: [] }],
+          })
+        )
+        .mockReturnValue(
           new Collection({
             firstParent: new InstanceOf(String),
             secondParent: new InstanceOf(Number),
@@ -357,17 +385,19 @@ describe(`ClassConverter`, () => {
         );
 
       objConverter.convert
-        .withArgs({
-          kind: 19,
-          name: 'Child',
-          properties: {
-            firstChild: { kind: 4, modifiers: 0 },
-            secondChild: { kind: 5, modifiers: 0, value: 'my-value' },
-          },
-          constructors: [{ modifiers: 0, parameters: [] }],
-          extends: { kind: 18, type: Parent, arguments: [] },
-        })
-        .returns(
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'Child',
+            properties: {
+              firstChild: { kind: 4, modifiers: 0 },
+              secondChild: { kind: 5, modifiers: 0, value: 'my-value' },
+            },
+            constructors: [{ modifiers: 0, parameters: [] }],
+            extends: { kind: 18, type: Parent, arguments: [] },
+          })
+        )
+        .mockReturnValue(
           new Collection({
             firstChild: new InstanceOf(Boolean),
             secondChild: 'my-value',
@@ -391,7 +421,7 @@ describe(`ClassConverter`, () => {
     });
 
     it('returns transformed transformable properties from conversion', () => {
-      const transformer = stubInterface<types.TypeTransformer>();
+      const transformer = mock<types.TypeTransformer>();
       typeConverter.transformers.set('myTransformer', transformer);
 
       @Type()
@@ -410,16 +440,22 @@ describe(`ClassConverter`, () => {
       const transformedClassType = new Class(MyExample, transformedProperties);
 
       objConverter.convert
-        .withArgs({
-          kind: 19,
-          name: 'MyExample',
-          properties: { key: { kind: 2, modifiers: 0 } },
-          constructors: [{ modifiers: 0, parameters: [] }],
-        })
-        .returns(collProperties);
+        .calledWith(
+          expect.objectContaining({
+            kind: 19,
+            name: 'MyExample',
+            properties: { key: { kind: 2, modifiers: 0 } },
+            constructors: [{ modifiers: 0, parameters: [] }],
+          })
+        )
+        .mockReturnValue(collProperties);
 
-      transformer.canTransform.withArgs(classType).returns(true);
-      transformer.transform.withArgs(classType).returns(transformedClassType);
+      transformer.canTransform
+        .calledWith(expect.objectContaining({ type: MyExample }))
+        .mockReturnValue(true);
+      transformer.transform
+        .calledWith(expect.objectContaining({ type: MyExample }))
+        .mockReturnValue(transformedClassType);
 
       const convertedAndTransformedClassType = typeConverter.convert(
         MyExample,
@@ -437,13 +473,15 @@ describe(`ClassConverter`, () => {
         }
 
         objConverter.convert
-          .withArgs({
-            kind: 19,
-            name: 'MyExample',
-            properties: { key: { kind: 2, modifiers: 0 } },
-            constructors: [{ modifiers: 0, parameters: [] }],
-          })
-          .returns(
+          .calledWith(
+            expect.objectContaining({
+              kind: 19,
+              name: 'MyExample',
+              properties: { key: { kind: 2, modifiers: 0 } },
+              constructors: [{ modifiers: 0, parameters: [] }],
+            })
+          )
+          .mockReturnValue(
             new Collection({
               key: new InstanceOf(String),
             })
@@ -465,13 +503,15 @@ describe(`ClassConverter`, () => {
         }
 
         objConverter.convert
-          .withArgs({
-            kind: 19,
-            name: 'MyExample',
-            properties: { key: { kind: 2, modifiers: 0 } },
-            constructors: [{ modifiers: 0, parameters: [] }],
-          })
-          .returns(
+          .calledWith(
+            expect.objectContaining({
+              kind: 19,
+              name: 'MyExample',
+              properties: { key: { kind: 2, modifiers: 0 } },
+              constructors: [{ modifiers: 0, parameters: [] }],
+            })
+          )
+          .mockReturnValue(
             new Collection({
               key: new InstanceOf(String),
             })

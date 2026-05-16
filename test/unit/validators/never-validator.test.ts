@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { NeverValidator } from '../../../src/validators/never-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -20,7 +20,7 @@ describe(`NeverValidator`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -162,7 +162,7 @@ describe(`NeverValidator`, () => {
       for (const val of INVALID_VALUES) {
         const neverValidator = new NeverValidator();
         const valStr = inspect(val);
-        describer.describe.withArgs(val).returns(valStr);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
 
         expect(() => neverValidator.validate(val)).toThrow(
           ValidationError,

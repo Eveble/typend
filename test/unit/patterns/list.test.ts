@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { inspect } from 'util';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { List } from '../../../src/patterns/list';
 import { Pattern } from '../../../src/pattern';
 import { types } from '../../../src/types';
@@ -13,7 +13,7 @@ describe(`List`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -132,7 +132,7 @@ describe(`List`, () => {
     it('takes valid single argument expectation for construction', () => {
       for (const expectation of VALID_EXPECTATIONS) {
         const expectationStr = inspect(expectation);
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
         expect(
           new List(expectation),
           `Expected expectation ${expectationStr} to be valid`
@@ -148,7 +148,7 @@ describe(`List`, () => {
     it('throws InvalidDefinitionError for more then one argument(use Tuple pattern for that)', () => {
       const values = [1, 2];
       const valueStr = inspect(values);
-      describer.describe.returns(valueStr);
+      describer.describe.mockReturnValue(valueStr);
       expect(
         () => new List(...values),
         `Expected expectation ${valueStr} to be invalid`

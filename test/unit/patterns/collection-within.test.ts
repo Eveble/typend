@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { CollectionWithin } from '../../../src/patterns/collection-within';
 import { InvalidDefinitionError } from '../../../src/errors';
@@ -11,7 +11,7 @@ describe(`CollectionWithin`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -133,7 +133,7 @@ describe(`CollectionWithin`, () => {
     it('throws InvalidDefinitionError for invalid definition on construction', () => {
       for (const props of INVALID_ARGUMENTS) {
         const propsStr = inspect(props);
-        describer.describe.returns(propsStr);
+        describer.describe.mockReturnValue(propsStr);
         expect(
           () => new CollectionWithin(props),
           `Expected properties ${propsStr} to be invalid`

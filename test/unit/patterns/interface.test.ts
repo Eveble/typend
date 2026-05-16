@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { InvalidTypeError } from '../../../src/errors';
 import { Pattern } from '../../../src/pattern';
@@ -14,10 +14,10 @@ describe(`Interface`, () => {
   let describer: any;
 
   beforeEach(() => {
-    converter = stubInterface<types.Converter>();
-    library = stubInterface<types.Library>();
+    converter = mock<types.Converter>();
+    library = mock<types.Library>();
     library.converter = converter;
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -144,7 +144,7 @@ describe(`Interface`, () => {
     it('throws InvalidTypeError for invalid expectations on construction', () => {
       for (const props of INVALID_EXPECTATIONS) {
         const propsStr = inspect(props);
-        describer.describe.returns(propsStr);
+        describer.describe.mockReturnValue(propsStr);
         expect(
           () => new Interface(props),
           `Expected expectation ${propsStr} to be invalid`

@@ -9,7 +9,7 @@ import {
   afterAll,
 } from 'vitest';
 import { reflect } from 'tsruntime';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { UnionConverter } from '../../../src/converters/tsruntime/type-converters/union.converter';
 import { types } from '../../../src/types';
@@ -24,7 +24,7 @@ describe(`UnionConverter`, () => {
   let typeConverter: UnionConverter;
 
   beforeEach(() => {
-    converter = stubInterface<types.Converter>();
+    converter = mock<types.Converter>();
     typeConverter = new UnionConverter();
   });
 
@@ -174,9 +174,15 @@ describe(`UnionConverter`, () => {
   describe('reflection', () => {
     describe('one of', () => {
       it('reflects one of type(two or more types) as an array', () => {
-        converter.reflect.withArgs({ kind: 2 }).returns(String);
-        converter.reflect.withArgs({ kind: 3 }).returns(Number);
-        converter.reflect.withArgs({ kind: 4 }).returns(Boolean);
+        converter.reflect
+          .calledWith(expect.objectContaining({ kind: 2 }))
+          .mockReturnValue(String);
+        converter.reflect
+          .calledWith(expect.objectContaining({ kind: 3 }))
+          .mockReturnValue(Number);
+        converter.reflect
+          .calledWith(expect.objectContaining({ kind: 4 }))
+          .mockReturnValue(Boolean);
         expect(
           typeConverter.reflect(reflect<string | number | boolean>(), converter)
         ).toEqual([Boolean, Number, String]);
@@ -207,8 +213,12 @@ describe(`UnionConverter`, () => {
           ],
         };
 
-        converter.reflect.withArgs({ kind: TypeKind.String }).returns(String);
-        converter.reflect.withArgs({ kind: TypeKind.Number }).returns(Number);
+        converter.reflect
+          .calledWith(expect.objectContaining({ kind: TypeKind.String }))
+          .mockReturnValue(String);
+        converter.reflect
+          .calledWith(expect.objectContaining({ kind: TypeKind.Number }))
+          .mockReturnValue(Number);
 
         expect(typeConverter.reflect(unionType, converter)).toEqual([
           MyClass,
@@ -220,8 +230,12 @@ describe(`UnionConverter`, () => {
 
     describe('optional', () => {
       it('reflects optional type(type|undefined) as array', () => {
-        converter.reflect.withArgs({ kind: 8 }).returns(true);
-        converter.reflect.withArgs({ kind: 12 }).returns(undefined);
+        converter.reflect
+          .calledWith(expect.objectContaining({ kind: 8 }))
+          .mockReturnValue(true);
+        converter.reflect
+          .calledWith(expect.objectContaining({ kind: 12 }))
+          .mockReturnValue(undefined);
         expect(
           typeConverter.reflect(reflect<true | undefined>(), converter)
         ).toEqual([true, undefined]);
@@ -237,8 +251,8 @@ describe(`UnionConverter`, () => {
         };
 
         converter.reflect
-          .withArgs({ kind: TypeKind.Undefined })
-          .returns(undefined);
+          .calledWith(expect.objectContaining({ kind: TypeKind.Undefined }))
+          .mockReturnValue(undefined);
 
         expect(typeConverter.reflect(unionType, converter)).toEqual([
           MyClass,
@@ -251,9 +265,15 @@ describe(`UnionConverter`, () => {
   describe('conversion', () => {
     describe('one of', () => {
       it('converts one of type(two or more types) as instance of OneOf pattern', () => {
-        converter.convert.withArgs({ kind: 2 }).returns(String);
-        converter.convert.withArgs({ kind: 3 }).returns(Number);
-        converter.convert.withArgs({ kind: 4 }).returns(Boolean);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 2 }))
+          .mockReturnValue(String);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 3 }))
+          .mockReturnValue(Number);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 4 }))
+          .mockReturnValue(Boolean);
         const result = typeConverter.convert(
           reflect<string | number | boolean>(),
           converter
@@ -269,9 +289,15 @@ describe(`UnionConverter`, () => {
           types: [{ kind: 2 }, { kind: 3 }, { kind: 4 }],
         };
 
-        converter.convert.withArgs({ kind: 2 }).returns(String);
-        converter.convert.withArgs({ kind: 3 }).returns(Number);
-        converter.convert.withArgs({ kind: 4 }).returns(Boolean);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 2 }))
+          .mockReturnValue(String);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 3 }))
+          .mockReturnValue(Number);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 4 }))
+          .mockReturnValue(Boolean);
         const result = typeConverter.convert(reflectedType, converter);
         expect(result).toBeInstanceOf(OneOf);
         expect(result).toEqual([String, Number, Boolean]);
@@ -309,8 +335,12 @@ describe(`UnionConverter`, () => {
           ],
         };
 
-        converter.convert.withArgs({ kind: TypeKind.String }).returns(String);
-        converter.convert.withArgs({ kind: TypeKind.Number }).returns(Number);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: TypeKind.String }))
+          .mockReturnValue(String);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: TypeKind.Number }))
+          .mockReturnValue(Number);
 
         const result = typeConverter.convert(unionType, converter);
         expect(result).toBeInstanceOf(OneOf);
@@ -329,8 +359,12 @@ describe(`UnionConverter`, () => {
           ],
         };
 
-        converter.convert.withArgs({ kind: TypeKind.String }).returns(String);
-        converter.convert.withArgs({ kind: TypeKind.Number }).returns(Number);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: TypeKind.String }))
+          .mockReturnValue(String);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: TypeKind.Number }))
+          .mockReturnValue(Number);
 
         const result = typeConverter.convert(unionType, converter);
         expect(result).toBeInstanceOf(OneOf);
@@ -340,8 +374,12 @@ describe(`UnionConverter`, () => {
 
     describe('optional', () => {
       it('converts optional type(type|undefined) as instance of Optional pattern', () => {
-        converter.convert.withArgs({ kind: 8 }).returns(true);
-        converter.convert.withArgs({ kind: 12 }).returns(undefined);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 8 }))
+          .mockReturnValue(true);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 12 }))
+          .mockReturnValue(undefined);
         const result = typeConverter.convert(
           reflect<true | undefined>(),
           converter
@@ -356,8 +394,12 @@ describe(`UnionConverter`, () => {
           initializer: (): any => true,
           types: [{ kind: 8 }, { kind: 12 }],
         };
-        converter.convert.withArgs({ kind: 8 }).returns(true);
-        converter.convert.withArgs({ kind: 12 }).returns(undefined);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 8 }))
+          .mockReturnValue(true);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: 12 }))
+          .mockReturnValue(undefined);
         const result = typeConverter.convert(reflectedType, converter);
         expect(result).toBeInstanceOf(Optional);
         expect(result).toEqual([true]);
@@ -375,8 +417,8 @@ describe(`UnionConverter`, () => {
         };
 
         converter.convert
-          .withArgs({ kind: TypeKind.Undefined })
-          .returns(undefined);
+          .calledWith(expect.objectContaining({ kind: TypeKind.Undefined }))
+          .mockReturnValue(undefined);
 
         const result = typeConverter.convert(unionType, converter);
         expect(result).toBeInstanceOf(Optional);
@@ -396,10 +438,12 @@ describe(`UnionConverter`, () => {
           ],
         };
 
-        converter.convert.withArgs({ kind: TypeKind.String }).returns(String);
         converter.convert
-          .withArgs({ kind: TypeKind.Undefined })
-          .returns(undefined);
+          .calledWith(expect.objectContaining({ kind: TypeKind.String }))
+          .mockReturnValue(String);
+        converter.convert
+          .calledWith(expect.objectContaining({ kind: TypeKind.Undefined }))
+          .mockReturnValue(undefined);
 
         const result = typeConverter.convert(unionType, converter);
         expect(result).toBeInstanceOf(Optional);
@@ -418,8 +462,8 @@ describe(`UnionConverter`, () => {
         };
 
         converter.convert
-          .withArgs({ kind: TypeKind.Undefined })
-          .returns(undefined);
+          .calledWith(expect.objectContaining({ kind: TypeKind.Undefined }))
+          .mockReturnValue(undefined);
 
         const result = typeConverter.convert(unionType, converter);
         expect(result).toBeInstanceOf(Optional);

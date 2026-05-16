@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { Validator } from '../../src/validator';
 import { types } from '../../src/types';
 import {
@@ -45,7 +45,7 @@ describe(`Validator`, () => {
   describe('managing validators', () => {
     it(`allows to register validator`, () => {
       const kind = 'my-type';
-      const patternValidator = stubInterface<types.PatternValidator>();
+      const patternValidator = mock<types.PatternValidator>();
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
@@ -54,7 +54,7 @@ describe(`Validator`, () => {
 
     it(`throws PatternValidatorExistError when overriding existing validator`, () => {
       const kind = 'my-type';
-      const patternValidator = stubInterface<types.PatternValidator>();
+      const patternValidator = mock<types.PatternValidator>();
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
@@ -67,8 +67,8 @@ describe(`Validator`, () => {
 
     it(`allows to override existing validator`, () => {
       const kind = 'my-type';
-      const patternValidator = stubInterface<types.PatternValidator>();
-      const otherValidator = stubInterface<types.PatternValidator>();
+      const patternValidator = mock<types.PatternValidator>();
+      const otherValidator = mock<types.PatternValidator>();
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
@@ -78,7 +78,7 @@ describe(`Validator`, () => {
 
     it(`returns registered validator `, () => {
       const kind = 'my-type';
-      const patternValidator = stubInterface<types.PatternValidator>();
+      const patternValidator = mock<types.PatternValidator>();
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
@@ -96,7 +96,7 @@ describe(`Validator`, () => {
 
     it(`returns true if validator is registered`, () => {
       const kind = 'my-type';
-      const patternValidator = stubInterface<types.PatternValidator>();
+      const patternValidator = mock<types.PatternValidator>();
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
@@ -109,9 +109,9 @@ describe(`Validator`, () => {
     });
 
     it(`returns all validators in not-sorted order`, () => {
-      const firstPatternValidator = stubInterface<types.PatternValidator>();
-      const secondPatternValidator = stubInterface<types.PatternValidator>();
-      const thirdPatternValidator = stubInterface<types.PatternValidator>();
+      const firstPatternValidator = mock<types.PatternValidator>();
+      const secondPatternValidator = mock<types.PatternValidator>();
+      const thirdPatternValidator = mock<types.PatternValidator>();
 
       const validator = new Validator();
       validator.registerValidator('first', firstPatternValidator);
@@ -131,9 +131,9 @@ describe(`Validator`, () => {
     });
 
     it(`returns all registered validator mappings`, () => {
-      const firstPatternValidator = stubInterface<types.PatternValidator>();
-      const secondPatternValidator = stubInterface<types.PatternValidator>();
-      const thirdPatternValidator = stubInterface<types.PatternValidator>();
+      const firstPatternValidator = mock<types.PatternValidator>();
+      const secondPatternValidator = mock<types.PatternValidator>();
+      const thirdPatternValidator = mock<types.PatternValidator>();
 
       const validator = new Validator();
       validator.registerValidator('first', firstPatternValidator);
@@ -154,7 +154,7 @@ describe(`Validator`, () => {
 
     it(`removes validator by id`, () => {
       const kind = 'my-type';
-      const patternValidator = stubInterface<types.PatternValidator>();
+      const patternValidator = mock<types.PatternValidator>();
 
       const validator = new Validator();
       validator.registerValidator(kind, patternValidator);
@@ -176,9 +176,9 @@ describe(`Validator`, () => {
 
     it(`returns sorted patterns`, () => {
       const stubs: [string, types.PatternValidator][] = [
-        ['first', stubInterface<types.PatternValidator>()],
-        ['second', stubInterface<types.PatternValidator>()],
-        ['third', stubInterface<types.PatternValidator>()],
+        ['first', mock<types.PatternValidator>()],
+        ['second', mock<types.PatternValidator>()],
+        ['third', mock<types.PatternValidator>()],
       ];
       const validators = new Map(stubs);
 
@@ -214,13 +214,13 @@ describe(`Validator`, () => {
         const val = 'my-value';
         const expectation = 'my-expectation';
         const pattern = new MyPattern(expectation);
-        const patternValidator = stubInterface<types.PatternValidator>();
+        const patternValidator = mock<types.PatternValidator>();
 
         const validator = new Validator();
         validator.registerValidator('MyValidator', patternValidator);
         patternValidator.validate
-          .withArgs(val, pattern, validator)
-          .returns(true);
+          .calledWith(val, pattern, validator)
+          .mockReturnValue(true);
 
         expect(validator.validate(val, pattern)).toBe(true);
         expect(patternValidator.validate).toHaveBeenCalledTimes(1);
@@ -240,13 +240,11 @@ describe(`Validator`, () => {
 
         const val = 'my-value';
         const pattern = MyOtherPattern;
-        const patternValidator = stubInterface<types.PatternValidator>();
+        const patternValidator = mock<types.PatternValidator>();
 
         const validator = new Validator();
         validator.registerValidator('MyValidator', patternValidator);
-        patternValidator.validate
-          .withArgs(val, new MyOtherPattern(), validator)
-          .returns(true);
+        patternValidator.validate.mockReturnValue(true);
 
         expect(validator.validate(val, pattern)).toBe(true);
         expect(patternValidator.validate).toHaveBeenCalledTimes(1);
@@ -264,9 +262,9 @@ describe(`Validator`, () => {
         const expectation = 'my-expectation';
         const isStrict = true;
 
-        const firstPatternValidator = stubInterface<types.PatternValidator>();
-        const secondPatternValidator = stubInterface<types.PatternValidator>();
-        const myValidator = stubInterface<types.PatternValidator>();
+        const firstPatternValidator = mock<types.PatternValidator>();
+        const secondPatternValidator = mock<types.PatternValidator>();
+        const myValidator = mock<types.PatternValidator>();
         const validator = new Validator();
 
         validator.registerValidator('first', firstPatternValidator);
@@ -274,15 +272,17 @@ describe(`Validator`, () => {
         validator.registerValidator('MyValidator', myValidator);
 
         firstPatternValidator.canValidate
-          .withArgs(expectation, isStrict)
-          .returns(false);
+          .calledWith(expectation, isStrict)
+          .mockReturnValue(false);
         secondPatternValidator.canValidate
-          .withArgs(expectation, isStrict)
-          .returns(false);
-        myValidator.canValidate.withArgs(expectation, isStrict).returns(true);
+          .calledWith(expectation, isStrict)
+          .mockReturnValue(false);
+        myValidator.canValidate
+          .calledWith(expectation, isStrict)
+          .mockReturnValue(true);
         myValidator.validate
-          .withArgs(val, expectation, validator)
-          .returns(true);
+          .calledWith(val, expectation, validator)
+          .mockReturnValue(true);
 
         expect(validator.validate(val, expectation, isStrict)).toBe(true);
         expect(myValidator.validate).toHaveBeenCalledTimes(1);

@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { Optional } from '../../../src/patterns/optional';
 import { types } from '../../../src/types';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -19,7 +19,7 @@ describe(`Optional`, () => {
   let validator: any;
 
   beforeEach(() => {
-    validator = stubInterface<types.Validator>();
+    validator = mock<types.Validator>();
   });
 
   it(`extends PatternValidator`, () => {
@@ -58,7 +58,7 @@ describe(`Optional`, () => {
         const optionalValidator = new OptionalValidator();
         const val = 'my-string';
         const optional = new Optional(String);
-        validator.validate.withArgs(val, String).returns(true);
+        validator.validate.calledWith(val, String).mockReturnValue(true);
 
         expect(optionalValidator.validate(val, optional, validator)).toBe(true);
         expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -74,7 +74,9 @@ describe(`Optional`, () => {
         const optional = new Optional(String);
         const error = new ValidationError('my-error');
 
-        validator.validate.withArgs(val, String).throws(error);
+        validator.validate.calledWith(val, String).mockImplementation(() => {
+          throw error;
+        });
 
         expect(() =>
           optionalValidator.validate(val, optional, validator)
@@ -90,7 +92,9 @@ describe(`Optional`, () => {
         const optional = new Optional(String);
         const error = new ValidationError('my-error');
 
-        validator.validate.withArgs(val, String).throws(error);
+        validator.validate.calledWith(val, String).mockImplementation(() => {
+          throw error;
+        });
 
         expect(() =>
           optionalValidator.validate(val, optional, validator)

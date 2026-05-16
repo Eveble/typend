@@ -93,7 +93,8 @@
     "typedoc": "^0.17.7",
     "typedoc-plugin-markdown": "^2.3.1",
     "typescript": "5.9.3",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.6",
+    "vitest-mock-extended": "3.1.0"
   },
   "scripts": {
     "explain": "./node_modules/.bin/npm-scripts-info",

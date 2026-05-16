@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { CollectionIncluding } from '../../../src/patterns/collection-including';
 import { InvalidTypeError } from '../../../src/errors';
@@ -11,7 +11,7 @@ describe(`CollectionIncluding`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -133,7 +133,7 @@ describe(`CollectionIncluding`, () => {
     it('throws InvalidTypeError for invalid definition on construction', () => {
       for (const props of INVALID_ARGUMENTS) {
         const propsStr = inspect(props);
-        describer.describe.returns(propsStr);
+        describer.describe.mockReturnValue(propsStr);
         expect(
           () => new CollectionIncluding(props),
           `Expected properties ${propsStr} to be invalid`

@@ -9,7 +9,7 @@ import {
   afterAll,
 } from 'vitest';
 import { reflect } from 'tsruntime';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { TypeKind } from 'tsruntime/dist/runtime/publicTypes';
 import { TupleConverter } from '../../../src/converters/tsruntime/type-converters/tuple.converter';
 import { types } from '../../../src/types';
@@ -22,7 +22,7 @@ describe(`TupleConverter`, () => {
   let typeConverter: TupleConverter;
 
   beforeEach(() => {
-    converter = stubInterface<types.Converter>();
+    converter = mock<types.Converter>();
     typeConverter = new TupleConverter();
   });
 
@@ -165,9 +165,15 @@ describe(`TupleConverter`, () => {
 
   describe('reflection', () => {
     it('reflects tuple as an array', () => {
-      converter.reflect.withArgs({ kind: 2 }).returns(String);
-      converter.reflect.withArgs({ kind: 3 }).returns(Number);
-      converter.reflect.withArgs({ kind: 4 }).returns(Boolean);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: 2 }))
+        .mockReturnValue(String);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: 3 }))
+        .mockReturnValue(Number);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: 4 }))
+        .mockReturnValue(Boolean);
       expect(
         typeConverter.reflect(reflect<[string, number, boolean]>(), converter)
       ).toEqual([String, Number, Boolean]);
@@ -198,8 +204,12 @@ describe(`TupleConverter`, () => {
         ],
       };
 
-      converter.reflect.withArgs({ kind: TypeKind.String }).returns(String);
-      converter.reflect.withArgs({ kind: TypeKind.Number }).returns(Number);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: TypeKind.String }))
+        .mockReturnValue(String);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: TypeKind.Number }))
+        .mockReturnValue(Number);
 
       expect(typeConverter.reflect(tupleType, converter)).toEqual([
         String,
@@ -218,7 +228,9 @@ describe(`TupleConverter`, () => {
         ],
       };
 
-      converter.convert.withArgs({ kind: TypeKind.Number }).returns(Number);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: TypeKind.Number }))
+        .mockReturnValue(Number);
 
       const result = typeConverter.convert(tupleType, converter);
       expect(result).toBeInstanceOf(Tuple);
@@ -232,9 +244,15 @@ describe(`TupleConverter`, () => {
 
   describe('conversion', () => {
     it('converts tuple as instance of Tuple pattern', () => {
-      converter.convert.withArgs({ kind: 2 }).returns(String);
-      converter.convert.withArgs({ kind: 3 }).returns(Number);
-      converter.convert.withArgs({ kind: 4 }).returns(Boolean);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: 2 }))
+        .mockReturnValue(String);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: 3 }))
+        .mockReturnValue(Number);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: 4 }))
+        .mockReturnValue(Boolean);
       const result = typeConverter.convert(
         reflect<[string, number, boolean]>(),
         converter
@@ -250,9 +268,15 @@ describe(`TupleConverter`, () => {
         elementTypes: [{ kind: 2 }, { kind: 3 }, { kind: 4 }],
       };
 
-      converter.convert.withArgs({ kind: 2 }).returns(String);
-      converter.convert.withArgs({ kind: 3 }).returns(Number);
-      converter.convert.withArgs({ kind: 4 }).returns(Boolean);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: 2 }))
+        .mockReturnValue(String);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: 3 }))
+        .mockReturnValue(Number);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: 4 }))
+        .mockReturnValue(Boolean);
       const result = typeConverter.convert(reflectedType, converter);
       expect(result).toBeInstanceOf(Tuple);
       expect(result).toEqual([String, Number, Boolean]);
@@ -287,8 +311,12 @@ describe(`TupleConverter`, () => {
         ],
       };
 
-      converter.convert.withArgs({ kind: TypeKind.String }).returns(String);
-      converter.convert.withArgs({ kind: TypeKind.Number }).returns(Number);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: TypeKind.String }))
+        .mockReturnValue(String);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: TypeKind.Number }))
+        .mockReturnValue(Number);
 
       const result = typeConverter.convert(tupleType, converter);
       expect(result).toBeInstanceOf(Tuple);

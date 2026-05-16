@@ -9,7 +9,7 @@ import {
   afterAll,
 } from 'vitest';
 import { reflect } from 'tsruntime';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { InstanceOf, List, types } from '../../../src';
 import { TypeKind } from '../../../src/enums/type-kind.enum';
 import { ArrayConverter } from '../../../src/converters/tsruntime/type-converters/array.converter';
@@ -20,7 +20,7 @@ describe(`ArrayConverter`, () => {
   let typeConverter: ArrayConverter;
 
   beforeEach(() => {
-    converter = stubInterface<types.Converter>();
+    converter = mock<types.Converter>();
     typeConverter = new ArrayConverter();
   });
 
@@ -99,18 +99,24 @@ describe(`ArrayConverter`, () => {
 
   describe('reflection', () => {
     it('reflects literal array as an array', () => {
-      converter.reflect.withArgs({ kind: 2 }).returns(String);
+      converter.reflect
+        .calledWith(expect.objectContaining({ kind: 2 }))
+        .mockReturnValue(String);
       expect(typeConverter.reflect(reflect<string[]>(), converter)).toEqual([
         String,
       ]);
     });
 
     it('reflects literal array with class', () => {
-      const classConverter = stubInterface<types.TypeConverter>();
-      converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
+      const classConverter = mock<types.TypeConverter>();
+      converter.getConverter
+        .calledWith(TypeKind.Class)
+        .mockReturnValue(classConverter);
       classConverter.isConvertible
-        .withArgs({ kind: 18, type: MyClass, arguments: [] })
-        .returns(true);
+        .calledWith(
+          expect.objectContaining({ kind: 18, type: MyClass, arguments: [] })
+        )
+        .mockReturnValue(true);
 
       const arrayType = typeConverter.reflect(reflect<MyClass[]>(), converter);
       expect(arrayType).toBeInstanceOf(Array);
@@ -120,7 +126,9 @@ describe(`ArrayConverter`, () => {
 
   describe('conversion', () => {
     it('converts literal array as instance of List pattern', () => {
-      converter.convert.withArgs({ kind: 2 }).returns(String);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: 2 }))
+        .mockReturnValue(String);
       const arrayType = typeConverter.convert(reflect<string[]>(), converter);
       expect(arrayType).toBeInstanceOf(List);
       expect(arrayType).toEqual([String]);
@@ -132,7 +140,9 @@ describe(`ArrayConverter`, () => {
         initializer: (): any => ['my-value'],
         arguments: [{ kind: 2 }],
       };
-      converter.convert.withArgs({ kind: 2 }).returns(String);
+      converter.convert
+        .calledWith(expect.objectContaining({ kind: 2 }))
+        .mockReturnValue(String);
 
       const arrayType = typeConverter.convert(reflectedType, converter);
       expect(arrayType).toBeInstanceOf(List);
@@ -142,11 +152,15 @@ describe(`ArrayConverter`, () => {
     });
 
     it('converts literal array with class', () => {
-      const classConverter = stubInterface<types.TypeConverter>();
-      converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
+      const classConverter = mock<types.TypeConverter>();
+      converter.getConverter
+        .calledWith(TypeKind.Class)
+        .mockReturnValue(classConverter);
       classConverter.isConvertible
-        .withArgs({ kind: 18, type: MyClass, arguments: [] })
-        .returns(true);
+        .calledWith(
+          expect.objectContaining({ kind: 18, type: MyClass, arguments: [] })
+        )
+        .mockReturnValue(true);
 
       const arrayType = typeConverter.convert(reflect<MyClass[]>(), converter);
       expect(arrayType).toBeInstanceOf(List);

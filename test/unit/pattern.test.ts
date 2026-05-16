@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { types } from '../../src/types';
 import { Pattern } from '../../src/pattern';
 
@@ -16,7 +16,7 @@ describe(`Pattern`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
   });
 
   it('returns patterns type kind', () => {
@@ -38,7 +38,7 @@ describe(`Pattern`, () => {
     const pattern = new MyPattern();
     const val = 'my-value';
     const valStr = `String('my-value'`;
-    describer.describe.withArgs(val).returns(valStr);
+    describer.describe.calledWith(val).mockReturnValue(valStr);
 
     expect(pattern.describe(val)).toBe(valStr);
     expect(describer.describe).toHaveBeenCalledTimes(1);

@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { Types as tsruntimeTypes } from 'tsruntime';
 import { Type } from '../../../src/decorators/type.decorator';
 import 'reflect-metadata';

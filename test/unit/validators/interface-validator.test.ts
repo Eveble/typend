@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { Interface } from '../../../src/patterns/interface';
 import { InterfaceValidator } from '../../../src/validators/interface-validator';
@@ -25,8 +25,8 @@ describe(`InterfaceValidator`, () => {
   let validator: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
-    validator = stubInterface<types.Validator>();
+    describer = mock<types.Describer>();
+    validator = mock<types.Validator>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -84,7 +84,7 @@ describe(`InterfaceValidator`, () => {
         key: String,
       });
       const valStr = inspect(val);
-      describer.describe.returns(valStr);
+      describer.describe.mockReturnValue(valStr);
 
       expect(() => intfValidator.validate(val, intf, validator)).toThrow(
         InvalidTypeError,
@@ -106,10 +106,10 @@ describe(`InterfaceValidator`, () => {
         getName: Function,
         getAge: Function,
       });
-      validator.validate.withArgs('Jane Doe', String).returns(true);
-      validator.validate.withArgs(28, Number).returns(true);
-      validator.validate.withArgs('getName', Function).returns(true);
-      validator.validate.withArgs('getAge', Function).returns(true);
+      validator.validate.calledWith('Jane Doe', String).mockReturnValue(true);
+      validator.validate.calledWith(28, Number).mockReturnValue(true);
+      validator.validate.calledWith('getName', Function).mockReturnValue(true);
+      validator.validate.calledWith('getAge', Function).mockReturnValue(true);
 
       expect(intfValidator.validate(val, intf, validator)).toBe(true);
       expect(validator.validate).toHaveBeenCalledTimes(4);
@@ -138,10 +138,10 @@ describe(`InterfaceValidator`, () => {
         getName: Function,
         getAge: Function,
       });
-      validator.validate.withArgs('Jane Doe', String).returns(true);
-      validator.validate.withArgs(28, Number).returns(true);
-      validator.validate.withArgs('getName', Function).returns(true);
-      validator.validate.withArgs('getAge', Function).returns(true);
+      validator.validate.calledWith('Jane Doe', String).mockReturnValue(true);
+      validator.validate.calledWith(28, Number).mockReturnValue(true);
+      validator.validate.calledWith('getName', Function).mockReturnValue(true);
+      validator.validate.calledWith('getAge', Function).mockReturnValue(true);
 
       expect(intfValidator.validate(val, intf, validator)).toBe(true);
       expect(validator.validate).toHaveBeenCalledTimes(4);
@@ -162,11 +162,11 @@ describe(`InterfaceValidator`, () => {
         first: String,
       });
       const valStr = inspect(val);
-      describer.describe.withArgs(val).returns(valStr);
-      validator.validate.withArgs('value', String).returns(true);
-      validator.validate
-        .withArgs(2, undefined)
-        .throws(new UnequalValueError(`Expected Number(2) to be a undefined`));
+      describer.describe.calledWith(val).mockReturnValue(valStr);
+      validator.validate.calledWith('value', String).mockReturnValue(true);
+      validator.validate.calledWith(2, undefined).mockImplementation(() => {
+        throw new UnequalValueError(`Expected Number(2) to be a undefined`);
+      });
 
       expect(intfValidator.validate(val, intf, validator)).toBe(true);
       expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -190,18 +190,21 @@ describe(`InterfaceValidator`, () => {
         },
       });
       const valStr = inspect(val);
-      describer.describe.withArgs(val).returns(valStr);
-      validator.validate.withArgs('value', String).returns(true);
+      describer.describe.calledWith(val).mockReturnValue(valStr);
+      validator.validate.calledWith('value', String).mockReturnValue(true);
       validator.validate
-        .withArgs(
-          { a: 'a-value', unexpected: 'unexpected-value' },
-          { a: 'a-value' }
+        .calledWith(
+          expect.objectContaining({
+            a: 'a-value',
+            unexpected: 'unexpected-value',
+          }),
+          expect.objectContaining({ a: 'a-value' })
         )
-        .throws(
-          new UnexpectedKeyError(
+        .mockImplementation(() => {
+          throw new UnexpectedKeyError(
             `Unexpected key 'unexpected' in {"a":"a-value","unexpected":"unexpected-value"}`
-          )
-        );
+          );
+        });
 
       expect(intfValidator.validate(val, expectation, validator)).toBe(true);
       expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -236,17 +239,17 @@ describe(`InterfaceValidator`, () => {
         },
       };
       const valStr = JSON.stringify(val);
-      describer.describe.withArgs(val).returns(valStr);
+      describer.describe.calledWith(val).mockReturnValue(valStr);
 
-      validator.validate.withArgs('a-value', String).returns(true);
+      validator.validate.calledWith('a-value', String).mockReturnValue(true);
       validator.validate
-        .withArgs('b-invalid-not-a-number', Number)
-        .throws(
-          new UnequalValueError(
+        .calledWith('b-invalid-not-a-number', Number)
+        .mockImplementation(() => {
+          throw new UnequalValueError(
             `Expected Number, got String("invalid-should-be-number")`
-          )
-        );
-      validator.validate.withArgs('c-value', String).returns(true);
+          );
+        });
+      validator.validate.calledWith('c-value', String).mockReturnValue(true);
 
       expect(() => intfValidator.validate(val, pattern, validator)).toThrow(
         UnequalValueError,

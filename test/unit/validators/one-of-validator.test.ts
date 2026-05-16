@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { OneOf } from '../../../src/patterns/one-of';
 import { OneOfValidator } from '../../../src/validators/one-of-validator';
@@ -21,8 +21,8 @@ describe(`OneOf`, () => {
   let validator: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
-    validator = stubInterface<types.Validator>();
+    describer = mock<types.Describer>();
+    validator = mock<types.Validator>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -57,7 +57,7 @@ describe(`OneOf`, () => {
         const oneOfValidator = new OneOfValidator();
         const val = 'my-string';
         const oneOf = new OneOf(String, Number);
-        validator.validate.withArgs(val, String).returns(true);
+        validator.validate.calledWith(val, String).mockReturnValue(true);
 
         expect(oneOfValidator.validate(val, oneOf, validator)).toBe(true);
         expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -68,8 +68,8 @@ describe(`OneOf`, () => {
         const oneOfValidator = new OneOfValidator();
         const val = 2;
         const oneOf = new OneOf(String, Number);
-        validator.validate.withArgs(val, String).returns(false);
-        validator.validate.withArgs(val, Number).returns(true);
+        validator.validate.calledWith(val, String).mockReturnValue(false);
+        validator.validate.calledWith(val, Number).mockReturnValue(true);
 
         expect(oneOfValidator.validate(val, oneOf, validator)).toBe(true);
         expect(validator.validate).toHaveBeenCalledTimes(2);
@@ -84,11 +84,15 @@ describe(`OneOf`, () => {
         const val = 'my-string';
         const oneOf = new OneOf(String, Number);
         const error = new ValidationError('my-error');
-        validator.validate.withArgs(val, String).throws(error);
-        validator.validate.withArgs(val, Number).throws(error);
+        validator.validate.calledWith(val, String).mockImplementation(() => {
+          throw error;
+        });
+        validator.validate.calledWith(val, Number).mockImplementation(() => {
+          throw error;
+        });
 
         const oneOfStr = inspect(oneOf);
-        describer.describe.withArgs(oneOf).returns(oneOfStr);
+        describer.describe.calledWith(oneOf).mockReturnValue(oneOfStr);
 
         expect(() => oneOfValidator.validate(val, oneOf, validator)).toThrow(
           NotAMemberError,

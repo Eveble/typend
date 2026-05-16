@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { reflect } from 'tsruntime';
 import { converter } from './setup';
 import { InstanceOf } from '../../../src/patterns/instance-of';

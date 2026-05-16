@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 // Annotations
 import { Internal } from '../../src/annotations/internal';
 import { Validable } from '../../src/annotations/validable';

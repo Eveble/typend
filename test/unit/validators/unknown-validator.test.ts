@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { UnknownValidator } from '../../../src/validators/unknown-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -19,7 +19,7 @@ describe(`UnknownValidator`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     PatternValidator.setDescriber(describer);
   });
 

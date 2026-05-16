@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { InvalidTypeError } from '../../../src/errors';
 import { Utility } from '../../../src/utility';
@@ -24,10 +24,10 @@ describe(`PropsOf`, () => {
   let describer: any;
 
   beforeEach(() => {
-    converter = stubInterface<types.Converter>();
-    library = stubInterface<types.Library>();
+    converter = mock<types.Converter>();
+    library = mock<types.Library>();
     library.converter = converter;
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Utility.setDescriber(describer);
   });
 
@@ -151,7 +151,7 @@ describe(`PropsOf`, () => {
     it('throws InvalidTypeError for invalid type on construction', () => {
       for (const type of INVALID_TYPES) {
         const typeStr = inspect(type);
-        describer.describe.returns(typeStr);
+        describer.describe.mockReturnValue(typeStr);
         expect(
           () => new PropsOf(type),
           `Expected type ${typeStr} to be invalid`
@@ -174,7 +174,7 @@ describe(`PropsOf`, () => {
         value: String,
       });
       const type = new Class(MyClass, definition);
-      library.converter.convert.withArgs(MyClass).returns(type);
+      library.converter.convert.calledWith(MyClass).mockReturnValue(type);
       const generatedResult = propsOf.generate(library);
       expect(generatedResult).toBeInstanceOf(Collection);
       expect(generatedResult).toEqual(definition);

@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { EqualsValidator } from '../../../src/validators/equals-validator';
 import { types } from '../../../src/types';
@@ -20,7 +20,7 @@ describe(`EqualsValidator`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -75,8 +75,10 @@ describe(`EqualsValidator`, () => {
       const expectationStr = inspect(expectation);
       const expectedStr = `Expected ${valStr} to be equal to ${expectationStr}`;
 
-      describer.describe.withArgs(val).returns(valStr);
-      describer.describe.withArgs(expectation).returns(expectationStr);
+      describer.describe.calledWith(val).mockReturnValue(valStr);
+      describer.describe
+        .calledWith(expectation)
+        .mockReturnValue(expectationStr);
 
       expect(eqValidator.validate(val, expectation), expectedStr).toBe(true);
     }
@@ -134,7 +136,7 @@ describe(`EqualsValidator`, () => {
           const eqValidator = new EqualsValidator();
           for (const expectation of VALID_EXPECTATIONS) {
             const expectationStr = inspect(expectation);
-            describer.describe.returns(expectationStr);
+            describer.describe.mockReturnValue(expectationStr);
             expect(
               eqValidator.canValidate(expectation),
               `Expected expectation '${expectationStr}' to be valid for equality validation`
@@ -157,7 +159,7 @@ describe(`EqualsValidator`, () => {
           const eqValidator = new EqualsValidator();
           for (const expectation of VALID_EXPECTATIONS) {
             const expectationStr = inspect(expectation);
-            describer.describe.returns(expectationStr);
+            describer.describe.mockReturnValue(expectationStr);
             expect(
               eqValidator.canValidate(expectation),
               `Expected expectation '${expectationStr}' to be valid for equality validation`
@@ -174,7 +176,7 @@ describe(`EqualsValidator`, () => {
           const eqValidator = new EqualsValidator();
           for (const expectation of VALID_EXPECTATIONS) {
             const expectationStr = inspect(expectation);
-            describer.describe.returns(expectationStr);
+            describer.describe.mockReturnValue(expectationStr);
             expect(
               eqValidator.canValidate(expectation),
               `Expected expectation '${expectationStr}' to be valid for reference validation`
@@ -214,7 +216,7 @@ describe(`EqualsValidator`, () => {
           const eqValidator = new EqualsValidator();
           for (const expectation of VALID_EXPECTATIONS) {
             const expectationStr = inspect(expectation);
-            describer.describe.returns(expectationStr);
+            describer.describe.mockReturnValue(expectationStr);
             expect(
               eqValidator.canValidate(expectation),
               `Expected expectation '${expectationStr}' to be valid for reference validation`
@@ -246,8 +248,10 @@ describe(`EqualsValidator`, () => {
       };
       const expectation = new Equals(2);
 
-      describer.describe.withArgs(value).returns(inspect(value));
-      describer.describe.withArgs(expectation).returns(inspect(expectation));
+      describer.describe.calledWith(value).mockReturnValue(inspect(value));
+      describer.describe
+        .calledWith(expectation)
+        .mockReturnValue(inspect(expectation));
 
       expect(() => eqValidator.validate(value, expectation)).toThrow(
         InvalidTypeError,
@@ -262,8 +266,10 @@ describe(`EqualsValidator`, () => {
       const value = ['value'];
       const expectation = new Equals(2);
 
-      describer.describe.withArgs(value).returns(inspect(value));
-      describer.describe.withArgs(expectation).returns(inspect(expectation));
+      describer.describe.calledWith(value).mockReturnValue(inspect(value));
+      describer.describe
+        .calledWith(expectation)
+        .mockReturnValue(inspect(expectation));
 
       expect(() => eqValidator.validate(value, expectation)).toThrow(
         InvalidTypeError,
@@ -379,8 +385,10 @@ describe(`EqualsValidator`, () => {
         const value = 'mismatch';
         const expectation = new RegExp(/matches/);
 
-        describer.describe.withArgs(value).returns(inspect(value));
-        describer.describe.withArgs(expectation).returns(inspect(expectation));
+        describer.describe.calledWith(value).mockReturnValue(inspect(value));
+        describer.describe
+          .calledWith(expectation)
+          .mockReturnValue(inspect(expectation));
 
         expect(() => eqValidator.validate(value, expectation)).toThrow(
           UnequalValueError,
@@ -406,8 +414,10 @@ describe(`EqualsValidator`, () => {
           const expectationStr = inspect(expectation);
           const expectedStr = `Expected ${valStr} to not be equal ${expectationStr}`;
 
-          describer.describe.withArgs(val).returns(valStr);
-          describer.describe.withArgs(expectation).returns(expectationStr);
+          describer.describe.calledWith(val).mockReturnValue(valStr);
+          describer.describe
+            .calledWith(expectation)
+            .mockReturnValue(expectationStr);
 
           expect(
             () => eqValidator.validate(val, expectation),
@@ -424,8 +434,10 @@ describe(`EqualsValidator`, () => {
         const value = new IsSameClass('value');
         const expectation = new IsSameClass('other-value');
 
-        describer.describe.withArgs(value).returns(inspect(value));
-        describer.describe.withArgs(expectation).returns(inspect(expectation));
+        describer.describe.calledWith(value).mockReturnValue(inspect(value));
+        describer.describe
+          .calledWith(expectation)
+          .mockReturnValue(inspect(expectation));
 
         expect(() => eqValidator.validate(value, expectation)).toThrow(
           UnequalValueError,
@@ -441,8 +453,10 @@ describe(`EqualsValidator`, () => {
         const value = new EqualsClass('value');
         const expectation = new EqualsClass('other-value');
 
-        describer.describe.withArgs(value).returns(inspect(value));
-        describer.describe.withArgs(expectation).returns(inspect(expectation));
+        describer.describe.calledWith(value).mockReturnValue(inspect(value));
+        describer.describe
+          .calledWith(expectation)
+          .mockReturnValue(inspect(expectation));
 
         expect(() => eqValidator.validate(value, expectation)).toThrow(
           UnequalValueError,
@@ -468,8 +482,10 @@ describe(`EqualsValidator`, () => {
           const expectationStr = inspect(expectation);
           const expectedStr = `Expected ${valStr} value to be equal to ${expectationStr}`;
 
-          describer.describe.withArgs(val).returns(valStr);
-          describer.describe.withArgs(expectation).returns(expectationStr);
+          describer.describe.calledWith(val).mockReturnValue(valStr);
+          describer.describe
+            .calledWith(expectation)
+            .mockReturnValue(expectationStr);
 
           expect(
             () => eqValidator.validate(val, expectation),
@@ -504,8 +520,10 @@ describe(`EqualsValidator`, () => {
           const expectationStr = inspect(expectation);
           const expectedStr = `Expected ${valStr} to be equal to ${expectationStr}`;
 
-          describer.describe.withArgs(val).returns(valStr);
-          describer.describe.withArgs(expectation).returns(expectationStr);
+          describer.describe.calledWith(val).mockReturnValue(valStr);
+          describer.describe
+            .calledWith(expectation)
+            .mockReturnValue(expectationStr);
           expect(
             () => eqValidator.validate(val, expectation),
             expectedStr
@@ -531,8 +549,10 @@ describe(`EqualsValidator`, () => {
           const expectationStr = inspect(expectation);
           const expectedStr = `Expected ${valStr} to be equal to ${expectationStr}`;
 
-          describer.describe.withArgs(val).returns(valStr);
-          describer.describe.withArgs(expectation).returns(expectationStr);
+          describer.describe.calledWith(val).mockReturnValue(valStr);
+          describer.describe
+            .calledWith(expectation)
+            .mockReturnValue(expectationStr);
 
           expect(
             () => eqValidator.validate(val, expectation),

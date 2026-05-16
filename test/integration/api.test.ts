@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { ValidationError } from '../../src/errors';
 import { Interface } from '../../src/patterns/interface';
 import { InstanceOf } from '../../src/patterns/instance-of';

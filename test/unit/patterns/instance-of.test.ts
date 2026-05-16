@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { InvalidTypeError } from '../../../src/errors';
 import { Pattern } from '../../../src/pattern';
@@ -12,7 +12,7 @@ describe(`InstanceOf`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -132,7 +132,7 @@ describe(`InstanceOf`, () => {
     it('takes valid type for construction', () => {
       for (const type of VALID_TYPES) {
         const typeStr = inspect(type);
-        describer.describe.returns(typeStr);
+        describer.describe.mockReturnValue(typeStr);
         expect(
           new InstanceOf(type),
           `Expected type ${typeStr} to be valid`
@@ -148,7 +148,7 @@ describe(`InstanceOf`, () => {
     it('throws InvalidTypeError for invalid type on construction', () => {
       for (const type of INVALID_TYPES) {
         const typeStr = inspect(type);
-        describer.describe.returns(typeStr);
+        describer.describe.mockReturnValue(typeStr);
         expect(
           () => new InstanceOf(type),
           `Expected type ${typeStr} to be invalid`

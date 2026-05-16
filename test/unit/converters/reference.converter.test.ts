@@ -9,7 +9,7 @@ import {
   afterAll,
 } from 'vitest';
 import { reflect, Types as tsruntimeTypes } from 'tsruntime';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { ReferenceConverter } from '../../../src/converters/tsruntime/type-converters/reference.converter';
 import { types } from '../../../src/types';
 import { InstanceOf } from '../../../src/patterns/instance-of';
@@ -23,9 +23,9 @@ describe(`ReferenceConverter`, () => {
   let typeConverter: ReferenceConverter;
 
   beforeEach(() => {
-    converter = stubInterface<types.Converter>();
-    arrayConverter = stubInterface<types.TypeConverter>();
-    classConverter = stubInterface<types.TypeConverter>();
+    converter = mock<types.Converter>();
+    arrayConverter = mock<types.TypeConverter>();
+    classConverter = mock<types.TypeConverter>();
     typeConverter = new ReferenceConverter();
   });
 
@@ -78,15 +78,23 @@ describe(`ReferenceConverter`, () => {
         };
 
         // Ensure array converter check returns false
-        converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
-        arrayConverter.isConvertible.withArgs(reflectedType).returns(false);
+        converter.getConverter
+          .calledWith(TypeKind.Array)
+          .mockReturnValue(arrayConverter);
+        arrayConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(false);
 
         // Ensure class converter check returns true
-        converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
-        classConverter.isConvertible.withArgs(reflectedType).returns(true);
+        converter.getConverter
+          .calledWith(TypeKind.Class)
+          .mockReturnValue(classConverter);
+        classConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(true);
         classConverter.convert
-          .withArgs(reflectedType, converter)
-          .returns(new InstanceOf(MyClass));
+          .calledWith(reflectedType, converter)
+          .mockReturnValue(new InstanceOf(MyClass));
 
         const result = typeConverter.convert(reflectedType, converter);
         expect(result).toBeInstanceOf(InstanceOf);
@@ -117,17 +125,25 @@ describe(`ReferenceConverter`, () => {
         };
 
         // Ensure array converter check returns false
-        converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
-        arrayConverter.isConvertible.withArgs(reflectedType).returns(false);
+        converter.getConverter
+          .calledWith(TypeKind.Array)
+          .mockReturnValue(arrayConverter);
+        arrayConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(false);
 
         // Ensure class converter check returns true
-        converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
-        classConverter.isConvertible.withArgs(reflectedType).returns(true);
+        converter.getConverter
+          .calledWith(TypeKind.Class)
+          .mockReturnValue(classConverter);
+        classConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(true);
         const convertedInstance = new InstanceOf(MyClass);
         convertedInstance.setInitializer(initializer);
         classConverter.convert
-          .withArgs(reflectedType, converter)
-          .returns(convertedInstance);
+          .calledWith(reflectedType, converter)
+          .mockReturnValue(convertedInstance);
 
         const result = typeConverter.convert(reflectedType, converter);
         expect(result).toBeInstanceOf(InstanceOf);
@@ -157,10 +173,18 @@ describe(`ReferenceConverter`, () => {
         };
 
         // Ensure both converters return false
-        converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
-        arrayConverter.isConvertible.withArgs(reflectedType).returns(false);
-        converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
-        classConverter.isConvertible.withArgs(reflectedType).returns(false);
+        converter.getConverter
+          .calledWith(TypeKind.Array)
+          .mockReturnValue(arrayConverter);
+        arrayConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(false);
+        converter.getConverter
+          .calledWith(TypeKind.Class)
+          .mockReturnValue(classConverter);
+        classConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(false);
 
         const result = typeConverter.convert(reflectedType, converter);
         expect(result).toBeInstanceOf(InstanceOf);
@@ -190,11 +214,15 @@ describe(`ReferenceConverter`, () => {
         const convertedArray = ['converted-array'];
 
         // Ensure array converter check returns true
-        converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
-        arrayConverter.isConvertible.withArgs(reflectedType).returns(true);
+        converter.getConverter
+          .calledWith(TypeKind.Array)
+          .mockReturnValue(arrayConverter);
+        arrayConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(true);
         arrayConverter.convert
-          .withArgs(reflectedType, converter)
-          .returns(convertedArray);
+          .calledWith(reflectedType, converter)
+          .mockReturnValue(convertedArray);
 
         const arrayType = typeConverter.convert(reflectedType, converter);
         expect(arrayType).toBe(convertedArray);
@@ -224,15 +252,23 @@ describe(`ReferenceConverter`, () => {
         };
 
         // Ensure array converter check returns false
-        converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
-        arrayConverter.isConvertible.withArgs(reflectedType).returns(false);
+        converter.getConverter
+          .calledWith(TypeKind.Array)
+          .mockReturnValue(arrayConverter);
+        arrayConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(false);
 
         // Ensure class converter check returns true
-        converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
-        classConverter.isConvertible.withArgs(reflectedType).returns(true);
+        converter.getConverter
+          .calledWith(TypeKind.Class)
+          .mockReturnValue(classConverter);
+        classConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(true);
         classConverter.reflect
-          .withArgs(reflectedType, converter)
-          .returns(MyClass);
+          .calledWith(reflectedType, converter)
+          .mockReturnValue(MyClass);
 
         const result = typeConverter.reflect(reflectedType, converter);
         expect(result).toBe(MyClass);
@@ -260,10 +296,18 @@ describe(`ReferenceConverter`, () => {
         };
 
         // Ensure both converters return false
-        converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
-        arrayConverter.isConvertible.withArgs(reflectedType).returns(false);
-        converter.getConverter.withArgs(TypeKind.Class).returns(classConverter);
-        classConverter.isConvertible.withArgs(reflectedType).returns(false);
+        converter.getConverter
+          .calledWith(TypeKind.Array)
+          .mockReturnValue(arrayConverter);
+        arrayConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(false);
+        converter.getConverter
+          .calledWith(TypeKind.Class)
+          .mockReturnValue(classConverter);
+        classConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(false);
 
         const result = typeConverter.reflect(reflectedType, converter);
         expect(result).toBe(MyClass);
@@ -292,11 +336,15 @@ describe(`ReferenceConverter`, () => {
         const reflectedArray = [String];
 
         // Ensure array converter check returns true
-        converter.getConverter.withArgs(TypeKind.Array).returns(arrayConverter);
-        arrayConverter.isConvertible.withArgs(reflectedType).returns(true);
+        converter.getConverter
+          .calledWith(TypeKind.Array)
+          .mockReturnValue(arrayConverter);
+        arrayConverter.isConvertible
+          .calledWith(reflectedType)
+          .mockReturnValue(true);
         arrayConverter.reflect
-          .withArgs(reflectedType, converter)
-          .returns(reflectedArray);
+          .calledWith(reflectedType, converter)
+          .mockReturnValue(reflectedArray);
 
         const arrayType = typeConverter.reflect(reflectedType, converter);
         expect(arrayType).toBe(reflectedArray);

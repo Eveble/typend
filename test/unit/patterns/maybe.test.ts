@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { Maybe } from '../../../src/patterns/maybe';
 import { Pattern } from '../../../src/pattern';
@@ -11,7 +11,7 @@ describe(`Maybe`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     Pattern.setDescriber(describer);
   });
 
@@ -127,7 +127,7 @@ describe(`Maybe`, () => {
     it('takes any expectation for construction', () => {
       for (const expectation of VALID_EXPECTATIONS) {
         const expectationStr = inspect(expectation);
-        describer.describe.returns(expectationStr);
+        describer.describe.mockReturnValue(expectationStr);
         expect(
           new Maybe(expectation),
           `Expected expectation ${expectationStr} to be valid`

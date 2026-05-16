@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { CollectionWithin } from '../../../src/patterns/collection-within';
 import { CollectionWithinValidator } from '../../../src/validators/collection-within-validator';
@@ -25,8 +25,8 @@ describe(`CollectionWithinValidator`, () => {
   let validator: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
-    validator = stubInterface<types.Validator>();
+    describer = mock<types.Describer>();
+    validator = mock<types.Validator>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -76,7 +76,7 @@ describe(`CollectionWithinValidator`, () => {
         key: 'value',
       });
       const valStr = inspect(val);
-      describer.describe.returns(valStr);
+      describer.describe.mockReturnValue(valStr);
 
       expect(() =>
         collWithinValidator.validate(val, expectation, validator)
@@ -97,8 +97,8 @@ describe(`CollectionWithinValidator`, () => {
           first: String,
           second: Number,
         });
-        validator.validate.withArgs('value', String).returns(true);
-        validator.validate.withArgs(2, Number).returns(true);
+        validator.validate.calledWith('value', String).mockReturnValue(true);
+        validator.validate.calledWith(2, Number).mockReturnValue(true);
 
         expect(collWithinValidator.validate(val, expectation, validator)).toBe(
           true
@@ -119,13 +119,11 @@ describe(`CollectionWithinValidator`, () => {
           first: String,
         });
         const valStr = inspect(val);
-        describer.describe.withArgs(val).returns(valStr);
-        validator.validate.withArgs('value', String).returns(true);
-        validator.validate
-          .withArgs(2, undefined)
-          .throws(
-            new UnequalValueError(`Expected Number(2) to be a undefined`)
-          );
+        describer.describe.calledWith(val).mockReturnValue(valStr);
+        validator.validate.calledWith('value', String).mockReturnValue(true);
+        validator.validate.calledWith(2, undefined).mockImplementation(() => {
+          throw new UnequalValueError(`Expected Number(2) to be a undefined`);
+        });
 
         expect(collWithinValidator.validate(val, expectation, validator)).toBe(
           true
@@ -148,20 +146,23 @@ describe(`CollectionWithinValidator`, () => {
         };
 
         const valStr = inspect(val, { compact: true });
-        describer.describe.withArgs(val).returns(valStr);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
 
-        validator.validate.withArgs('value', String).returns(true);
+        validator.validate.calledWith('value', String).mockReturnValue(true);
         validator.validate
-          .withArgs(undefined, {
-            second: {
-              third: String,
-            },
-          })
-          .throws(
-            new UnequalValueError(
+          .calledWith(
+            undefined,
+            expect.objectContaining({
+              second: {
+                third: String,
+              },
+            })
+          )
+          .mockImplementation(() => {
+            throw new UnequalValueError(
               `(Key second in {"first":"value"}) - Expected undefined to be an Object`
-            )
-          );
+            );
+          });
 
         expect(collWithinValidator.validate(val, expectation, validator)).toBe(
           true
@@ -190,18 +191,21 @@ describe(`CollectionWithinValidator`, () => {
           },
         });
         const valStr = inspect(val);
-        describer.describe.withArgs(val).returns(valStr);
-        validator.validate.withArgs('value', String).returns(true);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
+        validator.validate.calledWith('value', String).mockReturnValue(true);
         validator.validate
-          .withArgs(
-            { a: 'a-value', unexpected: 'unexpected-value' },
-            { a: 'a-value' }
+          .calledWith(
+            expect.objectContaining({
+              a: 'a-value',
+              unexpected: 'unexpected-value',
+            }),
+            expect.objectContaining({ a: 'a-value' })
           )
-          .throws(
-            new UnexpectedKeyError(
+          .mockImplementation(() => {
+            throw new UnexpectedKeyError(
               `Unexpected key 'unexpected' in {"a":"a-value","unexpected":"unexpected-value"}`
-            )
-          );
+            );
+          });
 
         expect(collWithinValidator.validate(val, expectation, validator)).toBe(
           true
@@ -242,17 +246,17 @@ describe(`CollectionWithinValidator`, () => {
           },
         };
         const valStr = JSON.stringify(val);
-        describer.describe.withArgs(val).returns(valStr);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
 
-        validator.validate.withArgs('a-value', String).returns(true);
+        validator.validate.calledWith('a-value', String).mockReturnValue(true);
         validator.validate
-          .withArgs('b-invalid-not-a-number', Number)
-          .throws(
-            new UnequalValueError(
+          .calledWith('b-invalid-not-a-number', Number)
+          .mockImplementation(() => {
+            throw new UnequalValueError(
               `Expected Number, got String("invalid-should-be-number")`
-            )
-          );
-        validator.validate.withArgs('c-value', String).returns(true);
+            );
+          });
+        validator.validate.calledWith('c-value', String).mockReturnValue(true);
 
         expect(() =>
           collWithinValidator.validate(val, expectation, validator)

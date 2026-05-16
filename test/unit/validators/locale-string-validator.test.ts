@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { LocaleStringValidator } from '../../../src/validators/locale-string-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -20,7 +20,7 @@ describe(`LocaleStringValidator`, () => {
   let describer: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
+    describer = mock<types.Describer>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -164,7 +164,7 @@ describe(`LocaleStringValidator`, () => {
       for (const val of INVALID_VALUES) {
         const localeStringValidator = new LocaleStringValidator();
         const valStr = inspect(val);
-        describer.describe.withArgs(val).returns(valStr);
+        describer.describe.calledWith(val).mockReturnValue(valStr);
 
         expect(() => localeStringValidator.validate(val)).toThrow(
           ValidationError,

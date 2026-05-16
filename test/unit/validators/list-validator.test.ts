@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { inspect } from 'util';
 import { ListValidator } from '../../../src/validators/list-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -25,8 +25,8 @@ describe(`ListValidator`, () => {
   let validator: any;
 
   beforeEach(() => {
-    describer = stubInterface<types.Describer>();
-    validator = stubInterface<types.Validator>();
+    describer = mock<types.Describer>();
+    validator = mock<types.Validator>();
     PatternValidator.setDescriber(describer);
   });
 
@@ -82,7 +82,7 @@ describe(`ListValidator`, () => {
       };
       const valueStr = inspect(value);
 
-      describer.describe.returns(valueStr);
+      describer.describe.mockReturnValue(valueStr);
 
       expect(() =>
         listValidator.validate(value, new List(Array), validator)
@@ -127,8 +127,8 @@ describe(`ListValidator`, () => {
         const value = ['first', 'second'];
         const expectation = [String];
 
-        validator.validate.withArgs('first', String).returns(true);
-        validator.validate.withArgs('second', String).returns(true);
+        validator.validate.calledWith('first', String).mockReturnValue(true);
+        validator.validate.calledWith('second', String).mockReturnValue(true);
 
         expect(listValidator.validate(value, expectation, validator)).toBe(
           true
@@ -142,8 +142,10 @@ describe(`ListValidator`, () => {
         const error: ValidationError = new UnmatchedTypeError(
           'Expected Number(2) to be a String'
         );
-        validator.validate.withArgs('first').returns(true);
-        validator.validate.withArgs(2).throws(error);
+        validator.validate.calledWith('first').mockReturnValue(true);
+        validator.validate.calledWith(2).mockImplementation(() => {
+          throw error;
+        });
 
         const listValidator = new ListValidator();
         const value = ['first', 2];
@@ -151,8 +153,10 @@ describe(`ListValidator`, () => {
         const expectation = [String];
         const expectationStr = inspect(expectation);
 
-        describer.describe.withArgs(value).returns(valueStr);
-        describer.describe.withArgs(expectation).returns(expectationStr);
+        describer.describe.calledWith(value).mockReturnValue(valueStr);
+        describer.describe
+          .calledWith(expectation)
+          .mockReturnValue(expectationStr);
 
         expect(() =>
           listValidator.validate(value, expectation, validator)

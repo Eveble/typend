@@ -8,7 +8,7 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import { stubInterface } from '../../vitest-helper';
+import { mock } from 'vitest-mock-extended';
 import { Maybe } from '../../../src/patterns/maybe';
 import { MaybeValidator } from '../../../src/validators/maybe-validator';
 import { PatternValidator } from '../../../src/pattern-validator';
@@ -19,7 +19,7 @@ describe(`MaybeValidator`, () => {
   let validator: any;
 
   beforeEach(() => {
-    validator = stubInterface<types.Validator>();
+    validator = mock<types.Validator>();
   });
 
   it(`extends PatternValidator`, () => {
@@ -65,7 +65,7 @@ describe(`MaybeValidator`, () => {
         const maybeValidator = new MaybeValidator();
         const val = 'my-string';
         const maybe = new Maybe(String);
-        validator.validate.withArgs(val, String).returns(true);
+        validator.validate.calledWith(val, String).mockReturnValue(true);
 
         expect(maybeValidator.validate(val, maybe, validator)).toBe(true);
         expect(validator.validate).toHaveBeenCalledTimes(1);
@@ -79,7 +79,9 @@ describe(`MaybeValidator`, () => {
         const val = 'my-string';
         const maybe = new Maybe(String);
         const error = new ValidationError('my-error');
-        validator.validate.withArgs(val, String).throws(error);
+        validator.validate.calledWith(val, String).mockImplementation(() => {
+          throw error;
+        });
 
         expect(() => maybeValidator.validate(val, maybe, validator)).toThrow(
           error
